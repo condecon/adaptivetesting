@@ -4,10 +4,11 @@ from ..math.ml_estimation import MLEstimator
 from ..models.algorithm_exception import AlgorithmException
 import numpy as np
 
+
 class TestMLE(unittest.TestCase):
 
     def test_mle_tensorflow(self):
-        response_pattern = np.array([0,1,0], dtype="float64")
+        response_pattern = np.array([0, 1, 0], dtype="float64")
         difficulties = np.array([0.7, 0.9, 0.6], dtype="float64")
         estimator = MLE_Tensorflow(
             response_pattern=response_pattern,
@@ -33,7 +34,6 @@ class TestMLE(unittest.TestCase):
     def test_one_item(self):
         response = np.array([0], dtype="float64")
         dif = np.array([0.9], dtype="float64")
-        ability = 0
 
         estimator = MLE_Tensorflow(response, dif)
 

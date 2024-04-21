@@ -6,6 +6,7 @@ import abc
 from .test_result import TestResult
 from ..data.sqlite_context import SQLiteContext
 
+
 class AdaptiveTest(abc.ABC):
     """Abstract class of adaptive test.
     All abstract methods have to be overriden
@@ -48,7 +49,7 @@ class AdaptiveTest(abc.ABC):
     def get_ability_se(self) -> float:
         """Calculates the current standard error
         of the ability estimation."""
-        answered_items_difficulties: List[float] = self.get_answered_items_difficulties()
+        answered_items_difficulties: List[float] = self.get_answered_items_difficulties() # noqa E501
         return standard_error(answered_items_difficulties, self.ability_level)
 
     def get_next_item(self) -> TestItem:
@@ -57,7 +58,7 @@ class AdaptiveTest(abc.ABC):
         return item
 
     @abc.abstractmethod
-    def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float:
+    def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float: # noqa E501
         """
         Estimates ability level.
         Has to be implemented.
@@ -71,7 +72,7 @@ class AdaptiveTest(abc.ABC):
         # get item
         item = self.get_next_item()
         if self.DEBUG:
-            print(f"Selected {item.b} for an ability level of {self.ability_level}.")
+            print(f"Selected {item.b} for an ability level of {self.ability_level}.") # noqa E501
         # find response
         response = item.simulated_response
         if self.DEBUG:
@@ -96,7 +97,7 @@ class AdaptiveTest(abc.ABC):
         index = self.items.index(item)
         self.items.pop(index)
         if self.DEBUG:
-            print(f"Now, there are only {len(self.items)} left in the item pool.")
+            print(f"Now, there are only {len(self.items)} left in the item pool.") # noqa E501
         # create result
         result: TestResult = TestResult(
             ability_estimation=estimation,
