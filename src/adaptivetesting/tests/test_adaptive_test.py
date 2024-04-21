@@ -21,7 +21,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
 
     items = [item1, item2, item3]
 
-    def __init__(self, methodName = "runTest"):
+    def __init__(self, methodName="runTest"):
         AdaptiveTest.__init__(
             self,
             items=self.items,
@@ -31,7 +31,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         )
         unittest.TestCase.__init__(self, methodName)
 
-    def estimate_ability_level(self, answered_items_difficulties: list[float]) -> float:
+    def estimate_ability_level(self, answered_items_difficulties: list[float]) -> float:  # noqa E501
         return 0
 
     def test_get_difficulties(self):
@@ -41,7 +41,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
     def test_standard_error(self):
         """This should calculate a standard error without failing"""
         self.answered_items = [self.item1, self.item2]
-        error = self.get_ability_se()
+        self.get_ability_se()
 
     def test_get_next_item(self):
         next_item = self.get_next_item()
@@ -61,4 +61,3 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         # test item is removed from pool
         print(self.items)
         self.assertEqual(self.items, [self.item2, self.item3])
-

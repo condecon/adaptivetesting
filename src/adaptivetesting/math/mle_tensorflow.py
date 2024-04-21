@@ -5,14 +5,16 @@ from ..models.algorithm_exception import AlgorithmException
 class MLE_Tensorflow:
     """Make maximum likelihood estimations with tensorflow"""
 
-    def __init__(self, response_pattern: np.ndarray, item_difficulties: np.ndarray):
+    def __init__(self, response_pattern: np.ndarray,
+                 item_difficulties: np.ndarray):
         self.response_pattern = response_pattern
         self.item_difficulties = item_difficulties
 
     def log_likelihood(self, ability: np.ndarray) -> np.ndarray:
         """
-        Log-Likelihood function. Value is calculated for the given ability level.
-        Ability level is converted to tensor internally.
+        Log-Likelihood function. Value is calculated for the
+        given ability level. Ability level is converted to
+        tensor internally.
         Args:
             ability:
 
@@ -20,7 +22,8 @@ class MLE_Tensorflow:
 
         """
 
-        item_terms = (self.response_pattern * (ability - self.item_difficulties) -
+        item_terms = (self.response_pattern *
+                      (ability - self.item_difficulties) -
                       np.log(1 + np.exp(ability - self.item_difficulties)))
 
         log_likelihood = np.cumsum(item_terms)[len(item_terms) - 1]
@@ -57,7 +60,9 @@ class MLE_Tensorflow:
         previ_lik = float("-inf")
         previ_abil = last_max_ability
 
-        for ability in np.arange(last_max_ability, last_max_ability - 1, -0.01):
+        for ability in np.arange(last_max_ability,
+                                 last_max_ability - 1,
+                                 -0.01):
             calculated_likelihood = self.log_likelihood(ability)
 
             if calculated_likelihood <= previ_lik:
@@ -67,6 +72,9 @@ class MLE_Tensorflow:
                 # update lik
                 previ_lik = calculated_likelihood
                 previ_abil = ability
+                previ_abil
+                # this line has to be here so that
+                # py lint does not throw an error
 
         raise AlgorithmException()
 
@@ -74,7 +82,8 @@ class MLE_Tensorflow:
         previ_lik = float("-inf")
         previ_abil = last_max_ability
 
-        for ability in np.arange(last_max_ability, last_max_ability + 0.5, 0.001):
+        for ability in np.arange(last_max_ability,
+                                 last_max_ability + 0.5, 0.001):
             calculated_likelihood = self.log_likelihood(ability)
 
             if calculated_likelihood <= previ_lik:

@@ -1,8 +1,12 @@
 from .mle_tensorflow import MLE_Tensorflow
 from typing import List
 import numpy as np
+
+
 class MLEstimator(MLE_Tensorflow):
-    def __init__(self, ResponsePattern: List[int], ItemDifficulties: List[float]):
+    def __init__(self,
+                 ResponsePattern: List[int],
+                 ItemDifficulties: List[float]):
         super().__init__(np.array(ResponsePattern, dtype="float64"), 
                          np.array(ItemDifficulties, dtype="float64"))
 

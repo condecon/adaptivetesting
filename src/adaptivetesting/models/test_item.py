@@ -1,5 +1,4 @@
-from typing import Any, Dict, List
-from dataclasses import dataclass
+from typing import List
 
 
 class TestItem:
@@ -22,7 +21,7 @@ def load_test_items_from_list(source: List[float]) -> List[TestItem]:
         source (List[float]): Item difficulties
 
     Returns:
-        List[TestItem]: 
+        List[TestItem]:
     """
     items: List[TestItem] = []
 
