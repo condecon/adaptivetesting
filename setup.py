@@ -6,6 +6,15 @@ setuptools.setup(
     author="Jonas Engicht",
     author_email="dev@condecon.de",
     url="https://github.com/condecon/adaptivetesting",
+    packages=["adaptivetesting", 
+              "adaptivetesting.data",
+              "adaptivetesting.implementations",
+              "adaptivetesting.math",
+              "adaptivetesting.models",
+              "adaptivetesting.services",
+              "adaptivetesting.simulation",
+              "adaptivetesting.tests"],
+    package_dir={"":"src"},
     install_requires=[
         "numpy"
     ]
