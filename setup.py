@@ -14,7 +14,6 @@ setuptools.setup(
               "adaptivetesting.services",
               "adaptivetesting.simulation",
               "adaptivetesting.tests"],
-    package_dir={"":"src"},
     install_requires=[
         "numpy"
     ]
