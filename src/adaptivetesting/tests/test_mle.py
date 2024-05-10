@@ -1,5 +1,4 @@
 import unittest
-from ..math.mle_tensorflow import MLE_Tensorflow
 from ..math.ml_estimation import MLEstimator
 from ..models.algorithm_exception import AlgorithmException
 import numpy as np
@@ -8,14 +7,14 @@ import numpy as np
 class TestMLE(unittest.TestCase):
 
     def test_mle_tensorflow(self):
-        response_pattern = np.array([0, 1, 0], dtype="float64")
-        difficulties = np.array([0.7, 0.9, 0.6], dtype="float64")
-        estimator = MLE_Tensorflow(
-            response_pattern=response_pattern,
-            item_difficulties=difficulties
+        response_pattern = [0, 1, 0]
+        difficulties = [0.7, 0.9, 0.6]
+        estimator = MLEstimator(
+            response_pattern,
+            difficulties
         )
 
-        estimation_result = estimator.find_max()
+        estimation_result = estimator.get_maximum_likelihood_estimation()
 
         self.assertAlmostEqual(estimation_result, 0.0375530712, 2)
 
@@ -32,13 +31,14 @@ class TestMLE(unittest.TestCase):
         self.assertAlmostEqual(result, 0.0375530712, 2)
 
     def test_one_item(self):
-        response = np.array([0], dtype="float64")
-        dif = np.array([0.9], dtype="float64")
+        response = [0]
+        dif = [0.9]
+        ability = 0
 
-        estimator = MLE_Tensorflow(response, dif)
+        estimator = MLEstimator(response, dif)
 
         with self.assertRaises(AlgorithmException):
-            result = estimator.find_max()
+            result = estimator.get_maximum_likelihood_estimation()
             print(f"Estimation Result {result}")
 
     def test_eid(self):
@@ -46,7 +46,7 @@ class TestMLE(unittest.TestCase):
         difficulties = [-1.603, 0.909]
         estimator = MLEstimator(response_pattern, difficulties)
 
-        result = estimator.find_max()
+        result = estimator.get_maximum_likelihood_estimation()
 
         self.assertAlmostEqual(result, -0.347)
 
@@ -55,6 +55,6 @@ class TestMLE(unittest.TestCase):
         difficulties = [-2.1851, -0.2897194]
         estimator = MLEstimator(response_pattern, difficulties)
 
-        result = estimator.find_max()
+        result = estimator.get_maximum_likelihood_estimation()
 
         self.assertAlmostEqual(result, -1.237413, 3)

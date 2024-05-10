@@ -1,11 +1,11 @@
 import math
 from typing import List
 import numpy as np
+from ..models.test_item import TestItem
 from .test_information import test_information_function
 
 
-def standard_error(answered_items: List[float],
-                   estimated_ability_level: float) -> float:
+def standard_error(answered_items: List[float], estimated_ability_level: float) -> float:
     """Calculates standard error using test information function.
 
     Args:
@@ -15,11 +15,7 @@ def standard_error(answered_items: List[float],
     Returns:
         float: Standard error
     """
-
-    answered_items_array = np.array(answered_items, dtype="float64")
-    estimated_ability_level_array = np.array(estimated_ability_level, dtype="float64")  # noqa E501
-    test_information = test_information_function(answered_items_array, estimated_ability_level_array)  # noqa E501
-
-    error = 1 / math.sqrt(test_information)
+    error = 1 / math.sqrt(test_information_function(np.array(answered_items, dtype="float64"),
+                                                               np.array(estimated_ability_level, dtype="float64")))
 
     return error

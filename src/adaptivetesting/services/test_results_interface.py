@@ -4,8 +4,15 @@ from typing import List
 
 
 class ITestResults(ABC):
-    """Interface for saving test results to database"""
+
     def __init__(self, simulation_id: str, participant_id: int):
+        """Interface for saving and reading test results.
+        This interface may mainly be used for saving simulation results.
+
+        Args:
+            simulation_id (str): The simulation ID. Name of the results file.
+            participant_id (int): The participant ID.
+        """
         self.filename = f"data/{simulation_id}.db"
         self.participant_id: int = participant_id
 
