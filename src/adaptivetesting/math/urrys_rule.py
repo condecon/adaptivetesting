@@ -3,9 +3,19 @@ from typing import List
 
 
 def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
+    """Urry's rule will select the test item
+    which has the minimal difference between
+    the item's difficulty and the ability level.
+
+    Args:
+        items (List[TestItem]): Test items (item pool)
+        ability (float): Ability level (current ability estimation)
+
+    Returns:
+        TestItem: selected test item
+    """
     # create difference array from absolute value
     difference: List[float] = []
-
     for item in items:
         difference.append(abs(ability - item.b))
 
@@ -17,3 +27,4 @@ def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
     for item in items:
         if abs(ability - item.b) == minimal_difference:
             return item
+        

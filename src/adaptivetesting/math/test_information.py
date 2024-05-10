@@ -2,15 +2,15 @@ import numpy as np
 
 
 def test_information_function(
-        item_difficulties: np.array,
-        ability_level: np.array
+        item_difficulties: np.ndarray,
+        ability_level: np.ndarray
 ) -> float:
     """
-    Calculates test information using tensors
-    This will run on GPUs if available
+    Calculates test information.
+
     Args:
-        item_difficulties: List of answered items
-        ability_level: Currently estimated ability level
+        item_difficulties (np.ndarray): List of answered items
+        ability_level (np.ndarray): Currently estimated ability level
 
     Returns:
         float: test information

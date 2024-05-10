@@ -1,37 +1,39 @@
 import unittest
 from ..models.adaptive_test import AdaptiveTest
 from ..models.test_item import TestItem
+from ..models.item_pool import ItemPool
+
+item1 = TestItem()
+item1.b = 0.24
+item1.id = 1
+item2 = TestItem()
+item2.b = 0.89
+item2.id = 2
+item3 = TestItem()
+item3.b = -0.6
+item3.id = 3
+
+items = [item1, item2, item3]
+simulated_responses = [1, 0, 1]
+
+item_pool = ItemPool(
+    test_items=items.copy(),
+    simulated_responses=simulated_responses.copy()
+)
 
 
 class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
-    item1 = TestItem()
-    item1.b = 0.24
-    item1.id = 1
-    item1.simulated_response = 1
-
-    item2 = TestItem()
-    item2.b = 0.89
-    item2.id = 2
-    item2.simulated_response = 0
-
-    item3 = TestItem()
-    item3.b = -0.6
-    item3.id = 3
-    item3.simulated_response = 1
-
-    items = [item1, item2, item3]
-
-    def __init__(self, methodName="runTest"):
+    def __init__(self, methodName='runTest'):
         AdaptiveTest.__init__(
             self,
-            items=self.items,
-            participant_id=0,
+            item_pool=item_pool,
             simulation_id="1",
-            true_ability_level=0
+            true_ability_level=0,
+            participant_id=0
         )
         unittest.TestCase.__init__(self, methodName)
 
-    def estimate_ability_level(self, answered_items_difficulties: list[float]) -> float:  # noqa E501
+    def estimate_ability_level(self, answered_items_difficulties: list[float]) -> float:
         return 0
 
     def test_get_difficulties(self):
@@ -40,24 +42,28 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
 
     def test_standard_error(self):
         """This should calculate a standard error without failing"""
-        self.answered_items = [self.item1, self.item2]
-        self.get_ability_se()
+        self.answered_items = [item1, item2]
+        error = self.get_ability_se()
 
     def test_get_next_item(self):
         next_item = self.get_next_item()
-        self.assertEqual(next_item, self.item1)
+        self.assertEqual(next_item, item1)
 
     def test_testing_procedure_once(self):
         self.run_test_once()
         # test showed item
         self.assertEqual(self.test_results[0].showed_item,
-                         self.item1.b)
+                         item1.b)
+
+        print(self.test_results)
+        print(simulated_responses)
         # test response
         self.assertEqual(
             self.test_results[0].response,
-            self.item1.simulated_response
+            simulated_responses[0]
         )
 
         # test item is removed from pool
-        print(self.items)
-        self.assertEqual(self.items, [self.item2, self.item3])
+        print(self.item_pool.test_items)
+        self.assertEqual(self.item_pool.test_items, [item2, item3])
+

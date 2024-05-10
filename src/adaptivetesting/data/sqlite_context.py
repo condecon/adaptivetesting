@@ -5,15 +5,26 @@ import sqlite3
 
 
 class SQLiteContext(ITestResults):
-    """Implements ITestResults interface for
-    saving test results to SQLITE."""
-
     def __init__(self, simulation_id: str, participant_id: int):
+        """Implementation of the ITestResults interface for
+        saving test results to a SQLITE database.
+        The resulting sqlite file <simulation_id>.db
+        will be of the SQLITE3 format.
+
+        Args:
+            simulation_id (str): db filename
+            participant_id (int): participant id and table name
+        """
         super().__init__(simulation_id, participant_id)
 
     def save(self, test_results: List[TestResult]) -> None:
-        """Saves test results to SQLITE file
-        :param test_results: test results from adaptive test"""
+        """Saves a list of test results to the database
+        in the table <participant_id>.
+
+        Args:
+            test_results (List[TestResult]): list of test results
+        """
+
 
         try:
             con = sqlite3.connect(self.filename)
@@ -27,12 +38,8 @@ class SQLiteContext(ITestResults):
         for result in test_results:
             sql_query = f"""
             INSERT INTO p_{self.participant_id}
-            VALUES ("{result.test_id}", 
-            {result.ability_estimation}, 
-            {result.standard_error},
-            {result.showed_item}, 
-            {result.response}, 
-            {result.true_ability_level})"""
+            VALUES ("{result.test_id}", {result.ability_estimation}, {result.standard_error},
+            {result.showed_item}, {result.response}, {result.true_ability_level})"""
             cur.execute(sql_query)
         # commit changes
         con.commit()
@@ -40,11 +47,22 @@ class SQLiteContext(ITestResults):
         con.close()
 
     def load(self) -> List[TestResult]:
-        """Loads test results from SQLITE file"""
+        """Loads results from the database.
+        The implementation of this method is required
+        by the interface. However, is does not have
+        any implemented functionality and will throw an error.
+
+        Returns: List[TestResult]
+        """
         raise NotImplementedError("This  function is not implemented.")
 
     def _create_table(self, cur: sqlite3.Cursor) -> None:
-        """Creates test results table"""
+        """Creates a table in the database with the
+        name <participant_id> if it does not exist.
+
+        Args:
+            cur (sqlite3.Cursor): database cursor
+        """
         sql_query = f"""CREATE TABLE IF NOT EXISTS p_{self.participant_id} (
             test_id,
             ability_estimation,
