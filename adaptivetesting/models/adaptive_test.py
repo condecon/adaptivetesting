@@ -1,7 +1,6 @@
 from typing import List
 from .test_item import TestItem
-from ..math.urrys_rule import urrys_rule
-from ..math.standard_error import standard_error
+from adaptivetesting.math import urrys_rule, standard_error
 import abc
 from .test_result import TestResult
 from .item_pool import ItemPool

@@ -1,11 +1,11 @@
 from typing import List
 import numpy as np
-from adaptivetesting import TestItem
+from adaptivetesting.models import TestItem
 import random
 
 
 class PreTest:
-    def __init__(self, items: List[TestItem], seed: int | None = None):
+    def __init__(self, items: List[TestItem], seed: int = None):
         """The pretest class can be used to draw items randomly from quantiles
         of the item pool.
 

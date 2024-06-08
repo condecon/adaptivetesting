@@ -1,7 +1,6 @@
 import math
 from typing import List
 import numpy as np
-from ..models.test_item import TestItem
 from .test_information import test_information_function
 
 

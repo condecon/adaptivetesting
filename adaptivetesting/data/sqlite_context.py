@@ -1,6 +1,6 @@
 from typing import List
-from ..models.test_result import TestResult
-from ..services.test_results_interface import ITestResults
+from adaptivetesting.models import AdaptiveTest, TestResult
+from adaptivetesting.services import ITestResults
 import sqlite3
 
 

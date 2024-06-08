@@ -5,7 +5,7 @@ from typing import List, overload, Tuple
 class ItemPool:
     def __init__(self,
                  test_items: List[TestItem],
-                 simulated_responses: List[int] | None = None):
+                 simulated_responses: List[int] = None):
         """An item pool has to be created for an adaptive test.
         A list of test items has to be provided. If the package is used
         to simulate adaptive tests, simulated responses have to be provided.
@@ -17,10 +17,10 @@ class ItemPool:
             simulated_responses (List[int]): A list of simulated responses. Required for CAT simulations.
         """
         self.test_items: List[TestItem] = test_items
-        self.simulated_responses: List[int] | None = simulated_responses
+        self.simulated_responses: List[int] = simulated_responses
 
     @overload
-    def get_item(self, index: int) -> TestItem | Tuple[TestItem, int]:
+    def get_item(self, index: int) -> Tuple[TestItem, int]:
         """Returns item and if defined the simulated response.
 
         Args:
@@ -36,7 +36,7 @@ class ItemPool:
         else:
             return selected_item
 
-    def get_item(self, item: TestItem) -> TestItem | Tuple[TestItem, int]:
+    def get_item(self, item: TestItem) -> Tuple[TestItem, int]:
         """Returns item and if defined the simulated response.
 
         Args:

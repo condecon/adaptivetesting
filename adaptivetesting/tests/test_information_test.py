@@ -1,5 +1,5 @@
 import unittest
-from ..math.test_information import test_information_function
+from adaptivetesting.math import test_information_function
 import numpy as np
 
 

@@ -1,5 +1,5 @@
 import unittest
-from ..math.standard_error import standard_error
+from adaptivetesting.math import standard_error
 
 class TestStandardError(unittest.TestCase):
     def test_dummy_items(self):

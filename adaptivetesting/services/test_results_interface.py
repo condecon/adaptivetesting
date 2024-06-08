@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..models.test_result import TestResult
+from adaptivetesting.models import TestResult
 from typing import List
 
 
@@ -13,7 +13,8 @@ class ITestResults(ABC):
             simulation_id (str): The simulation ID. Name of the results file.
             participant_id (int): The participant ID.
         """
-        self.filename = f"data/{simulation_id}.db"
+        self.simulation_id = simulation_id
+        self.filename = f"data/{self.simulation_id}.db"
         self.participant_id: int = participant_id
 
     @abstractmethod
