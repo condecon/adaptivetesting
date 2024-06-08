@@ -1,6 +1,8 @@
 from typing import List
-from adaptivetesting.models import ItemPool, AdaptiveTest, AlgorithmException
-from adaptivetesting.math import MLEstimator
+from ..models.adaptive_test import AdaptiveTest
+from ..models.item_pool import ItemPool
+from ..models.algorithm_exception import AlgorithmException
+from ..math import MLEstimator
 
 
 class DefaultImplementation(AdaptiveTest):

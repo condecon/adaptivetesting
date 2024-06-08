@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-from adaptivetesting.models import AlgorithmException
+from ..models.algorithm_exception import AlgorithmException
 
 
 class MLEstimator:

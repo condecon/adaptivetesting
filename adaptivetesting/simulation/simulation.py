@@ -1,6 +1,7 @@
-from adaptivetesting.models import AdaptiveTest
-from adaptivetesting.data import SQLiteContext, PickleContext
-from adaptivetesting.services import ITestResults
+from ..models.adaptive_test import AdaptiveTest
+from ..data.sqlite_context import SQLiteContext
+from ..data.pickle_context import PickleContext
+from ..services.test_results_interface import ITestResults
 from enum import Enum
 
 

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from adaptivetesting.models import TestResult
+from ..models.test_result import TestResult
 from typing import List
 
 

@@ -1,4 +1,4 @@
-from adaptivetesting.models import TestItem
+from ..models.test_item import TestItem
 from typing import List
 
 
