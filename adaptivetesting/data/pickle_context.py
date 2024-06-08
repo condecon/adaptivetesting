@@ -1,8 +1,8 @@
 from typing import List
 import pickle
 import pathlib
-from adaptivetesting.models import TestResult
-from adaptivetesting.services import ITestResults
+from ..models.test_result import TestResult
+from ..services.test_results_interface import ITestResults
 
 
 class PickleContext(ITestResults):

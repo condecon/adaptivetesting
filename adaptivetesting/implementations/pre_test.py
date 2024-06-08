@@ -1,6 +1,6 @@
 from typing import List
 import numpy as np
-from adaptivetesting.models import TestItem
+from ..models.test_item import TestItem
 import random
 
 
