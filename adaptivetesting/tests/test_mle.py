@@ -1,7 +1,6 @@
 import unittest
-from ..math.ml_estimation import MLEstimator
-from ..models.algorithm_exception import AlgorithmException
-import numpy as np
+from adaptivetesting.math import MLEstimator
+from adaptivetesting.models import AlgorithmException
 
 
 class TestMLE(unittest.TestCase):

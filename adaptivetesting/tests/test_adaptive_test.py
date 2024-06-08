@@ -1,7 +1,5 @@
 import unittest
-from ..models.adaptive_test import AdaptiveTest
-from ..models.test_item import TestItem
-from ..models.item_pool import ItemPool
+from adaptivetesting.models import AdaptiveTest, TestItem, ItemPool
 
 item1 = TestItem()
 item1.b = 0.24

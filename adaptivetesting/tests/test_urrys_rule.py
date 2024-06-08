@@ -1,6 +1,6 @@
 import unittest
-from ..math.urrys_rule import urrys_rule
-from ..models.test_item import TestItem
+from adaptivetesting.math import urrys_rule
+from adaptivetesting.models import TestItem
 
 
 class TestUrrysRule(unittest.TestCase):

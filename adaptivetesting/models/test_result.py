@@ -1,18 +1,19 @@
 from dataclasses import dataclass
+from typing import Dict
 
 
 @dataclass
 class TestResult:
     """Representation of simulation test results"""
     test_id: str
-    ability_estimation: float | str
-    standard_error: float | str
+    ability_estimation: float
+    standard_error: float
     showed_item: float
     response: int
     true_ability_level: float
 
     @staticmethod
-    def from_dict(dictionary: dict) -> 'TestResult':
+    def from_dict(dictionary: Dict) -> 'TestResult':
         """Create a TestResult from a dictionary
 
         Args:
