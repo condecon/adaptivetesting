@@ -1,2 +1,2 @@
 #!/bin/bash
-python -m unittest src/adaptivetesting/tests/test*
+python -m unittest adaptivetesting/tests/test*
