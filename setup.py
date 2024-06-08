@@ -2,9 +2,9 @@ import setuptools
 
 setuptools.setup(
     name="adaptivetesting",
-    version="0.0.1",
+    version="1.0.0",
     author="Jonas Engicht",
-    author_email="dev@condecon.de",
+    author_email="jonas.engicht@uni-jena.de",
     url="https://github.com/condecon/adaptivetesting",
     packages=["adaptivetesting", 
               "adaptivetesting.data",
