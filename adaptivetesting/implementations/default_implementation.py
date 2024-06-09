@@ -36,8 +36,13 @@ class DefaultImplementation(AdaptiveTest):
         Estimates latent ability level using ML.
         If responses are only 1 or 0, extreme values
         of the distribution are returned.
-        :param answered_items_difficulties:
-        :return:
+        
+        Args:
+            answered_items_difficulties (List[float]): List of difficulty valus of the answered items
+
+        
+        Returns:
+            estimation: ability estimation
         """
         estimator = MLEstimator(
             self.response_pattern,
