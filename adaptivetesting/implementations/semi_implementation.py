@@ -2,6 +2,7 @@ from typing import List
 from ..models.adaptive_test import AdaptiveTest
 from ..models.item_pool import ItemPool
 from ..models.algorithm_exception import AlgorithmException
+from ..models.test_result import TestResult
 from ..math import MLEstimator
 from .pre_test import PreTest
 
