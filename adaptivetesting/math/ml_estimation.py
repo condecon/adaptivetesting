@@ -40,12 +40,9 @@ class MLEstimator:
             given the ability level
         """
 
-        item_terms = (self.response_pattern * (ability - self.item_difficulties) -
-                      np.log(1 + np.exp(ability - self.item_difficulties)))
+        item_terms = self.response_pattern - 1 + (1 / (np.exp(ability - self.item_difficulties) + 1))
 
-        log_likelihood = np.cumsum(item_terms)[len(item_terms) - 1]
-
-        return log_likelihood
+        return np.cumsum(item_terms)[len(item_terms) - 1]
 
     def _find_max(self) -> float:
         """
