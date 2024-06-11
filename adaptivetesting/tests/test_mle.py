@@ -5,18 +5,6 @@ from adaptivetesting.models import AlgorithmException
 
 class TestMLE(unittest.TestCase):
 
-    def test_mle_tensorflow(self):
-        response_pattern = [0, 1, 0]
-        difficulties = [0.7, 0.9, 0.6]
-        estimator = MLEstimator(
-            response_pattern,
-            difficulties
-        )
-
-        estimation_result = estimator.get_maximum_likelihood_estimation()
-
-        self.assertAlmostEqual(estimation_result, 0.0375530712, 2)
-
     def test_ml_estimation(self):
         response_pattern = [0, 1, 0]
         difficulties = [0.7, 0.9, 0.6]
