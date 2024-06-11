@@ -28,28 +28,25 @@ class MLEstimator:
         """
         return self._find_max()
 
-    def log_likelihood(self, ability: np.ndarray) -> np.ndarray:
-        """
-        Log-Likelihood function. Value is calculated for the given ability level.
+    def d1_log_likelihood(self, ability: np.ndarray) -> float:
+        """First derivative of the log-likelihood function.
 
         Args:
             ability (np.ndarray): ability level
 
         Returns:
-            np.ndarray: Log-Likelihood of the response pattern and item difficulties
-            given the ability level
+            float: log-likelihood value of given ability value
         """
+        item_term: np.ndarray = self.response_pattern - 1 + (
+            1 / (1 + np.exp(ability - self.item_difficulties))
+        )
 
-        item_terms = (self.response_pattern * (ability - self.item_difficulties) -
-                      np.log(1 + np.exp(ability - self.item_difficulties)))
+        return float(np.cumsum(item_term)[-1])
 
-        log_likelihood = np.cumsum(item_terms)[len(item_terms) - 1]
-
-        return log_likelihood
 
     def _find_max(self) -> float:
         """
-        Stars line search algorithm.
+        Starts gradient descent algorithm.
         Do not call directly.
         Instead, use get_maximum_likelihood_estimation.
 
@@ -66,17 +63,14 @@ class MLEstimator:
             float: ability estimation
         """
         previ_abil = -10
-        previ_lik = float("-inf")
 
         for ability in np.arange(previ_abil, 10.1, 0.1):
-            calculated_likelihood = self.log_likelihood(ability)
+            calculated_likelihood = self.d1_log_likelihood(ability)
 
-            if calculated_likelihood <= previ_lik:
+            if calculated_likelihood <= 0:
                 return self.__step_2(ability)
 
             else:
-                # update lik
-                previ_lik = calculated_likelihood
                 previ_abil = ability
 
         raise AlgorithmException()
@@ -88,18 +82,15 @@ class MLEstimator:
         Returns:
             float: ability estimation
         """
-        previ_lik = float("-inf")
         previ_abil = last_max_ability
 
         for ability in np.arange(last_max_ability, last_max_ability - 1, -0.01):
-            calculated_likelihood = self.log_likelihood(ability)
+            calculated_likelihood = self.d1_log_likelihood(ability)
 
-            if calculated_likelihood <= previ_lik:
+            if calculated_likelihood >= 0:
                 return self.__step_3(ability)
 
             else:
-                # update lik
-                previ_lik = calculated_likelihood
                 previ_abil = ability
 
         raise AlgorithmException()
@@ -111,17 +102,14 @@ class MLEstimator:
         Returns:
             float: ability estimation
         """
-        previ_lik = float("-inf")
         previ_abil = last_max_ability
 
         for ability in np.arange(last_max_ability, last_max_ability + 0.5, 0.0001):
-            calculated_likelihood = self.log_likelihood(ability)
+            calculated_likelihood = self.d1_log_likelihood(ability)
 
-            if calculated_likelihood <= previ_lik:
+            if calculated_likelihood <= 0:
                 return previ_abil
 
             else:
-                # update lik
-                previ_lik = calculated_likelihood
                 previ_abil = ability
         raise AlgorithmException()
