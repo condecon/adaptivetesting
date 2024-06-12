@@ -6,7 +6,8 @@ from ..math import MLEstimator
 
 
 class DefaultImplementation(AdaptiveTest):
-
+    """This class represents the Default implementation using
+    Maximum Likelihood Estimation and Urry's rule during the test."""
     def __init__(self, item_pool: ItemPool,
                  simulation_id: str,
                  participant_id: int,
@@ -15,13 +16,21 @@ class DefaultImplementation(AdaptiveTest):
                  simulation=True,
                  debug=False):
         """
+        Args:
+            item_pool (ItemPool): item pool used for the test
 
-        :param items:
-        :param simulation_id:
-        :param participant_id:
-        :param true_ability_level:
-        :param initial_ability_level:
-        :param DEBUG:
+            simulation_id (str): simulation id
+
+            participant_id (int): participant id
+
+            true_ability_level (float): true ability level (must always be set)
+
+            initial_ability_level (float): initially assumed ability level
+
+            simulation (bool): will the test be simulated
+
+            debug (bool): enables debug mode
+
         """
         super().__init__(item_pool,
                          simulation_id,
@@ -38,7 +47,7 @@ class DefaultImplementation(AdaptiveTest):
         of the distribution are returned.
         
         Args:
-            answered_items_difficulties (List[float]): List of difficulty valus of the answered items
+            answered_items_difficulties (List[float]): List of difficulty values of the answered items
 
         
         Returns:
