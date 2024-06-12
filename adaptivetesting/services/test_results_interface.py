@@ -11,6 +11,7 @@ class ITestResults(ABC):
 
         Args:
             simulation_id (str): The simulation ID. Name of the results file.
+
             participant_id (int): The participant ID.
         """
         self.simulation_id = simulation_id

@@ -13,6 +13,7 @@ class MLEstimator:
 
         Args:
             ResponsePattern (List[int]): list of response patterns (0: wrong, 1:right)
+
             ItemDifficulties (List[float]): list of item difficulties
         """
         self.response_pattern = np.array(ResponsePattern)
@@ -42,7 +43,6 @@ class MLEstimator:
         )
 
         return float(np.cumsum(item_term)[-1])
-
 
     def _find_max(self) -> float:
         """
@@ -79,6 +79,9 @@ class MLEstimator:
         """Line search algorithm with step length -0.01
         If no maximum can be found, a AlgorithmException is raised.
 
+        Args:
+            last_max_ability (float): ability value that is the value before the last calculated ability level
+
         Returns:
             float: ability estimation
         """
@@ -98,6 +101,9 @@ class MLEstimator:
     def __step_3(self, last_max_ability: float) -> float:
         """Line search algorithm with step length 0.0001
         If no maximum can be found, a AlgorithmException is raised.
+
+        Args:
+            last_max_ability (float): ability value that is the value before the last calculated ability level
 
         Returns:
             float: ability estimation

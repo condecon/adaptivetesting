@@ -17,10 +17,10 @@ class PickleContext(ITestResults):
 
         Args:
             simulation_id (str): filename
+
             participant_id (int): participant id and table name
         """
         super().__init__(simulation_id, participant_id)
-
 
     def save(self, test_results: List[TestResult]) -> None:
         """Saves a list of test results to a pickle binary file

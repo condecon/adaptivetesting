@@ -25,12 +25,19 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
         Args:
             item_pool (ItemPool): item pool used for the test
+
             simulation_id (str): simulation id
+
             participant_id (int): participant id
+
             true_ability_level (float): true ability level (must always be set)
+
             initial_ability_level (float): initially assumed ability level
+
             simulation (bool): will the test be simulated
+
             debug (bool): enables debug mode
+
             pretest_seed (int): seed used for the random number generator to draw pretest items.
 
         """

@@ -9,6 +9,7 @@ def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
 
     Args:
         items (List[TestItem]): Test items (item pool)
+
         ability (float): Ability level (current ability estimation)
 
     Returns:

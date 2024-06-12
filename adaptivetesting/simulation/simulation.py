@@ -6,11 +6,17 @@ from enum import Enum
 
 
 class ResultOutputFormat(Enum):
+    """
+    Enum for selecting the output format for
+    test results
+    """
     SQLITE = 1
     PICKLE = 2
 
 
 class StoppingCriterion(Enum):
+    """Enum for selecting the stopping criterion
+    for the adaptive test"""
     SE = 1
     LENGTH = 2
 
@@ -19,13 +25,28 @@ class Simulation:
     def __init__(self,
                  test: AdaptiveTest,
                  test_result_output: ResultOutputFormat):
+        """
+        This class can be used for simulating CAT.
+
+        Args:
+            test (AdaptiveTest): instance of an adaptive test implementation (see implementations module)
+
+            test_result_output (ResultOutputFormat): test results output format
+        """
         self.test = test
         self.test_result_output = test_result_output
 
     def simulate(self,
                  criterion: StoppingCriterion = StoppingCriterion.SE,
                  value: float = 0.4):
-        """Runs test until the criterion is met."""
+        """Runs test until the stopping criterion is met.
+
+        Args:
+            criterion (StoppingCriterion): selected stopping criterion
+
+            value (float): either standard error value or test length value that has to be met by the test
+
+        """
         stop_test = False
         while stop_test is False:
             # run test

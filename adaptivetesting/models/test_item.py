@@ -21,7 +21,7 @@ def load_test_items_from_list(source: List[float]) -> List[TestItem]:
         source (List[float]): Item difficulties
 
     Returns:
-        List[TestItem]: 
+        List[TestItem]: item pool
     """
     items: List[TestItem] = []
 

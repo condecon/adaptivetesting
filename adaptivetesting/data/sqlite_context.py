@@ -14,6 +14,7 @@ class SQLiteContext(ITestResults):
 
         Args:
             simulation_id (str): db filename
+
             participant_id (int): participant id and table name
         """
         super().__init__(simulation_id, participant_id)
