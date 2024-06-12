@@ -21,6 +21,15 @@ class AdaptiveTest(abc.ABC):
 
         Abstract methods:
             - estimate_ability_level
+
+        Args:
+            item_pool (ItemPool): item pool used for the test
+            simulation_id (str): simulation id
+            participant_id (int): participant id
+            true_ability_level (float): true ability level (must always be set)
+            initial_ability_level (float): initially assumed ability level
+            simulation (bool): will the test be simulated
+            DEBUG (bool): enables debug mode
         """
         self.true_ability_level: float = true_ability_level
         self.simulation_id = simulation_id
@@ -88,7 +97,7 @@ class AdaptiveTest(abc.ABC):
 
     def get_response(self, item: TestItem) -> int:
         """If the adaptive test is not used for simulation.
-        This method is used to get user feedback
+        This method is used to get user feedback.
 
         Args:
             item (TestItem): test item shown to the participant
