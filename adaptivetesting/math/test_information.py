@@ -10,6 +10,7 @@ def test_information_function(
 
     Args:
         item_difficulties (np.ndarray): List of answered items
+
         ability_level (np.ndarray): Currently estimated ability level
 
     Returns:

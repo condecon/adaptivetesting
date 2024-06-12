@@ -14,6 +14,7 @@ class ItemPool:
 
         Args:
             test_items (List[TestItem]): A list of test items. Necessary for any adaptive test.
+
             simulated_responses (List[int]): A list of simulated responses. Required for CAT simulations.
         """
         self.test_items: List[TestItem] = test_items
@@ -54,6 +55,16 @@ class ItemPool:
             return selected_item
 
     def get_item_response(self, item: TestItem) -> int:
+        """
+        Gets the simulated response to an item if available.
+        A `ValueError` will be raised if no simulated response is available.
+
+        Args:
+            item (TestItem): item to get the corresponding response
+
+        Returns:
+            (int): response (either `0` or `1`)
+        """
         if self.simulated_responses is None:
             raise ValueError("Simulated responses not provided")
         else:

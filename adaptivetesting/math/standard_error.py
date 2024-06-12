@@ -8,7 +8,8 @@ def standard_error(answered_items: List[float], estimated_ability_level: float) 
     """Calculates standard error using test information function.
 
     Args:
-        answered_items (List[TestItem]): List of answered items
+        answered_items (List[float]): List of answered items
+
         estimated_ability_level (float): Currently estimated ability level
 
     Returns:

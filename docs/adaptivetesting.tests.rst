@@ -1,4 +1,5 @@
 adaptivetesting.tests package
 =============================
 
-This module is not documented. Please, refer to the source code instead.
+This module includes unittests for the functionality of the package.
+There is no explicit documentation available.

@@ -17,7 +17,7 @@ class TestResult:
         """Create a TestResult from a dictionary
 
         Args:
-            dictionary: with the fields 'test_id', 'ability_estimation', 'standard_error', 'showed_item', 'response',
-            'true_ability_level'
+            dictionary: with the fields `test_id`, `ability_estimation`, `standard_error`, `showed_item`, `response`,
+            `true_ability_level`
         """
         return TestResult(**dictionary)

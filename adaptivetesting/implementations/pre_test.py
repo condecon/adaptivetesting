@@ -12,6 +12,7 @@ class PreTest:
 
         Args:
             items: Item pool
+
             seed (int): A seed for the item selection can be provided.
                 If not, the item selection will be drawn randomly, and you will not be able
                 to reproduce the results.

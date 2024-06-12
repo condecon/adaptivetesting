@@ -24,11 +24,17 @@ class AdaptiveTest(abc.ABC):
 
         Args:
             item_pool (ItemPool): item pool used for the test
+
             simulation_id (str): simulation id
+
             participant_id (int): participant id
+
             true_ability_level (float): true ability level (must always be set)
+
             initial_ability_level (float): initially assumed ability level
+
             simulation (bool): will the test be simulated
+
             DEBUG (bool): enables debug mode
         """
         self.true_ability_level: float = true_ability_level
@@ -113,9 +119,6 @@ class AdaptiveTest(abc.ABC):
         Saves the result to test_results of
         the current instance.
         """
-
-        """Runs the test once and saves the results
-        to self.test_results"""
         # get item
         item = self.get_next_item()
         if self.DEBUG:
