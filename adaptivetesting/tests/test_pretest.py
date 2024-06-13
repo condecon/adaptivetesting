@@ -23,6 +23,8 @@ items = [item0, item1, item2, item3, item4]
 test = PreTest(
     items=items
 )
+# a seed is not set because
+# the random selection should only allow one solution
 
 
 class TestPreTest(unittest.TestCase):
