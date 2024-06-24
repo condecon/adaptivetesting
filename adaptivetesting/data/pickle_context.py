@@ -16,7 +16,7 @@ class PickleContext(ITestResults):
         on the used python version.
 
         Args:
-            simulation_id (str): filename
+            simulation_id (str): Not used but required by interface
 
             participant_id (int): participant id and table name
         """
