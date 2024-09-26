@@ -5,7 +5,7 @@ from .test_information import test_information_function
 
 
 def standard_error(answered_items: List[float], estimated_ability_level: float) -> float:
-    """Calculates standard error using test information function.
+    """Calculates the standard error using the test information function.
 
     Args:
         answered_items (List[float]): List of answered items

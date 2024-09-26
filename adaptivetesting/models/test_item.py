@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 
 class TestItem:
-    """Representation of test item in the item pool.
-    The format is equal to implementation of catR.
+    """Representation of a test item in the item pool.
+    The format is equal to the implementation in catR.
     """
     def __init__(self):
         self.id: int = None
@@ -15,7 +15,7 @@ class TestItem:
 
 
 def load_test_items_from_list(source: List[float]) -> List[TestItem]:
-    """Creates test items from list.
+    """Creates test items from a list of floats.
 
     Args:
         source (List[float]): Item difficulties

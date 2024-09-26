@@ -3,7 +3,7 @@ from typing import List
 
 
 def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
-    """Urry's rule will select the test item
+    """Urry's rule selects the test item
     which has the minimal difference between
     the item's difficulty and the ability level.
 

@@ -54,16 +54,18 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
     def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float:
         """
-       Estimates latent ability level using MLE.
-       If responses are only 1 or 0, extreme values
-       of the distribution are returned.
+        Estimates latent ability level using ML.
+        If responses are only 1 or 0,
+        the ability will be set to one
+        of the boundaries of the estimation interval (`[-10,10]`).
 
-       Args:
-           answered_items_difficulties: Item difficulties of the answered items.
+        Args:
+            answered_items_difficulties (List[float]): List of difficulty values of the answered items
 
-       Returns:
-           float: Estimated ability level.
-       """
+
+        Returns:
+            estimation: ability estimation
+        """
         estimator = MLEstimator(
             self.response_pattern,
             self.get_answered_items_difficulties()
