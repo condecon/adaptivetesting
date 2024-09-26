@@ -12,11 +12,11 @@ class PickleContext(ITestResults):
         """Implementation of the ITestResults interface for
         saving test results to the pickle format.
         The resulting pickle file <simulation_id>.pickle
-        will be of standard pickle format which depends
+        will be of the standard pickle format which depends
         on the used python version.
 
         Args:
-            simulation_id (str): Not used but required by interface
+            simulation_id (str): Not used but required by the interface
 
             participant_id (int): participant id and table name
         """
@@ -43,7 +43,8 @@ class PickleContext(ITestResults):
         """Loads results from the database.
         The implementation of this method is required
         by the interface. However, is does not have
-        any implemented functionality and will throw an error.
+        any implemented functionality and will throw an error
+        if used.
 
         Returns: List[TestResult]
         """

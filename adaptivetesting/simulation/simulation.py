@@ -8,7 +8,7 @@ from enum import Enum
 class ResultOutputFormat(Enum):
     """
     Enum for selecting the output format for
-    test results
+    the test results
     """
     SQLITE = 1
     PICKLE = 2
@@ -61,7 +61,7 @@ class Simulation:
                     stop_test = self.test.check_length_criterion(value)
 
     def save_test_results(self):
-        """Saves test results to the specified output format."""
+        """Saves the test results to the specified output format."""
         data_context: ITestResults
         if self.test_result_output == ResultOutputFormat.PICKLE:
             data_context = PickleContext(simulation_id=self.test.simulation_id,

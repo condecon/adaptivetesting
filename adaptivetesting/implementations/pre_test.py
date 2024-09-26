@@ -7,7 +7,8 @@ import random
 class PreTest:
     def __init__(self, items: List[TestItem], seed: int = None):
         """
-        The pretest class can be used to draw items randomly from quantiles
+        The pretest class can be used to draw items randomly from
+        difficulty quantiles
         of the item pool.
 
         Args:

@@ -7,9 +7,9 @@ class ItemPool:
                  test_items: List[TestItem],
                  simulated_responses: List[int] = None):
         """An item pool has to be created for an adaptive test.
-        A list of test items has to be provided. If the package is used
-        to simulate adaptive tests, simulated responses have to be provided.
-        Responses are matched to the items internally.
+        For that, a list of test items has to be provided. If the package is used
+        to simulate adaptive tests, simulated responses have to be supplied as well.
+        The responses are matched to the items internally.
         Therefore, both have to be in the same order.
 
         Args:
@@ -57,7 +57,7 @@ class ItemPool:
     def get_item_response(self, item: TestItem) -> int:
         """
         Gets the simulated response to an item if available.
-        A `ValueError` will be raised if no simulated response is available.
+        A `ValueError` will be raised if a simulated response is not available.
 
         Args:
             item (TestItem): item to get the corresponding response

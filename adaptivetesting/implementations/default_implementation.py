@@ -43,8 +43,9 @@ class DefaultImplementation(AdaptiveTest):
     def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float:
         """
         Estimates latent ability level using ML.
-        If responses are only 1 or 0, extreme values
-        of the distribution are returned.
+        If responses are only 1 or 0,
+        the ability will be set to one
+        of the boundaries of the estimation interval (`[-10,10]`).
         
         Args:
             answered_items_difficulties (List[float]): List of difficulty values of the answered items

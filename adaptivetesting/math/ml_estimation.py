@@ -4,7 +4,7 @@ from ..models.algorithm_exception import AlgorithmException
 
 
 class MLEstimator:
-    def __init__(self, ResponsePattern: List[int], ItemDifficulties: List[float]):
+    def __init__(self, response_pattern: List[int], item_difficulties: List[float]):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
         item difficulties.
@@ -12,17 +12,17 @@ class MLEstimator:
         Rasch model.
 
         Args:
-            ResponsePattern (List[int]): list of response patterns (0: wrong, 1:right)
+            response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
 
-            ItemDifficulties (List[float]): list of item difficulties
+            item_difficulties (List[float]): list of item difficulties
         """
-        self.response_pattern = np.array(ResponsePattern)
-        self.item_difficulties = np.array(ItemDifficulties)
+        self.response_pattern = np.array(response_pattern)
+        self.item_difficulties = np.array(item_difficulties)
 
     def get_maximum_likelihood_estimation(self) -> float:
         """Estimate the current ability level by searching
         for the maximum of the likelihood function.
-        Therefore, a line-search algorithm is used.
+        A line-search algorithm is used.
 
         Returns:
             float: ability estimation

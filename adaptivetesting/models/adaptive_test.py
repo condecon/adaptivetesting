@@ -91,7 +91,7 @@ class AdaptiveTest(abc.ABC):
     def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float:
         """
         Estimates ability level.
-        Has to be implemented.
+        The method has to be implemented by subclasses.
 
         Args:
             answered_items_difficulties (List[float]): difficulties of answered items
