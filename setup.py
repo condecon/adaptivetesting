@@ -22,6 +22,7 @@ adaptivetesting is a Python package that can be used to simulate and evaluate CA
               "adaptivetesting.simulation",
               "adaptivetesting.tests"],
     install_requires=[
-        "numpy"
-    ]
+        "numpy>=1.20.0"
+    ],
+    license="Mozilla Public License Version 2.0"
 )
