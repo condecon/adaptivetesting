@@ -38,4 +38,4 @@ retaining full compatability with the packages' functionality.
 ![Schematic overview of the Semi-Adaptive implementation](/images/semi-adaptive.svg)
 
 ## Documentation
-Extensive documentation of all programm code is available at ....
+Extensive documentation of all programm code is available at [`/documentation`](/documentation).

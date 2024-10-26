@@ -1,0 +1,89 @@
+adaptivetesting.math package
+****************************
+
+
+adaptivetesting.math.MLEstimator
+================================
+
+class adaptivetesting.math.MLEstimator(response_pattern: List[int], item_difficulties: List[float])
+
+   Bases: "object"
+
+   This class can be used to estimate the current ability level of a
+   respondent given the response pattern and the corresponding item
+   difficulties. The estimation is based on maximum likelihood
+   estimation and the Rasch model.
+
+   Args:
+      response_pattern (List[int]): list of response patterns (0:
+      wrong, 1:right)
+
+      item_difficulties (List[float]): list of item difficulties
+
+   d1_log_likelihood(ability: ndarray) -> float
+
+      First derivative of the log-likelihood function.
+
+      Args:
+         ability (np.ndarray): ability level
+
+      Returns:
+         float: log-likelihood value of given ability value
+
+   get_maximum_likelihood_estimation() -> float
+
+      Estimate the current ability level by searching for the maximum
+      of the likelihood function. A line-search algorithm is used.
+
+      Returns:
+         float: ability estimation
+
+
+adaptivetesting.math.standard_error
+===================================
+
+adaptivetesting.math.standard_error(answered_items: List[float], estimated_ability_level: float) -> float
+
+   Calculates the standard error using the test information function.
+
+   Args:
+      answered_items (List[float]): List of answered items
+
+      estimated_ability_level (float): Currently estimated ability
+      level
+
+   Returns:
+      float: Standard error
+
+
+adaptivetesting.math.test_information_function
+==============================================
+
+adaptivetesting.math.test_information_function(item_difficulties: ndarray, ability_level: ndarray) -> float
+
+   Calculates test information.
+
+   Args:
+      item_difficulties (np.ndarray): List of answered items
+
+      ability_level (np.ndarray): Currently estimated ability level
+
+   Returns:
+      float: test information
+
+
+adaptivetesting.math.urrys_rule
+===============================
+
+adaptivetesting.math.urrys_rule(items: List[TestItem], ability: float) -> TestItem
+
+   Urry’s rule selects the test item which has the minimal difference
+   between the item’s difficulty and the ability level.
+
+   Args:
+      items (List[TestItem]): Test items (item pool)
+
+      ability (float): Ability level (current ability estimation)
+
+   Returns:
+      TestItem: selected test item
