@@ -1,0 +1,61 @@
+adaptivetesting.simulation package
+**********************************
+
+
+adaptivetesting.simulation.ResultOutputFormat
+=============================================
+
+class adaptivetesting.simulation.ResultOutputFormat(value, names=None, *, module=None, qualname=None, type=None, start=1, boundary=None)
+
+   Bases: "Enum"
+
+   Enum for selecting the output format for the test results
+
+   PICKLE = 2
+
+   SQLITE = 1
+
+
+adaptivetesting.simulation.StoppingCriterion
+============================================
+
+class adaptivetesting.simulation.StoppingCriterion(value, names=None, *, module=None, qualname=None, type=None, start=1, boundary=None)
+
+   Bases: "Enum"
+
+   Enum for selecting the stopping criterion for the adaptive test
+
+   LENGTH = 2
+
+   SE = 1
+
+
+adaptivetesting.simulation.Simulation
+=====================================
+
+class adaptivetesting.simulation.Simulation(test: AdaptiveTest, test_result_output: ResultOutputFormat)
+
+   Bases: "object"
+
+   This class can be used for simulating CAT.
+
+   Args:
+      test (AdaptiveTest): instance of an adaptive test implementation
+      (see implementations module)
+
+      test_result_output (ResultOutputFormat): test results output
+      format
+
+   save_test_results()
+
+      Saves the test results to the specified output format.
+
+   simulate(criterion: StoppingCriterion = StoppingCriterion.SE, value: float = 0.4)
+
+      Runs test until the stopping criterion is met.
+
+      Args:
+         criterion (StoppingCriterion): selected stopping criterion
+
+         value (float): either standard error value or test length
+         value that has to be met by the test
