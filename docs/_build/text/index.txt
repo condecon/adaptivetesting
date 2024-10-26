@@ -1,0 +1,20 @@
+adaptivetesting
+***************
+
+
+Contents:
+^^^^^^^^^
+
+* adaptivetesting.data package
+
+* adaptivetesting.implementations package
+
+* adaptivetesting.math package
+
+* adaptivetesting.models package
+
+* adaptivetesting.simulation package
+
+* adaptivetesting.services package
+
+* adaptivetesting.tests package
