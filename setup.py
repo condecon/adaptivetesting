@@ -1,5 +1,10 @@
 import setuptools
 
+with open("README.md", "r") as file:
+    long_description = file.read()
+    file.close()
+
+
 setuptools.setup(
     name="adaptivetesting",
     version="1.0.0",
@@ -7,11 +12,9 @@ setuptools.setup(
     author_email="jonas.engicht@uni-jena.de",
     maintainer="Jonas Engicht",
     maintainer_email="jonas.engicht@uni-jena.de",
-    description="A Python package for Computerized Adaptive Testing",
-    long_description="""
-adaptivetesting is a Python package that can be used to simulate and evaluate CAT scenarios as well as implement them in real-world testing scenarios from a single codebase.
-""",
-    long_description_content_type="text",
+    description="adaptivetesting is a Python package that can be used to simulate and evaluate custom CAT scenarios as well as implement them in real-world testing scenarios from a single codebase",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/condecon/adaptivetesting",
     packages=["adaptivetesting", 
               "adaptivetesting.data",
