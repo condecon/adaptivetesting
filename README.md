@@ -1,4 +1,7 @@
 # adaptivetesting
+[![Unittests](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml)
+[![Deploy to PyPi](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml)
+
 _adaptivetesting_ is a Python package for computer-aided adaptive 
 testing that can be used to simulate and implement custom adaptive tests 
 in real-world testing scenarios.
