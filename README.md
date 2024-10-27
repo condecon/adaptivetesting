@@ -1,7 +1,7 @@
 # adaptivetesting
-_adaptivetesting_ is a Python package for Computerized Adaptive Testing
-that can be used for simulating as well as implementing adaptive tests
-into real testing scenarios.
+_adaptivetesting_ is a Python package for computer-aided adaptive 
+testing that can be used to simulate and implement custom adaptive tests 
+in real-world testing scenarios.
 
 ## Getting Started
 
@@ -28,6 +28,8 @@ Custom testing procedures can be implemented by implementing
 the abstract class ``AdaptiveTest``.
 Any existing functionality can be overridden while still
 retaining full compatability with the packages' functionality.
+For more information, please consult the documentation for the ``AdaptiveTest`` class
+([``AdaptiveTest`` documentation](/documentation/adaptivetesting.models.txt)).
 
 ## Implementations
 ### Default implementation
