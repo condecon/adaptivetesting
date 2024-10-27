@@ -27,5 +27,7 @@ setuptools.setup(
     install_requires=[
         "numpy>=1.20.0"
     ],
-    license="Mozilla Public License Version 2.0"
+    license="Mozilla Public License Version 2.0",
+    keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"],
+    python_requires=">3.10"
 )
