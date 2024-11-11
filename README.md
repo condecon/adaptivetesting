@@ -11,6 +11,13 @@ in real-world testing scenarios.
 Required Python version: >= 3.11 (other versions may work, but they are not officially supported)
 
 ``
+pip install adaptivetesting
+``
+
+If you want to install the current development version,
+you can do so by running the following command:
+
+``
 pip install git+https://github.com/condecon/adaptivetesting
 ``
 
