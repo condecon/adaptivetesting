@@ -60,7 +60,7 @@ class DefaultImplementation(AdaptiveTest):
         )
         estimation: float = float("NaN")
         try:
-            estimation = estimator.get_maximum_likelihood_estimation()
+            estimation = estimator.get_estimation()
         except AlgorithmException as exception:
             # check if all responses are the same
             if len(set(self.response_pattern)) == 1:

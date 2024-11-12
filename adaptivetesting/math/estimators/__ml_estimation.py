@@ -1,9 +1,10 @@
 from typing import List
 import numpy as np
-from ..models.__algorithm_exception import AlgorithmException
+from ...models.__algorithm_exception import AlgorithmException
+from ...services.__estimator_interface import IEstimator
 
 
-class MLEstimator:
+class MLEstimator(IEstimator):
     def __init__(self, response_pattern: List[int], item_difficulties: List[float]):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
@@ -19,7 +20,7 @@ class MLEstimator:
         self.response_pattern = np.array(response_pattern)
         self.item_difficulties = np.array(item_difficulties)
 
-    def get_maximum_likelihood_estimation(self) -> float:
+    def get_estimation(self) -> float:
         """Estimate the current ability level by searching
         for the maximum of the likelihood function.
         A line-search algorithm is used.

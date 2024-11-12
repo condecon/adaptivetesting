@@ -1,6 +1,6 @@
 from typing import List
 from .__test_item import TestItem
-from ..math.__urrys_rule import urrys_rule
+from ..math.item_selection.__urrys_rule import urrys_rule
 from ..math.__standard_error import standard_error
 import abc
 from .__test_result import TestResult

@@ -1,4 +1,4 @@
-from ..models.__test_item import TestItem
+from ...models.__test_item import TestItem
 from typing import List
 
 
