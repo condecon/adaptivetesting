@@ -1,5 +1,6 @@
 from ...models.__test_item import TestItem
 from typing import List
+from ...models.__item_selection_exception import ItemSelectionException
 
 
 def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
@@ -28,4 +29,5 @@ def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
     for item in items:
         if abs(ability - item.b) == minimal_difference:
             return item
-        
+
+    raise ItemSelectionException("No appropriate item could be selected.")

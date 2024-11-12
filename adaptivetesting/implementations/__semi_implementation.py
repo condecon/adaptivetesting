@@ -117,8 +117,8 @@ class SemiAdaptiveImplementation(AdaptiveTest):
         # create test results for all n-1 random items
         for i in range(0, len(random_items) - 1):
             result = TestResult(
-                ability_estimation="NULL",
-                standard_error="NULL",
+                ability_estimation=float("nan"),
+                standard_error=float("nan"),
                 showed_item=random_items[i].b,
                 response=self.response_pattern[i],
                 test_id=self.simulation_id,

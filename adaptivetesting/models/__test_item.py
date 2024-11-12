@@ -7,9 +7,9 @@ class TestItem:
     The format is equal to the implementation in catR.
     """
     def __init__(self):
-        self.id: int = None
+        self.id: int | None = None
         self.a: float = 1
-        self.b: float = None
+        self.b: float = float("nan")
         self.c: float = 0
         self.d: float = 1
 

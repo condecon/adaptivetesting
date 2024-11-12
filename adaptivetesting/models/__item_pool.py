@@ -5,7 +5,7 @@ from typing import List, overload, Tuple
 class ItemPool:
     def __init__(self,
                  test_items: List[TestItem],
-                 simulated_responses: List[int] = None):
+                 simulated_responses: List[int] | None = None):
         """An item pool has to be created for an adaptive test.
         For that, a list of test items has to be provided. If the package is used
         to simulate adaptive tests, simulated responses have to be supplied as well.
@@ -18,10 +18,9 @@ class ItemPool:
             simulated_responses (List[int]): A list of simulated responses. Required for CAT simulations.
         """
         self.test_items: List[TestItem] = test_items
-        self.simulated_responses: List[int] = simulated_responses
+        self.simulated_responses: List[int] | None = simulated_responses
 
-    @overload
-    def get_item(self, index: int) -> Tuple[TestItem, int]:
+    def get_item(self, index: int) -> Tuple[TestItem, int] | TestItem:
         """Returns item and if defined the simulated response.
 
         Args:
@@ -36,8 +35,9 @@ class ItemPool:
             return selected_item, simulated_response
         else:
             return selected_item
-
-    def get_item(self, item: TestItem) -> Tuple[TestItem, int]:
+    
+    @overload # type: ignore
+    def get_item(self, item: TestItem) -> Tuple[TestItem, int] | TestItem:
         """Returns item and if defined the simulated response.
 
         Args:
@@ -68,7 +68,7 @@ class ItemPool:
         if self.simulated_responses is None:
             raise ValueError("Simulated responses not provided")
         else:
-            i, res = self.get_item(item)
+            i, res = self.get_item(item) # type: ignore
             return res
 
     def delete_item(self, item: TestItem) -> None:

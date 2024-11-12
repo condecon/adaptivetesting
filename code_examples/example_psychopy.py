@@ -1,6 +1,6 @@
 from typing import List
-from psychopy import visual, event
-from psychopy.hardware import keyboard
+from psychopy import visual, event # type: ignore
+from psychopy.hardware import keyboard # type: ignore
 from adaptivetesting.implementations import DefaultImplementation
 from adaptivetesting.models import AdaptiveTest , ItemPool, TestItem, load_test_items_from_list
 from adaptivetesting.data import PickleContext
@@ -43,7 +43,7 @@ adaptive_test: AdaptiveTest = DefaultImplementation(
     item_pool=item_pool,
     simulation_id="0",
     participant_id=0,
-    true_ability_level=None,
+    true_ability_level=None, # type: ignore
     simulation=False
 )
 
@@ -91,7 +91,7 @@ def get_response(item: TestItem) -> int:
                 return 0
 
 # override adaptive test standard function
-adaptive_test.get_response = get_response
+adaptive_test.get_response = get_response # type: ignore
 
 # start adaptive test
 while True:
