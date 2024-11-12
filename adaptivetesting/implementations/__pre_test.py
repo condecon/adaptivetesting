@@ -31,7 +31,7 @@ class PreTest:
         quantiles = np.array([])
         # calculate quantiles
         for q in [0.25, 0.5, 0.75]:
-            quantile: np.ndarray = np.quantile(np.array(difficulties), q)
+            quantile: np.floating = np.quantile(difficulties, q)
             quantiles = np.append(quantiles, quantile)
 
         return quantiles

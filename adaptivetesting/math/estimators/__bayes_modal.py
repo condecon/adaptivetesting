@@ -6,4 +6,4 @@ class BayesModal(IEstimator):
 
 
     def get_estimation(self):
-        return super().get_estimation()
+        pass
