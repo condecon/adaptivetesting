@@ -4,10 +4,10 @@ class TestItem:
         The format is equal to the implementation in catR.
 
         Properties:
-            - a (float):
+            - a (float): discrimination
             - b (float): difficulty
-            - c (float):
-            - d (float):
+            - c (float): pseudo-guessing
+            - d (float): inattention
 
         """
         self.id: int | None = None
