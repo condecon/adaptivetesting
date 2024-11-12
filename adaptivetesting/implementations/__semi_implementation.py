@@ -3,7 +3,7 @@ from ..models.__adaptive_test import AdaptiveTest
 from ..models.__item_pool import ItemPool
 from ..models.__algorithm_exception import AlgorithmException
 from ..models.__test_result import TestResult
-from ..math import MLEstimator
+from ..math.estimators.__ml_estimation import MLEstimator
 from .__pre_test import PreTest
 
 

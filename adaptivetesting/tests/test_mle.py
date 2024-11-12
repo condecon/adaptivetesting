@@ -1,5 +1,5 @@
 import unittest
-from adaptivetesting.math import MLEstimator
+from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.models import AlgorithmException
 
 

@@ -1,5 +1,5 @@
 import unittest
-from adaptivetesting.math import urrys_rule
+from adaptivetesting.math.item_selection import urrys_rule
 from adaptivetesting.models import TestItem
 
 

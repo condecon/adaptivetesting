@@ -2,7 +2,7 @@ from typing import List
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__item_pool import ItemPool
 from ..models.__algorithm_exception import AlgorithmException
-from ..math import MLEstimator
+from ..math.estimators.__ml_estimation import MLEstimator
 
 
 class DefaultImplementation(AdaptiveTest):
