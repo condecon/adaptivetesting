@@ -1,10 +1,10 @@
 from typing import List
-from ..models.adaptive_test import AdaptiveTest
-from ..models.item_pool import ItemPool
-from ..models.algorithm_exception import AlgorithmException
-from ..models.test_result import TestResult
+from ..models.__adaptive_test import AdaptiveTest
+from ..models.__item_pool import ItemPool
+from ..models.__algorithm_exception import AlgorithmException
+from ..models.__test_result import TestResult
 from ..math import MLEstimator
-from .pre_test import PreTest
+from .__pre_test import PreTest
 
 
 class SemiAdaptiveImplementation(AdaptiveTest):

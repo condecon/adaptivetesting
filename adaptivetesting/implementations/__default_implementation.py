@@ -1,7 +1,7 @@
 from typing import List
-from ..models.adaptive_test import AdaptiveTest
-from ..models.item_pool import ItemPool
-from ..models.algorithm_exception import AlgorithmException
+from ..models.__adaptive_test import AdaptiveTest
+from ..models.__item_pool import ItemPool
+from ..models.__algorithm_exception import AlgorithmException
 from ..math import MLEstimator
 
 

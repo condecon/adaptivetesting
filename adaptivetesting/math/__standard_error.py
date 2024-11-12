@@ -1,7 +1,7 @@
 import math
 from typing import List
 import numpy as np
-from .test_information import test_information_function
+from .__test_information import test_information_function
 
 
 def standard_error(answered_items: List[float], estimated_ability_level: float) -> float:
