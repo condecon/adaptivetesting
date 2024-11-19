@@ -15,7 +15,7 @@ class TestLoadTestItems(TestCase):
         self.item2.c = 1.9
 
     def test_load_test_items_from_dict_success(self):
-        source_dictionary = {
+        source_dictionary: dict[str, list[float]] = {
             "a": [0.9, 1.9],
             "b": [5, 3],
             "c": [0.9, 1.9],
@@ -24,10 +24,10 @@ class TestLoadTestItems(TestCase):
 
         generated = load_test_items_from_dict(source_dictionary)
 
-        self.assertEqual([self.item1.__dict__(), self.item2.__dict__()], [i.__dict__() for i in generated])
+        self.assertEqual([self.item1.as_dict(), self.item2.as_dict()], [i.as_dict() for i in generated])
 
     def test_load_test_items_from_dict_error_none(self):
-        source_dictionary = {
+        source_dictionary: dict[str, list[float]] = {
             "a": [0.9, 1.9],
             "b": [5, 3],
             "c": [0.9, 1.9],
@@ -37,7 +37,7 @@ class TestLoadTestItems(TestCase):
             load_test_items_from_dict(source_dictionary)
 
     def test_load_test_items_from_dict_error_length(self):
-        source_dictionary = {
+        source_dictionary: dict[str, list[float]] = {
             "a": [0.9, 1.9],
             "b": [5, 3],
             "c": [0.9, 1.9],

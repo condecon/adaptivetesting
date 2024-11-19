@@ -20,7 +20,7 @@ class TestItem:
         self.c: float = 0
         self.d: float = 1
     
-    def __dict__(self):
+    def as_dict(self) -> dict[str, float]:
         return {
             "a": self.a,
             "b": self.b,
