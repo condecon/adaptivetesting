@@ -51,3 +51,15 @@ For more information, please consult the documentation for the ``AdaptiveTest`` 
 
 ## Documentation
 Extensive documentation of all programm code is available at [`/documentation`](/documentation).
+
+
+# ToDo:
+
+- 4PL Model
+    - ML
+    - Item Bank
+    - Test Information
+    - Implementations
+
+- Bayes Modal
+    - Change AdaptiveTesting stucture
