@@ -1,5 +1,6 @@
 from typing import List
 import numpy as np
+from scipy.optimize import minimize, OptimizeResult, Bounds
 from ...models.__algorithm_exception import AlgorithmException
 from ...services.__estimator_interface import IEstimator
 
@@ -30,7 +31,7 @@ class MLEstimator(IEstimator):
         """
         return self._find_max()
 
-    def d1_log_likelihood(self, ability: np.ndarray) -> float:
+    def likelihood(self, ability: np.ndarray) -> float:
         """First derivative of the log-likelihood function.
 
         Args:
@@ -39,11 +40,14 @@ class MLEstimator(IEstimator):
         Returns:
             float: log-likelihood value of given ability value
         """
-        item_term: np.ndarray = self.response_pattern - 1 + (
-            1 / (1 + np.exp(ability - self.item_difficulties))
-        )
+        mu_T = ability[..., None]
 
-        return float(np.cumsum(item_term)[-1])
+        item_term_up = np.exp(self.response_pattern * (mu_T - self.item_difficulties))
+        item_term_down = 1 + np.exp(mu_T - self.item_difficulties)
+        item_term = item_term_up / item_term_down
+
+        cumprod = np.cumprod(item_term, axis=1)[:, -1]
+        return -cumprod
 
     def _find_max(self) -> float:
         """
@@ -53,70 +57,19 @@ class MLEstimator(IEstimator):
 
         Returns:
             float: ability estimation
+
+        Raises:
+            AlgorithmException
         """
-        return self.__step_1()
-
-    def __step_1(self) -> float:
-        """Line search algorithm with step length 0.1
-        If no maximum can be found, a AlgorithmException is raised.
-
-        Returns:
-            float: ability estimation
-        """
-        previ_abil = -10
-
-        for ability in np.arange(previ_abil, 10.1, 0.1):
-            calculated_likelihood = self.d1_log_likelihood(ability)
-
-            if calculated_likelihood <= 0:
-                return self.__step_2(ability)
-
-            else:
-                previ_abil = ability
-
-        raise AlgorithmException()
-
-    def __step_2(self, last_max_ability: float) -> float:
-        """Line search algorithm with step length -0.01
-        If no maximum can be found, a AlgorithmException is raised.
-
-        Args:
-            last_max_ability (float): ability value that is the value before the last calculated ability level
-
-        Returns:
-            float: ability estimation
-        """
-        previ_abil = last_max_ability
-
-        for ability in np.arange(last_max_ability, last_max_ability - 1, -0.01):
-            calculated_likelihood = self.d1_log_likelihood(ability)
-
-            if calculated_likelihood >= 0:
-                return self.__step_3(ability)
-
-            else:
-                previ_abil = ability
-
-        raise AlgorithmException()
-
-    def __step_3(self, last_max_ability: float) -> float:
-        """Line search algorithm with step length 0.0001
-        If no maximum can be found, a AlgorithmException is raised.
-
-        Args:
-            last_max_ability (float): ability value that is the value before the last calculated ability level
-
-        Returns:
-            float: ability estimation
-        """
-        previ_abil = last_max_ability
-
-        for ability in np.arange(last_max_ability, last_max_ability + 0.5, 0.0001):
-            calculated_likelihood = self.d1_log_likelihood(ability)
-
-            if calculated_likelihood <= 0:
-                return previ_abil
-
-            else:
-                previ_abil = ability
-        raise AlgorithmException()
+        result: OptimizeResult = minimize(self.likelihood,
+                                          x0=np.array([-10]),
+                                          method="L-BFGS-B")
+        if result.success == False:
+            raise AlgorithmException("Algorithm did not converge!")
+        
+        x_float: float = result.x.astype(float)[0]
+        if x_float < -10:
+            raise AlgorithmException("Algorithm did not converge correctly!")
+        else:
+            return result.x.astype(float)[0]
+        

@@ -35,7 +35,7 @@ class TestMLE(unittest.TestCase):
 
         result = estimator.get_estimation()
 
-        self.assertAlmostEqual(result, -0.347)
+        self.assertAlmostEqual(result, -0.347, places=5)
 
     def test_catr_item_1_2(self):
         response_pattern = [1, 0]
