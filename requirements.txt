@@ -1,6 +1,10 @@
 numpy>=1.20.0
+scipy>=1.13.0
+pandas>=2.2.0
+# devtools
 sphinx>=8.1.3
 sphinx-book-theme>=1.1.3
 setuptools>=75.2.0
 build
 twine
+mypy
