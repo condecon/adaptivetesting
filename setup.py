@@ -25,6 +25,7 @@ setuptools.setup(
               "adaptivetesting.simulation",
               "adaptivetesting.tests"],
     install_requires=[
+        "jax",
         "numpy>=1.20.0",
         "scipy>=1.13.0",
         "pandas>=2.2.0",
