@@ -2,7 +2,7 @@ from ..models.test_item import TestItem
 from typing import List
 
 
-def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
+def urrys_rule(items: List[TestItem], ability: float) -> TestItem | None:
     """Urry's rule selects the test item
     which has the minimal difference between
     the item's difficulty and the ability level.
@@ -28,4 +28,5 @@ def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
     for item in items:
         if abs(ability - item.b) == minimal_difference:
             return item
-        
+    
+    return None
