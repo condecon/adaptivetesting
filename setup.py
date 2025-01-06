@@ -25,7 +25,10 @@ setuptools.setup(
               "adaptivetesting.simulation",
               "adaptivetesting.tests"],
     install_requires=[
-        "numpy>=1.20.0"
+        "jax",
+        "numpy>=1.20.0",
+        "scipy>=1.13.0",
+        "pandas>=2.2.0",
     ],
     license="Mozilla Public License Version 2.0",
     keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"],

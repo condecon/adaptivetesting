@@ -1,4 +1,4 @@
-from .test_item import TestItem
+from .__test_item import TestItem
 from typing import List, overload, Tuple
 
 
@@ -20,8 +20,7 @@ class ItemPool:
         self.test_items: List[TestItem] = test_items
         self.simulated_responses: List[int] | None = simulated_responses
 
-    @overload
-    def get_item(self, index: int) -> Tuple[TestItem, int]:
+    def get_item_by_index(self, index: int) -> Tuple[TestItem, int] | TestItem:
         """Returns item and if defined the simulated response.
 
         Args:
@@ -36,8 +35,8 @@ class ItemPool:
             return selected_item, simulated_response
         else:
             return selected_item
-
-    def get_item(self, item: TestItem) -> Tuple[TestItem, int]:
+    
+    def get_item_by_item(self, item: TestItem) -> Tuple[TestItem, int] | TestItem:
         """Returns item and if defined the simulated response.
 
         Args:
@@ -68,7 +67,7 @@ class ItemPool:
         if self.simulated_responses is None:
             raise ValueError("Simulated responses not provided")
         else:
-            i, res = self.get_item(item)
+            i, res = self.get_item_by_item(item) # type: ignore
             return res
 
     def delete_item(self, item: TestItem) -> None:

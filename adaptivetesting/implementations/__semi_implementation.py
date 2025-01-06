@@ -1,10 +1,10 @@
 from typing import List
-from ..models.adaptive_test import AdaptiveTest
-from ..models.item_pool import ItemPool
-from ..models.algorithm_exception import AlgorithmException
-from ..models.test_result import TestResult
-from ..math import MLEstimator
-from .pre_test import PreTest
+from ..models.__adaptive_test import AdaptiveTest
+from ..models.__item_pool import ItemPool
+from ..models.__algorithm_exception import AlgorithmException
+from ..models.__test_result import TestResult
+from ..math.estimators.__ml_estimation import MLEstimator
+from .__pre_test import PreTest
 
 
 class SemiAdaptiveImplementation(AdaptiveTest):
@@ -72,7 +72,7 @@ class SemiAdaptiveImplementation(AdaptiveTest):
         )
         estimation: float = float("NaN")
         try:
-            estimation = estimator.get_maximum_likelihood_estimation()
+            estimation = estimator.get_estimation()
         except AlgorithmException as exception:
             # check if all responses are the same
             if len(set(self.response_pattern)) == 1:
@@ -117,8 +117,8 @@ class SemiAdaptiveImplementation(AdaptiveTest):
         # create test results for all n-1 random items
         for i in range(0, len(random_items) - 1):
             result = TestResult(
-                ability_estimation="NULL",
-                standard_error="NULL",
+                ability_estimation=float("nan"),
+                standard_error=float("nan"),
                 showed_item=random_items[i].b,
                 response=self.response_pattern[i],
                 test_id=self.simulation_id,

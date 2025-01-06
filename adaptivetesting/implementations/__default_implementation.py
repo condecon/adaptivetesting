@@ -1,8 +1,8 @@
 from typing import List
-from ..models.adaptive_test import AdaptiveTest
-from ..models.item_pool import ItemPool
-from ..models.algorithm_exception import AlgorithmException
-from ..math import MLEstimator
+from ..models.__adaptive_test import AdaptiveTest
+from ..models.__item_pool import ItemPool
+from ..models.__algorithm_exception import AlgorithmException
+from ..math.estimators.__ml_estimation import MLEstimator
 
 
 class DefaultImplementation(AdaptiveTest):
@@ -60,7 +60,7 @@ class DefaultImplementation(AdaptiveTest):
         )
         estimation: float = float("NaN")
         try:
-            estimation = estimator.get_maximum_likelihood_estimation()
+            estimation = estimator.get_estimation()
         except AlgorithmException as exception:
             # check if all responses are the same
             if len(set(self.response_pattern)) == 1:

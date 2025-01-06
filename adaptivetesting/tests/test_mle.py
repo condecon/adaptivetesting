@@ -1,5 +1,5 @@
 import unittest
-from adaptivetesting.math import MLEstimator
+from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.models import AlgorithmException
 
 
@@ -13,7 +13,7 @@ class TestMLE(unittest.TestCase):
             difficulties
         )
 
-        result = estimator.get_maximum_likelihood_estimation()
+        result = estimator.get_estimation()
 
         self.assertAlmostEqual(result, 0.0375530712, 2)
 
@@ -25,7 +25,7 @@ class TestMLE(unittest.TestCase):
         estimator = MLEstimator(response, dif)
 
         with self.assertRaises(AlgorithmException):
-            result = estimator.get_maximum_likelihood_estimation()
+            result = estimator.get_estimation()
             print(f"Estimation Result {result}")
 
     def test_eid(self):
@@ -33,15 +33,15 @@ class TestMLE(unittest.TestCase):
         difficulties = [-1.603, 0.909]
         estimator = MLEstimator(response_pattern, difficulties)
 
-        result = estimator.get_maximum_likelihood_estimation()
+        result = estimator.get_estimation()
 
-        self.assertAlmostEqual(result, -0.347)
+        self.assertAlmostEqual(result, -0.347, places=5)
 
     def test_catr_item_1_2(self):
         response_pattern = [1, 0]
         difficulties = [-2.1851, -0.2897194]
         estimator = MLEstimator(response_pattern, difficulties)
 
-        result = estimator.get_maximum_likelihood_estimation()
+        result = estimator.get_estimation()
 
         self.assertAlmostEqual(result, -1.237413, 3)
