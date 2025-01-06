@@ -1,7 +1,7 @@
 from typing import List, Tuple
 import jax.numpy as np
 from ...services.__estimator_interface import IEstimator
-from ._functions.__estimators import maximize_likelihood_function
+from .functions.__estimators import maximize_likelihood_function
 
 
 class MLEstimator(IEstimator):
