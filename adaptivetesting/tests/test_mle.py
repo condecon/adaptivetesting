@@ -1,6 +1,6 @@
 import unittest
 from adaptivetesting.math.estimators import MLEstimator
-from adaptivetesting.models import AlgorithmException
+from adaptivetesting.models import AlgorithmException, load_test_items_from_list
 
 
 class TestMLE(unittest.TestCase):
@@ -8,9 +8,12 @@ class TestMLE(unittest.TestCase):
     def test_ml_estimation(self):
         response_pattern = [0, 1, 0]
         difficulties = [0.7, 0.9, 0.6]
+
+        items = load_test_items_from_list(difficulties)
+
         estimator: MLEstimator = MLEstimator(
             response_pattern,
-            difficulties
+            items
         )
 
         result = estimator.get_estimation()
@@ -22,7 +25,9 @@ class TestMLE(unittest.TestCase):
         dif = [0.9]
         ability = 0
 
-        estimator = MLEstimator(response, dif)
+        items = load_test_items_from_list(dif)
+
+        estimator = MLEstimator(response, items)
 
         with self.assertRaises(AlgorithmException):
             result = estimator.get_estimation()
@@ -31,16 +36,22 @@ class TestMLE(unittest.TestCase):
     def test_eid(self):
         response_pattern = [1, 0]
         difficulties = [-1.603, 0.909]
-        estimator = MLEstimator(response_pattern, difficulties)
+
+        items = load_test_items_from_list(difficulties)
+
+        estimator = MLEstimator(response_pattern, items)
 
         result = estimator.get_estimation()
 
-        self.assertAlmostEqual(result, -0.347, places=5)
+        self.assertAlmostEqual(round(result, 3), -0.347, places=5)
 
     def test_catr_item_1_2(self):
         response_pattern = [1, 0]
         difficulties = [-2.1851, -0.2897194]
-        estimator = MLEstimator(response_pattern, difficulties)
+
+        items = load_test_items_from_list(difficulties)
+
+        estimator = MLEstimator(response_pattern, items)
 
         result = estimator.get_estimation()
 

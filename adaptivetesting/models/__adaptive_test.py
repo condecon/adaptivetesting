@@ -82,10 +82,10 @@ class AdaptiveTest(abc.ABC):
             float: standard error of the ability estimation
 
         """
-        answered_items_difficulties: List[float] = self.get_answered_items_difficulties()
-        return standard_error(answered_items_difficulties, self.ability_level)
+        answered_items= self.get_answered_items()
+        return standard_error(answered_items, self.ability_level)
 
-    def get_next_item(self) -> TestItem | None:
+    def get_next_item(self) -> TestItem:
         """Select next item using Urry's rule.
 
         Returns:
@@ -128,8 +128,9 @@ class AdaptiveTest(abc.ABC):
         """
         # get item
         item = self.get_next_item()
-        if self.DEBUG:
-            print(f"Selected {item.b} for an ability level of {self.ability_level}.")
+        if item is not None:
+            if self.DEBUG:
+                print(f"Selected {item.b} for an ability level of {self.ability_level}.")
 
         # check if simulation is running
         response = None
