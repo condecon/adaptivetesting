@@ -1,6 +1,6 @@
 import unittest
 from adaptivetesting.math import test_information_function
-import numpy as np
+import jax.numpy as np
 
 
 class TestInformation(unittest.TestCase):
