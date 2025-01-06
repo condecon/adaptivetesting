@@ -1,12 +1,14 @@
-from typing import List
-import numpy as np
-from scipy.optimize import minimize, OptimizeResult, Bounds
-from ...models.__algorithm_exception import AlgorithmException
+from typing import List, Tuple
+import jax.numpy as np
 from ...services.__estimator_interface import IEstimator
+from ._functions.__estimators import maximize_likelihood_function
 
 
 class MLEstimator(IEstimator):
-    def __init__(self, response_pattern: List[int], item_difficulties: List[float]):
+    def __init__(self,  
+                 response_pattern: List[int] | np.ndarray, 
+                 item_difficulties: List[float] | np.ndarray,
+                 optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
         item difficulties.
@@ -18,8 +20,7 @@ class MLEstimator(IEstimator):
 
             item_difficulties (List[float]): list of item difficulties
         """
-        self.response_pattern = np.array(response_pattern)
-        self.item_difficulties = np.array(item_difficulties)
+        IEstimator.__init__(self, response_pattern, item_difficulties, optimization_interval)
 
     def get_estimation(self) -> float:
         """Estimate the current ability level by searching
@@ -29,47 +30,9 @@ class MLEstimator(IEstimator):
         Returns:
             float: ability estimation
         """
-        return self._find_max()
-
-    def likelihood(self, ability: np.ndarray) -> float:
-        """First derivative of the log-likelihood function.
-
-        Args:
-            ability (np.ndarray): ability level
-
-        Returns:
-            float: log-likelihood value of given ability value
-        """
-        mu_T = ability[..., None]
-
-        item_term_up = np.exp(self.response_pattern * (mu_T - self.item_difficulties))
-        item_term_down = 1 + np.exp(mu_T - self.item_difficulties)
-        item_term = item_term_up / item_term_down
-
-        cumprod = np.cumprod(item_term, axis=1)[:, -1]
-        return -cumprod
-
-    def _find_max(self) -> float:
-        """
-        Starts gradient descent algorithm.
-        Do not call directly.
-        Instead, use get_maximum_likelihood_estimation.
-
-        Returns:
-            float: ability estimation
-
-        Raises:
-            AlgorithmException
-        """
-        result: OptimizeResult = minimize(self.likelihood,
-                                          x0=np.array([-10]),
-                                          method="L-BFGS-B")
-        if result.success == False:
-            raise AlgorithmException("Algorithm did not converge!")
-        
-        x_float: float = result.x.astype(float)[0]
-        if x_float < -10:
-            raise AlgorithmException("Algorithm did not converge correctly!")
-        else:
-            return result.x.astype(float)[0]
-        
+        return maximize_likelihood_function(a=np.array(1),
+                                            b=self.item_difficulties,
+                                            c=np.array(1),
+                                            d=np.array(0),
+                                            response_pattern=self.response_pattern,
+                                            border=self.optimization_interval)
