@@ -1,27 +1,39 @@
+## CHANGE
+
 import jax.numpy as np
 
 
 def test_information_function(
-        item_difficulties: np.ndarray,
-        ability_level: np.ndarray
+            mu: np.ndarray,
+               a: np.ndarray, 
+               b: np.ndarray, 
+               c: np.ndarray, 
+               d: np.ndarray, 
 ) -> float:
     """
     Calculates test information.
 
     Args:
-        item_difficulties (np.ndarray): List of answered items
-
-        ability_level (np.ndarray): Currently estimated ability level
+        mu (jnp.ndarray): ability level
+        a (jnp.ndarray): discrimination parameter
+        b (jnp.ndarray): difficulty parameter
+        c (jnp.ndarray): guessing parameter
+        d (jnp.ndarray): slipping parameter
 
     Returns:
         float: test information
 
     """
-    p_right = (np.exp(item_difficulties - ability_level)) / (
-            1 + np.exp(item_difficulties - ability_level))
-    p_wrong = 1 / (1 + np.exp(item_difficulties - ability_level))
+    p_right = c + (d - c) * \
+        (np.exp(a * (mu - b))) / \
+        (1 + np.exp(a * (mu - b)))
+    
+    p_wrong = c + (d - c) * \
+        1 / (1 + np.exp(a * (mu - b)))
 
     product = p_right * p_wrong
     information_tensor = np.cumsum(product)
     information = information_tensor[len(information_tensor) - 1]
+    # convert information to float and return
     return float(information)
+
