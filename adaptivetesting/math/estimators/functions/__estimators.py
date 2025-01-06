@@ -50,6 +50,11 @@ def maximize_likelihood_function(a: jnp.ndarray,
     Returns:
         float: optimized ability value
     """
+    # check if response pattern is valid
+    if len(set(response_pattern.tolist())) == 1:
+        raise AlgorithmException("Response pattern is invalid. It consists of only one type of response.")
+    
+    
     result: OptimizeResult = minimize_scalar(likelihood, args=(a, b, c, d, response_pattern), bounds=border, method='bounded')
 
     if not result.success:
