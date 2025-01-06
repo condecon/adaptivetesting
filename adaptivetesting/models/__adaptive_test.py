@@ -65,6 +65,13 @@ class AdaptiveTest(abc.ABC):
             List[float]: difficulties of answered items
         """
         return [item.b for item in self.answered_items]
+    
+    def get_answered_items(self) -> List[TestItem]:
+        """
+        Returns:
+            List[TestItem]: answered items
+        """
+        return self.answered_items
 
     def get_ability_se(self) -> float:
         """

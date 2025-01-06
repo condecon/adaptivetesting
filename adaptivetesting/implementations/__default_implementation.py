@@ -56,7 +56,7 @@ class DefaultImplementation(AdaptiveTest):
         """
         estimator = MLEstimator(
             self.response_pattern,
-            self.get_answered_items_difficulties()
+            self.get_answered_items()
         )
         estimation: float = float("NaN")
         try:
