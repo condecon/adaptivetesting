@@ -1,6 +1,6 @@
 import math
 from typing import List
-import numpy as np
+import jax.numpy as np
 from .__test_information import test_information_function
 
 
