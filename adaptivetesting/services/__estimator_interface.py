@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 import jax.numpy as np
+from ..models.__test_item import TestItem
 
 class IEstimator(ABC):
-    def __init__(self,
-                 response_pattern: List[int] | np.ndarray,
-                 item_difficulties: List[float] | np.ndarray,
+    def __init__(self,  
+                 response_pattern: List[int] | np.ndarray, 
+                 items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This is the interface required for every possible
         estimator.
@@ -13,19 +14,16 @@ class IEstimator(ABC):
         the `get_estimation` method.
 
         Args:
-            response_pattern (List[int]): list of responses (0: wrong, 1:right)
-            
-            item_difficulties (List[float]): list of item difficulties
+            response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
+
+            items (List[TestItem]): list of items
         """
         if type(response_pattern) is not np.ndarray:
             self.response_pattern = np.array(response_pattern)
         else:
             self.response_pattern = response_pattern
-        
-        if type(item_difficulties) is not np.ndarray:
-            self.item_difficulties = np.array(item_difficulties)
-        else:
-            self.item_difficulties = item_difficulties
+
+        self.items = items
 
         self.optimization_interval = optimization_interval
         
