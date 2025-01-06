@@ -84,3 +84,101 @@ class ItemPool:
         # remove response at index
         if self.simulated_responses is not None:
             self.simulated_responses.pop(index)
+
+    @staticmethod
+    def load_from_list(
+        b: List[float],
+        a: List[float] | None = None,
+        c: List[float] | None = None,
+        d: List[float] | None = None,
+        ) -> "ItemPool":
+        """Creates test items from a list of floats.
+
+        Args:
+            a (List[float]): discrimination parameter
+            b (List[float]): difficulty parameter
+            c (List[float]): guessing parameter
+            d (jnp.ndarray): slipping parameter
+
+        Returns:
+            List[TestItem]: item pool
+        """
+        items: List[TestItem] = []
+
+        for difficulty in b:
+            item = TestItem()
+            item.b = difficulty
+            items.append(item)
+
+        # check if a, b, c, d are the same length
+        if a is not None:
+            if len(a) != len(b):
+                raise ValueError("Length of a and b has to be the same.")
+            for i, discrimination in enumerate(a):
+                items[i].a = discrimination
+        
+        if c is not None:
+            if len(c) != len(b):
+                raise ValueError("Length of c and b has to be the same.")
+            for i, guessing in enumerate(c):
+                items[i].c = guessing
+        
+        if d is not None:
+            if len(d) != len(b):
+                raise ValueError("Length of d and b has to be the same.")
+            for i, slipping in enumerate(d):
+                items[i].d = slipping
+
+        return items
+
+    @staticmethod
+    def load_from_dict(source: dict[str, List[float]]) -> "ItemPool":
+        """Creates test items from a dictionary.
+        The dictionary has to have the following keys:
+            
+            - a
+            - b
+            - c
+            - d
+        each containing a list of float.
+
+        Args:
+            source (dict[str, List[float]]): item pool dictionary
+
+        Returns:
+            List[TestItem]: item pool
+        """
+        a = source.get("a")
+        b = source.get("b")
+        c = source.get("c")
+        d = source.get("d")
+
+        # check none
+        if a is None:
+            raise ValueError("a cannot be None")
+        
+        if b is None:
+            raise ValueError("b cannot be None")
+        
+        if c is None:
+            raise ValueError("c cannot be None")
+        
+        if d is None:
+            raise ValueError("d cannot be None")
+
+        # check if a, b, c, and d have the same length
+        if not (len(a) == len(b) == len(c) == len(d)):
+            raise ValueError("All lists in the source dictionary must have the same length")
+
+        n_items = len(b)
+        items: List[TestItem] = []
+        for i in range(n_items):
+            item = TestItem()
+            item.a = a[i]
+            item.b = b[i]
+            item.c = c[i]
+            item.d = d[i]
+
+            items.append(item)
+
+        return items        
