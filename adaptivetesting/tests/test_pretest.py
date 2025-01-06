@@ -1,7 +1,7 @@
 import unittest
 from adaptivetesting.implementations import PreTest
 from adaptivetesting.models import TestItem
-import numpy as np
+import jax.numpy as np
 
 item0 = TestItem()
 item0.b = 0
