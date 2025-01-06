@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 from jax import jit
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
-from adaptivetesting.models.algorithm_exception import AlgorithmException
+from ....models.__algorithm_exception import AlgorithmException
 
 @jit
 def likelihood(mu: jnp.ndarray,
