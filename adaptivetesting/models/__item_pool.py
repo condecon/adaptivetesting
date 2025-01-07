@@ -132,7 +132,8 @@ class ItemPool:
         return items
 
     @staticmethod
-    def load_from_dict(source: dict[str, List[float]]) -> "ItemPool":
+    def load_from_dict(source: dict[str, List[float]],
+                       simulated_responses: List[int] | None = None) -> "ItemPool":
         """Creates test items from a dictionary.
         The dictionary has to have the following keys:
             
@@ -181,4 +182,7 @@ class ItemPool:
 
             items.append(item)
 
-        return items        
+        
+        item_pool = ItemPool(items, simulated_responses)
+        
+        return item_pool        
