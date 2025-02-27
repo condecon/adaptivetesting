@@ -1,5 +1,6 @@
 from .__test_item import TestItem
-from typing import List, overload, Tuple
+from typing import List, Tuple
+from pandas import DataFrame
 
 
 class ItemPool:
@@ -85,6 +86,7 @@ class ItemPool:
         if self.simulated_responses is not None:
             self.simulated_responses.pop(index)
 
+# STATIC LOAD METHODS
     @staticmethod
     def load_from_list(
         b: List[float],
@@ -185,4 +187,49 @@ class ItemPool:
         
         item_pool = ItemPool(items, simulated_responses)
         
-        return item_pool        
+        return item_pool
+    
+    @staticmethod
+    def load_from_dataframe(source: DataFrame) -> "ItemPool":
+        """Creates item pool from a pandas DataFrame.
+        Required columns are: `a`, `b`, `c`, `d`. 
+        Each column has to contain float values.
+        A `simulated_responses` (int values) column can be added to 
+        the DataFrame to provide simulated responses.
+        
+
+        Args:
+            source (DataFrame): _description_
+
+        Returns:
+            ItemPool: _description_
+        """
+
+        # check if columns are present
+        if "a" not in source.columns:
+            raise ValueError("Column 'a' not found.")
+        
+        if "b" not in source.columns:
+            raise ValueError("Column 'b' not found.")
+        
+        if "c" not in source.columns:
+            raise ValueError("Column 'c' not found.")
+        
+        if "d" not in source.columns:
+            raise ValueError("Column 'd' not found.")
+        
+        # get values
+        a = source["a"].values
+        b = source["b"].values
+        c = source["c"].values
+        d = source["d"].values
+
+        # create item pool
+        item_pool = ItemPool.load_from_list(a, b, c, d)
+    
+        # check if simulated responses are present
+        if "simulated_responses" in source.columns:
+            simulated_responses = source["simulated_responses"].values
+            item_pool.simulated_responses = simulated_responses
+        
+        return item_pool
