@@ -93,6 +93,7 @@ class ItemPool:
         a: List[float] | None = None,
         c: List[float] | None = None,
         d: List[float] | None = None,
+        simulated_responses: List[int] | None = None
         ) -> "ItemPool":
         """Creates test items from a list of floats.
 
@@ -100,7 +101,8 @@ class ItemPool:
             a (List[float]): discrimination parameter
             b (List[float]): difficulty parameter
             c (List[float]): guessing parameter
-            d (jnp.ndarray): slipping parameter
+            d (List[float]): slipping parameter
+            simulated_responses (List[int]): simulated responses
 
         Returns:
             List[TestItem]: item pool
@@ -131,7 +133,10 @@ class ItemPool:
             for i, slipping in enumerate(d):
                 items[i].d = slipping
 
-        return items
+        item_pool = ItemPool(items)
+        item_pool.simulated_responses = simulated_responses
+
+        return item_pool
 
     @staticmethod
     def load_from_dict(source: dict[str, List[float]],
@@ -219,17 +224,17 @@ class ItemPool:
             raise ValueError("Column 'd' not found.")
         
         # get values
-        a = source["a"].values
-        b = source["b"].values
-        c = source["c"].values
-        d = source["d"].values
+        a = source["a"].values.tolist()
+        b = source["b"].values.tolist()
+        c = source["c"].values.tolist()
+        d = source["d"].values.tolist()
 
         # create item pool
-        item_pool = ItemPool.load_from_list(a, b, c, d)
+        item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d)
     
         # check if simulated responses are present
         if "simulated_responses" in source.columns:
-            simulated_responses = source["simulated_responses"].values
+            simulated_responses = source["simulated_responses"].values.tolist()
             item_pool.simulated_responses = simulated_responses
         
         return item_pool

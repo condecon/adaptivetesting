@@ -1,6 +1,6 @@
 import unittest
 from adaptivetesting.math.estimators import MLEstimator
-from adaptivetesting.models import AlgorithmException, load_test_items_from_list
+from adaptivetesting.models import AlgorithmException, ItemPool
 
 
 class TestMLE(unittest.TestCase):
@@ -9,7 +9,7 @@ class TestMLE(unittest.TestCase):
         response_pattern = [0, 1, 0]
         difficulties = [0.7, 0.9, 0.6]
 
-        items = load_test_items_from_list(difficulties)
+        items = ItemPool.load_from_list(b=difficulties).test_items
 
         estimator: MLEstimator = MLEstimator(
             response_pattern,
@@ -25,7 +25,7 @@ class TestMLE(unittest.TestCase):
         dif = [0.9]
         ability = 0
 
-        items = load_test_items_from_list(dif)
+        items = ItemPool.load_from_list(dif).test_items
 
         estimator = MLEstimator(response, items)
 
@@ -37,7 +37,7 @@ class TestMLE(unittest.TestCase):
         response_pattern = [1, 0]
         difficulties = [-1.603, 0.909]
 
-        items = load_test_items_from_list(difficulties)
+        items = ItemPool.load_from_list(difficulties).test_items
 
         estimator = MLEstimator(response_pattern, items)
 
@@ -49,8 +49,7 @@ class TestMLE(unittest.TestCase):
         response_pattern = [1, 0]
         difficulties = [-2.1851, -0.2897194]
 
-        items = load_test_items_from_list(difficulties)
-
+        items = ItemPool.load_from_list(difficulties).test_items
         estimator = MLEstimator(response_pattern, items)
 
         result = estimator.get_estimation()
