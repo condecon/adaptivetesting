@@ -1,4 +1,5 @@
 ## CHANGE
+# Hier geht irgendwas schief, glaube ich....
 
 import jax.numpy as np
 
@@ -14,11 +15,11 @@ def test_information_function(
     Calculates test information.
 
     Args:
-        mu (jnp.ndarray): ability level
-        a (jnp.ndarray): discrimination parameter
-        b (jnp.ndarray): difficulty parameter
-        c (jnp.ndarray): guessing parameter
-        d (jnp.ndarray): slipping parameter
+        mu (np.ndarray): ability level
+        a (np.ndarray): discrimination parameter
+        b (np.ndarray): difficulty parameter
+        c (np.ndarray): guessing parameter
+        d (np.ndarray): slipping parameter
 
     Returns:
         float: test information

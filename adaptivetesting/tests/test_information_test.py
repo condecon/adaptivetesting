@@ -4,7 +4,7 @@ import jax.numpy as np
 
 
 class TestInformation(unittest.TestCase):
-    def test_information_calculation_tensorflow(self):
+    def test_information_calculation_1pl(self):
         difficulties = np.array([0.7, 0.9, 0.6])
         ability = np.array([0], dtype="float32")
 
@@ -18,6 +18,5 @@ class TestInformation(unittest.TestCase):
 
         self.assertAlmostEqual(result, 0.6559974211, 3)
 
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_information_calculation_4pl(self):
+        pass
