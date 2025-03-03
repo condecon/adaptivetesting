@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ..models import TestItem, ItemPool
+from adaptivetesting.models import TestItem, ItemPool
 import pandas as pd
 
 class TestLoadTestItems(TestCase):
