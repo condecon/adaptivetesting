@@ -31,5 +31,7 @@ class TestInformation(unittest.TestCase):
                                            items.b.to_numpy(),
                                            items.c.to_numpy(),
                                            items.d.to_numpy())
-        
-        # print(1 / np.sqrt(result))
+        # convert test information into standard error
+        result = 1 / np.sqrt(result)
+
+        self.assertAlmostEqual(result, 1.444873, 3)
