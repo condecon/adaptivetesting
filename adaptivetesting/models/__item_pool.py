@@ -224,17 +224,17 @@ class ItemPool:
             raise ValueError("Column 'd' not found.")
         
         # get values
-        a: List[float] = source["a"].values.tolist()
-        b: List[float] = source["b"].values.tolist()
-        c: List[float] = source["c"].values.tolist()
-        d: List[float] = source["d"].values.tolist()
+        a: List[float] = source["a"].values.tolist() # type: ignore
+        b: List[float] = source["b"].values.tolist() # type: ignore
+        c: List[float] = source["c"].values.tolist() # type: ignore
+        d: List[float] = source["d"].values.tolist() # type: ignore
 
         # create item pool
         item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d)
     
         # check if simulated responses are present
         if "simulated_responses" in source.columns:
-            simulated_responses = source["simulated_responses"].values.tolist()
+            simulated_responses: List[int] = source["simulated_responses"].values.tolist() # type: ignore
             item_pool.simulated_responses = simulated_responses
         
         return item_pool
