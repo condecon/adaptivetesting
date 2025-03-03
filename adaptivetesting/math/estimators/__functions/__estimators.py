@@ -4,6 +4,55 @@ from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ....models.__algorithm_exception import AlgorithmException
 
 @jit
+def probability_y1(mu: jnp.ndarray,
+               a: jnp.ndarray, 
+               b: jnp.ndarray, 
+               c: jnp.ndarray, 
+               d: jnp.ndarray) -> jnp.ndarray:
+    """_summary_
+
+    Args:
+        mu (jnp.ndarray): _description_
+        a (jnp.ndarray): _description_
+        b (jnp.ndarray): _description_
+        c (jnp.ndarray): _description_
+        d (jnp.ndarray): _description_
+
+    Returns:
+        jnp.ndarray: _description_
+    """
+
+    value = c + (d-c) * (jnp.exp(a * (mu - b)))/ \
+        (1 + jnp.exp(a * (mu - b)))
+    
+    return value
+
+@jit
+def probability_y0(mu: jnp.ndarray,
+               a: jnp.ndarray, 
+               b: jnp.ndarray, 
+               c: jnp.ndarray, 
+               d: jnp.ndarray) -> jnp.ndarray:
+    """_summary_
+
+    Args:
+        mu (jnp.ndarray): _description_
+        a (jnp.ndarray): _description_
+        b (jnp.ndarray): _description_
+        c (jnp.ndarray): _description_
+        d (jnp.ndarray): _description_
+
+    Raises:
+        AlgorithmException: _description_
+        AlgorithmException: _description_
+
+    Returns:
+        jnp.ndarray: _description_
+    """
+    value = 1 - probability_y1(mu, a, b, c, d)
+    return value
+
+@jit
 def likelihood(mu: jnp.ndarray,
                a: jnp.ndarray, 
                b: jnp.ndarray, 
@@ -21,13 +70,11 @@ def likelihood(mu: jnp.ndarray,
         d (jnp.ndarray): slipping parameter
 
     Returns:
-        float: log-likelihood value of given ability value
+        float: likelihood value of given ability value
     """
-    value = c + (d - c) * \
-        (jnp.exp(a * response_pattern * (mu - b))) / \
-        (1 + jnp.exp(a * (mu - b)))
+    terms = (probability_y1(mu, a, b, c, d)**response_pattern) * (probability_y0(mu, a, b, c, d) ** (1 - response_pattern))
     
-    return -jnp.cumulative_prod(value)[-1].astype(float)
+    return -jnp.cumulative_prod(terms)[-1].astype(float)
 
 def maximize_likelihood_function(a: jnp.ndarray, 
                                  b: jnp.ndarray, 

@@ -1,7 +1,7 @@
 import unittest
 from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.models import AlgorithmException, ItemPool
-
+import pandas as pd
 
 class TestMLE(unittest.TestCase):
 
@@ -55,3 +55,19 @@ class TestMLE(unittest.TestCase):
         result = estimator.get_estimation()
 
         self.assertAlmostEqual(result, -1.237413, 3)
+
+    def test_4_pl_model(self):
+        items = pd.DataFrame({
+            "a": [1.32, 1.07, 0.84],
+            "b": [-0.63, 0.18, -0.84],
+            "c": [0.17, 0.10, 0.19],
+            "d": [0.87, 0.93, 1]
+        })
+        item_pool =  ItemPool.load_from_dataframe(items)
+
+        response_pattern = [0,1,0]
+        estimator = MLEstimator(response_pattern, item_pool.test_items)
+
+        result = estimator.get_estimation()
+
+        self.assertAlmostEqual(result, -1.793097, places=2)
