@@ -3,7 +3,6 @@ from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.models import AlgorithmException, ItemPool
 import pandas as pd
 
-
 class TestMLE(unittest.TestCase):
 
     def test_ml_estimation(self):

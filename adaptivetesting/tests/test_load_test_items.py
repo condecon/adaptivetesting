@@ -2,7 +2,6 @@ from unittest import TestCase
 from adaptivetesting.models import TestItem, ItemPool
 import pandas as pd
 
-
 class TestLoadTestItems(TestCase):
     def __init__(self, methodName="runTest"):
         super().__init__(methodName)

@@ -38,6 +38,13 @@ class TestTestInformation(unittest.TestCase):
 
         self.assertAlmostEqual(result, 1.444873, 3)
 
+    def test_information_calculation_4pl(self):
+        items = pd.DataFrame({
+            "a": [1.32, 1.07, 0.84],
+            "b": [-0.63, 0.18, -0.84],
+            "c": [0.17, 0.10, 0.19],
+            "d": [0.87, 0.93, 1]
+        })
 
 class TestPriorInformation(unittest.TestCase):
     def test_normal_prior_variance(self):

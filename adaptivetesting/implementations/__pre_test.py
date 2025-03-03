@@ -1,5 +1,5 @@
 from typing import List
-import jax.numpy as np
+import numpy as np
 from ..models.__test_item import TestItem
 import random
 
@@ -31,7 +31,7 @@ class PreTest:
         quantiles = np.array([])
         # calculate quantiles
         for q in [0.25, 0.5, 0.75]:
-            quantile: np.floating = np.quantile(difficulties, q)
+            quantile: np.ndarray = np.quantile(np.array(difficulties), q)
             quantiles = np.append(quantiles, quantile)
 
         return quantiles
