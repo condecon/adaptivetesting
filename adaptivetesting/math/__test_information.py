@@ -1,9 +1,8 @@
-## CHANGE
-# Hier geht irgendwas schief, glaube ich....
-
 import jax.numpy as np
+from .estimators.__functions.__estimators import probability_y1, probability_y0
+from jax import jit
 
-
+@jit
 def test_information_function(
             mu: np.ndarray,
                a: np.ndarray, 
@@ -25,16 +24,12 @@ def test_information_function(
         float: test information
 
     """
-    p_right = c + (d - c) * \
-        (np.exp(a * (mu - b))) / \
-        (1 + np.exp(a * (mu - b)))
-    
-    p_wrong = c + (d - c) * \
-        1 / (1 + np.exp(a * (mu - b)))
+    p_y1 = probability_y1(mu, a, b, c, d)
+    p_y0 = probability_y0(mu, a, b, c, d)
 
-    product = p_right * p_wrong
+    product = p_y0 * p_y1
     information_tensor = np.cumsum(product)
     information = information_tensor[len(information_tensor) - 1]
     # convert information to float and return
-    return float(information)
+    return information.astype(float)
 
