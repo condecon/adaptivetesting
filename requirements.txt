@@ -1,6 +1,6 @@
 jax
 numpy>=1.20.0
-scipy>=1.13.0
+scipy>=1.15.0
 pandas>=2.2.0
 pandas-stubs>=2.2.3
 # devtools
