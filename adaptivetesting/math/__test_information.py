@@ -39,5 +39,5 @@ def test_information_function(
     # print(f"Information tensor: {information_tensor}")
     information = information_tensor[len(information_tensor) - 1]
     # convert information to float and return
-    return information.astype(float)
+    return float(information)
 
