@@ -1,27 +1,43 @@
 import jax.numpy as np
+from .estimators.__functions.__estimators import probability_y1, probability_y0
+from jax import jit, grad
+from scipy.differentiate import derivative
+
 
 
 def test_information_function(
-        item_difficulties: np.ndarray,
-        ability_level: np.ndarray
+            mu: np.ndarray,
+               a: np.ndarray, 
+               b: np.ndarray, 
+               c: np.ndarray, 
+               d: np.ndarray, 
 ) -> float:
     """
     Calculates test information.
 
     Args:
-        item_difficulties (np.ndarray): List of answered items
-
-        ability_level (np.ndarray): Currently estimated ability level
+        mu (np.ndarray): ability level
+        a (np.ndarray): discrimination parameter
+        b (np.ndarray): difficulty parameter
+        c (np.ndarray): guessing parameter
+        d (np.ndarray): slipping parameter
 
     Returns:
         float: test information
 
     """
-    p_right = (np.exp(item_difficulties - ability_level)) / (
-            1 + np.exp(item_difficulties - ability_level))
-    p_wrong = 1 / (1 + np.exp(item_difficulties - ability_level))
+    p_y1 = probability_y1(mu, a, b, c, d)
+    
+    p_y1_grad = derivative(probability_y1, 
+                           mu,
+                           args=(a, b, c, d))
+    
+    
 
-    product = p_right * p_wrong
+    product = (p_y1_grad.df ** 2) / (p_y1 * (1 - p_y1))
     information_tensor = np.cumsum(product)
+    # print(f"Information tensor: {information_tensor}")
     information = information_tensor[len(information_tensor) - 1]
-    return float(information)
+    # convert information to float and return
+    return information.astype(float)
+

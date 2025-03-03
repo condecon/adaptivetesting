@@ -27,7 +27,7 @@ setuptools.setup(
     install_requires=[
         "jax",
         "numpy>=1.20.0",
-        "scipy>=1.13.0",
+        "scipy>=1.15.0",
         "pandas>=2.2.0",
     ],
     license="Mozilla Public License Version 2.0",

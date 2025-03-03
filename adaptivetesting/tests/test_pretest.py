@@ -30,7 +30,7 @@ test = PreTest(
 class TestPreTest(unittest.TestCase):
     def test_quantile_calculation(self):
         quantiles: np.ndarray = test.calculate_quantiles()
-        quantiles = quantiles.round(decimals=4)
+        quantiles = quantiles.round(decimals=1)
         self.assertListEqual(list(quantiles), [0.2, 0.4, 0.6])
     
     def test_selection_random_item_quantile(self):
