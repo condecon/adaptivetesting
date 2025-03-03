@@ -224,10 +224,10 @@ class ItemPool:
             raise ValueError("Column 'd' not found.")
         
         # get values
-        a = source["a"].values.tolist()
-        b = source["b"].values.tolist()
-        c = source["c"].values.tolist()
-        d = source["d"].values.tolist()
+        a: List[float] = source["a"].values.tolist()
+        b: List[float] = source["b"].values.tolist()
+        c: List[float] = source["c"].values.tolist()
+        d: List[float] = source["d"].values.tolist()
 
         # create item pool
         item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d)
