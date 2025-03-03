@@ -9,17 +9,17 @@ def probability_y1(mu: jnp.ndarray,
                b: jnp.ndarray, 
                c: jnp.ndarray, 
                d: jnp.ndarray) -> jnp.ndarray:
-    """_summary_
+    """Probability of getting the item correct given the ability level.
 
     Args:
-        mu (jnp.ndarray): _description_
-        a (jnp.ndarray): _description_
-        b (jnp.ndarray): _description_
-        c (jnp.ndarray): _description_
-        d (jnp.ndarray): _description_
+        mu (jnp.ndarray): latent ability level
+        a (jnp.ndarray): item discrimination parameter
+        b (jnp.ndarray): item difficulty parameter
+        c (jnp.ndarray): pseudo guessing parameter
+        d (jnp.ndarray): inattention parameter
 
     Returns:
-        jnp.ndarray: _description_
+        jnp.ndarray: probability of getting the item correct
     """
 
     value = c + (d-c) * (jnp.exp(a * (mu - b)))/ \
@@ -33,21 +33,17 @@ def probability_y0(mu: jnp.ndarray,
                b: jnp.ndarray, 
                c: jnp.ndarray, 
                d: jnp.ndarray) -> jnp.ndarray:
-    """_summary_
+    """Probability of getting the item wrong given the ability level.
 
     Args:
-        mu (jnp.ndarray): _description_
-        a (jnp.ndarray): _description_
-        b (jnp.ndarray): _description_
-        c (jnp.ndarray): _description_
-        d (jnp.ndarray): _description_
-
-    Raises:
-        AlgorithmException: _description_
-        AlgorithmException: _description_
+            mu (jnp.ndarray): latent ability level
+            a (jnp.ndarray): item discrimination parameter
+            b (jnp.ndarray): item difficulty parameter
+            c (jnp.ndarray): pseudo guessing parameter
+            d (jnp.ndarray): inattention parameter
 
     Returns:
-        jnp.ndarray: _description_
+        jnp.ndarray: probability of getting the item wrong
     """
     value = 1 - probability_y1(mu, a, b, c, d)
     return value
@@ -60,14 +56,15 @@ def likelihood(mu: jnp.ndarray,
                d: jnp.ndarray, 
                response_pattern: jnp.ndarray) -> jnp.ndarray:
     """Likelihood function of the 4-PL model.
-    To get the * real * value, multiply the result by -1.
+    For optimization purposes, the function returns the negative value of the likelihood function.
+    To get the *real* value, multiply the result by -1.
 
     Args:
         mu (jnp.ndarray): ability level
-        a (jnp.ndarray): discrimination parameter
-        b (jnp.ndarray): difficulty parameter
-        c (jnp.ndarray): guessing parameter
-        d (jnp.ndarray): slipping parameter
+        a (jnp.ndarray): item discrimination parameter
+        b (jnp.ndarray): item difficulty parameter
+        c (jnp.ndarray): pseudo guessing parameter
+        d (jnp.ndarray): inattention parameter
 
     Returns:
         float: likelihood value of given ability value
@@ -82,17 +79,20 @@ def maximize_likelihood_function(a: jnp.ndarray,
                                  d: jnp.ndarray, 
                                  response_pattern: jnp.ndarray,
                                  border: tuple[float, float] = (-10, 10)) -> float:
-    """Maximize the likelihood function using scipy's minimize_scalar.
+    """Find the ability value that maximizes the likelihood function.
+    This function uses the minimize_scalar function from scipy and the "bounded" method.
     
     Args:
-        mu (jnp.ndarray): ability level
-        a (jnp.ndarray): discrimination parameter
-        b (jnp.ndarray): difficulty parameter
-        c (jnp.ndarray): guessing parameter
-        d (jnp.ndarray): slipping parameter
+        a (jnp.ndarray): item discrimination parameter
+        b (jnp.ndarray): item difficulty parameter
+        c (jnp.ndarray): pseudo guessing parameter
+        d (jnp.ndarray): inattention parameter
 
         response_pattern (jnp.ndarray): response pattern of the item
-        border (tuple[float, float], optional): border of the optimization. Defaults to (-10, 10).
+        border (tuple[float, float], optional): border of the optimization interval. Defaults to (-10, 10).
+
+    Raises:
+        AlgorithmException: if the optimization fails or the response pattern consists of only one type of response.
 
     Returns:
         float: optimized ability value
