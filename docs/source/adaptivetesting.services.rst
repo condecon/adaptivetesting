@@ -1,7 +1,7 @@
-adaptivetesting.services package
+services module
 ================================
 
-adaptivetesting.services.ITestResults
+ITestResults
 --------------------------------------------------------
 
 .. autoclass:: adaptivetesting.services.ITestResults

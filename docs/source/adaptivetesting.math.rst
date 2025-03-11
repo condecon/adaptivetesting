@@ -1,7 +1,7 @@
-adaptivetesting.math package
+math module
 ============================
 
-adaptivetesting.math.MLEstimator
+MLEstimator
 ------------------------------------------
 .. autoclass:: adaptivetesting.math.MLEstimator
    :members:
@@ -9,21 +9,20 @@ adaptivetesting.math.MLEstimator
    :show-inheritance:
 
 
-adaptivetesting.math.standard\_error
+standard\_error
 -------------------------------------------
 
 .. autofunction:: adaptivetesting.math.standard_error
 
 
-
-adaptivetesting.math.test\_information_function 
+test\_information_function 
 -------------------------------------------------
 
 .. autofunction:: adaptivetesting.math.test_information_function
 
 
 
-adaptivetesting.math.urrys\_rule
+math.urrys\_rule
 ---------------------------------------
 
 .. autofunction:: adaptivetesting.math.urrys_rule

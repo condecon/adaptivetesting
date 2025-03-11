@@ -1,0 +1,9 @@
+.logo{
+    display: block;
+    margin: 0;
+    height: 100%;
+    width: auto;
+    border-radius: 0;
+    max-width: 100%;
+    background: transparent;
+}
