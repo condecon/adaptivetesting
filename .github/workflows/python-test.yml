@@ -39,6 +39,9 @@ jobs:
     - name: Type checking
       run: |
         mypy
+    - name: Type checking code examples
+      run: |
+        mypy code_examples
     - name: Test with unittest
       run: |
         bash run_tests.sh
