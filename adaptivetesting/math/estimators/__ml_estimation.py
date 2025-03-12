@@ -2,25 +2,26 @@ from typing import List, Tuple
 import jax.numpy as np
 from ...services.__estimator_interface import IEstimator
 from ._functions.__estimators import maximize_likelihood_function
+from ...models.__test_item import TestItem
 
 
 class MLEstimator(IEstimator):
     def __init__(self,  
                  response_pattern: List[int] | np.ndarray, 
-                 item_difficulties: List[float] | np.ndarray,
+                 items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
-        item difficulties.
+        item parameters.
         The estimation is based on maximum likelihood estimation and the
         Rasch model.
 
         Args:
             response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
 
-            item_difficulties (List[float]): list of item difficulties
+            items (List[TestItem]): list of answered items
         """
-        IEstimator.__init__(self, response_pattern, item_difficulties, optimization_interval)
+        IEstimator.__init__(self, response_pattern, items, optimization_interval)
 
     def get_estimation(self) -> float:
         """Estimate the current ability level by searching
@@ -30,9 +31,10 @@ class MLEstimator(IEstimator):
         Returns:
             float: ability estimation
         """
-        return maximize_likelihood_function(a=np.array(1),
-                                            b=self.item_difficulties,
-                                            c=np.array(1),
-                                            d=np.array(0),
+        
+        return maximize_likelihood_function(a=self.a,
+                                            b=self.b,
+                                            c=self.c,
+                                            d=self.d,
                                             response_pattern=self.response_pattern,
                                             border=self.optimization_interval)
