@@ -105,9 +105,8 @@ class SemiAdaptiveImplementation(AdaptiveTest):
         for item in random_items:
             self.item_pool.delete_item(item)
 
-        # get item difficulties
-        item_difficulties = self.get_answered_items_difficulties()
-        estimation = self.estimate_ability_level(item_difficulties)
+        # estimate ability level
+        estimation = self.estimate_ability_level()
         self.ability_level = estimation
 
         # create test results for all n-1 random items

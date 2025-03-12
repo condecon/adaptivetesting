@@ -2,7 +2,7 @@ from typing import List
 from psychopy import visual, event # type: ignore
 from psychopy.hardware import keyboard # type: ignore
 from adaptivetesting.implementations import DefaultImplementation
-from adaptivetesting.models import AdaptiveTest , ItemPool, TestItem, load_test_items_from_list
+from adaptivetesting.models import AdaptiveTest , ItemPool, TestItem
 from adaptivetesting.data import PickleContext
 
 # ====================
@@ -20,7 +20,7 @@ item_difficulties: List[float] = [-3,
                                   2]
 
 # convert to test items
-items: List[TestItem] = load_test_items_from_list(item_difficulties)
+items: List[TestItem] = ItemPool.load_from_list(item_difficulties).test_items
 
 # create example stimuli
 item_stimuli: List[str] = ["A",

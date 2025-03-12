@@ -145,11 +145,8 @@ class AdaptiveTest(abc.ABC):
         # add item to answered items list
         self.answered_items.append(item)
 
-        # get item difficulties of answered items
-        item_difficulties = self.get_answered_items_difficulties()
-
         # estimate ability level
-        estimation = self.estimate_ability_level(item_difficulties)
+        estimation = self.estimate_ability_level()
 
         # update estimated ability level
         self.ability_level = estimation
