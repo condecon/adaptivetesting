@@ -1,8 +1,8 @@
-adaptivetesting.data package
+data module
 ============================
 
 
-adaptivetesting.data.PickleContext
+PickleContext
 -------------------------------------------
 
 .. autoclass:: adaptivetesting.data.PickleContext
@@ -10,7 +10,7 @@ adaptivetesting.data.PickleContext
    :undoc-members:
    :show-inheritance:
 
-adaptivetesting.data.SQLiteContext
+SQLiteContext
 -------------------------------------------
 
 .. autoclass:: adaptivetesting.data.SQLiteContext

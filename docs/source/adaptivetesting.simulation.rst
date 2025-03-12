@@ -1,8 +1,8 @@
-adaptivetesting.simulation package
+simulation module
 ==================================
 
 
-adaptivetesting.simulation.ResultOutputFormat
+ResultOutputFormat
 -----------------------------------------------
 
 .. autoclass:: adaptivetesting.simulation.ResultOutputFormat
@@ -11,7 +11,7 @@ adaptivetesting.simulation.ResultOutputFormat
    :show-inheritance:
 
 
-adaptivetesting.simulation.StoppingCriterion
+StoppingCriterion
 -----------------------------------------------
 
 .. autoclass:: adaptivetesting.simulation.StoppingCriterion
@@ -20,7 +20,7 @@ adaptivetesting.simulation.StoppingCriterion
    :show-inheritance:
 
 
-adaptivetesting.simulation.Simulation
+Simulation
 -----------------------------------------------
 
 .. autoclass:: adaptivetesting.simulation.Simulation

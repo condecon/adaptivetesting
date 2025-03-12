@@ -3,6 +3,7 @@ import jax.numpy as np
 from ...models.__test_item import TestItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
+from ...models.__test_item import TestItem
 
 
 class MLEstimator(IEstimator):
@@ -12,12 +13,13 @@ class MLEstimator(IEstimator):
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
-        item difficulties.
+        item parameters.
+        The estimation uses Maximum Likelihood Estimation.
 
         Args:
             response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
 
-            items (List[TestItem]): list of items
+            items (List[TestItem]): list of answered items
         """
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
 
@@ -29,9 +31,10 @@ class MLEstimator(IEstimator):
         Returns:
             float: ability estimation
         """
-        return maximize_likelihood_function(a=np.array([item.a for item in self.items]),
-                                            b=np.array([item.b for item in self.items]),
-                                            c=np.array([item.c for item in self.items]),
-                                            d=np.array([item.d for item in self.items]),
+        
+        return maximize_likelihood_function(a=self.a,
+                                            b=self.b,
+                                            c=self.c,
+                                            d=self.d,
                                             response_pattern=self.response_pattern,
                                             border=self.optimization_interval)

@@ -1,8 +1,8 @@
-adaptivetesting.implementations package
+implementations module
 =======================================
 
 
-adaptivetesting.implementations.DefaultImplementation
+DefaultImplementation
 --------------------------------------------------------------
 
 .. autoclass:: adaptivetesting.implementations.DefaultImplementation
@@ -10,7 +10,7 @@ adaptivetesting.implementations.DefaultImplementation
    :undoc-members:
    :show-inheritance:
 
-adaptivetesting.implementations.PreTest
+PreTest
 --------------------------------------------------------------
 
 .. autoclass:: adaptivetesting.implementations.PreTest
@@ -19,7 +19,7 @@ adaptivetesting.implementations.PreTest
    :show-inheritance:
 
 
-adaptivetesting.implementations.SemiAdaptiveImplementation
+SemiAdaptiveImplementation
 --------------------------------------------------------------
 
 .. autoclass:: adaptivetesting.implementations.SemiAdaptiveImplementation
