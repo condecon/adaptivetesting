@@ -21,7 +21,6 @@ class Prior(ABC):
         """
         pass
 
-
 class NormalPrior(Prior):
     def __init__(self, mean: float, sd: float):
         """Normal distribution as prior for Bayes Modal estimation
