@@ -31,7 +31,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         )
         unittest.TestCase.__init__(self, methodName)
 
-    def estimate_ability_level(self, answered_items_difficulties: list[float]) -> float:
+    def estimate_ability_level(self) -> float:
         return 0
 
     def test_get_difficulties(self):
@@ -53,8 +53,8 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         self.assertEqual(self.test_results[0].showed_item,
                          item1.b)
 
-        print(self.test_results)
-        print(simulated_responses)
+        # print(self.test_results)
+        # print(simulated_responses)
         # test response
         self.assertEqual(
             self.test_results[0].response,
@@ -62,6 +62,6 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         )
 
         # test item is removed from pool
-        print(self.item_pool.test_items)
+        # print(self.item_pool.test_items)
         self.assertEqual(self.item_pool.test_items, [item2, item3])
 
