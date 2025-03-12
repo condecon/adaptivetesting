@@ -52,19 +52,15 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
         self.pretest_seed = pretest_seed
 
-    def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float:
+    def estimate_ability_level(self) -> float:
         """
         Estimates latent ability level using ML.
         If responses are only 1 or 0,
         the ability will be set to one
         of the boundaries of the estimation interval (`[-10,10]`).
 
-        Args:
-            answered_items_difficulties (List[float]): List of difficulty values of the answered items
-
-
         Returns:
-            estimation: ability estimation
+            float: ability estimation
         """
         estimator = MLEstimator(
             self.response_pattern,

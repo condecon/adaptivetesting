@@ -95,13 +95,10 @@ class AdaptiveTest(abc.ABC):
         return item
 
     @abc.abstractmethod
-    def estimate_ability_level(self, answered_items_difficulties: List[float]) -> float:
+    def estimate_ability_level(self) -> float:
         """
         Estimates ability level.
         The method has to be implemented by subclasses.
-
-        Args:
-            answered_items_difficulties (List[float]): difficulties of answered items
 
         Returns:
             float: estimated ability level
