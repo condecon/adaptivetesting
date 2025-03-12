@@ -33,7 +33,7 @@ def maximize_posterior(
     """
     posterior = lambda mu: likelihood(mu, a, b, c, d, response_pattern) * prior.pdf(mu)
     
-    result: OptimizeResult = minimize_scalar(lambda mu: -posterior(mu), 
+    result: OptimizeResult = minimize_scalar(lambda mu: posterior(mu), 
                                              bounds=(-10, 10),
                                              method="bounded") # type: ignore
     
