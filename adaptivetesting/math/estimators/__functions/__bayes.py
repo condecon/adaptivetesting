@@ -30,7 +30,7 @@ def maximize_posterior(
     
     result: OptimizeResult = minimize_scalar(lambda mu: -posterior(mu), 
                                              bounds=(-10, 10),
-                                             method="bounded")
+                                             method="bounded") # type: ignore
     
     if not result.success:
         raise AlgorithmException(f"Optimization failed: {result.message}")

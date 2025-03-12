@@ -6,7 +6,7 @@ class Prior(ABC):
     def __init__(self):
         """Base class for prior distributions
         """
-        super.init(self)
+        pass
 
     @abstractmethod
     def pdf(self, x: float | np.ndarray) -> np.ndarray:
@@ -41,5 +41,5 @@ class NormalPrior(Prior):
         Returns:
             ndarray: function value
         """
-        return norm.pdf(x, self.mean, self.sd)
+        return norm.pdf(x, self.mean, self.sd) # type: ignore
         

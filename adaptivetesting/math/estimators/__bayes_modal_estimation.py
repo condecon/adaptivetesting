@@ -8,7 +8,7 @@ from .__prior import Prior
 class BayesModal(IEstimator):
     def __init__(self, 
                  response_pattern: List[int] | np.ndarray, 
-                 items: List[TestItem] | np.ndarray,
+                 items: List[TestItem],
                  prior: Prior,
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
