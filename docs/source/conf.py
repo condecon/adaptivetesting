@@ -1,5 +1,6 @@
 import os
 import sys
+from sphinx.application import Sphinx
 sys.path.insert(0, os.path.abspath('../'))
 
 # Configuration file for the Sphinx documentation builder.
@@ -40,3 +41,6 @@ html_theme_options = {
     "logo_only": True,
 
 }
+
+def setup(app: Sphinx):
+    app.add_css_file("main.css")

@@ -1,4 +1,4 @@
-math module
+math Module
 ============================
 
 Estimators

@@ -1,5 +1,13 @@
-services module
+services Module
 ================================
+
+IEstimator
+---------------
+.. autoclass:: adaptivetesting.services.IEstimator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 ITestResults
 --------------------------------------------------------

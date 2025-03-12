@@ -1,4 +1,4 @@
-tests module
+tests Module
 =============================
 
 This module includes unit tests for the functionality of the package.
