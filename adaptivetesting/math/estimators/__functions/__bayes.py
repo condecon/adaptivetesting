@@ -17,10 +17,15 @@ def maximize_posterior(
 
     Args:
         a (np.ndarray): _description_
+        
         b (np.ndarray): _description_
+        
         c (np.ndarray): _description_
+        
         d (np.ndarray): _description_
+        
         response_pattern (np.ndarray): _description_
+        
         prior (Prior): _description_
 
     Returns:

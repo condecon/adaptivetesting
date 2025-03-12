@@ -100,9 +100,13 @@ class ItemPool:
 
         Args:
             a (List[float]): discrimination parameter
+            
             b (List[float]): difficulty parameter
+            
             c (List[float]): guessing parameter
+            
             d (List[float]): slipping parameter
+            
             simulated_responses (List[int]): simulated responses
 
         Returns:

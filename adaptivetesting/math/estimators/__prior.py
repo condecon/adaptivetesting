@@ -26,6 +26,7 @@ class NormalPrior(Prior):
 
         Args:
             mean (float): mean of the distribution
+            
             sd (float): standard deviation of the distribution
         """
         self.mean = mean

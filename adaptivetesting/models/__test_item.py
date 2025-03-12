@@ -7,7 +7,7 @@ class TestItem:
         """Representation of a test item in the item pool.
         The format is equal to the implementation in catR.
 
-        ## Properties:
+        Properties:
             - a (float):
             - b (float): difficulty
             - c (float): 

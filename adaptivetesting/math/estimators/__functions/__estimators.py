@@ -13,9 +13,13 @@ def probability_y1(mu: jnp.ndarray,
 
     Args:
         mu (jnp.ndarray): latent ability level
+        
         a (jnp.ndarray): item discrimination parameter
+        
         b (jnp.ndarray): item difficulty parameter
+        
         c (jnp.ndarray): pseudo guessing parameter
+        
         d (jnp.ndarray): inattention parameter
 
     Returns:
@@ -37,9 +41,13 @@ def probability_y0(mu: jnp.ndarray,
 
     Args:
             mu (jnp.ndarray): latent ability level
+            
             a (jnp.ndarray): item discrimination parameter
+            
             b (jnp.ndarray): item difficulty parameter
+            
             c (jnp.ndarray): pseudo guessing parameter
+            
             d (jnp.ndarray): inattention parameter
 
     Returns:
@@ -61,9 +69,13 @@ def likelihood(mu: jnp.ndarray,
 
     Args:
         mu (jnp.ndarray): ability level
+        
         a (jnp.ndarray): item discrimination parameter
+        
         b (jnp.ndarray): item difficulty parameter
+        
         c (jnp.ndarray): pseudo guessing parameter
+        
         d (jnp.ndarray): inattention parameter
 
     Returns:
@@ -84,8 +96,11 @@ def maximize_likelihood_function(a: jnp.ndarray,
     
     Args:
         a (jnp.ndarray): item discrimination parameter
+        
         b (jnp.ndarray): item difficulty parameter
+        
         c (jnp.ndarray): pseudo guessing parameter
+        
         d (jnp.ndarray): inattention parameter
 
         response_pattern (jnp.ndarray): response pattern of the item

@@ -42,6 +42,7 @@ class PreTest:
 
         Args:
             lower (float): Lower bound of the item difficulty interval.
+            
             upper (float): Upper bound of the item difficulty interval.
 
         Returns:

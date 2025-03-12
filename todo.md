@@ -1,1 +1,1 @@
-add pandas support
+bayes standard error!

@@ -30,6 +30,7 @@ class BayesModal(IEstimator):
 
     def get_estimation(self) -> float:
         """Estimate the current ability level using Bayes Modal.
+        
         Returns:
             float: ability estimation
         """
