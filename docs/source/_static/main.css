@@ -1,0 +1,24 @@
+.logo{
+    display: block;
+    margin: 0;
+    height: auto;
+    width: 100% !important;
+    border-radius: 0;
+    max-width: 100%;
+    background: transparent;
+}
+
+.wy-side-nav-search {
+    display: block;
+    width: 300px;
+    padding: .809em;
+    margin-bottom: .809em;
+    z-index: 200;
+    background-color: white !important;
+    text-align: center;
+    color: #fcfcfc;
+}
+
+.caption-text{
+    color: white !important;
+}

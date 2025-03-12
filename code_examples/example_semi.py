@@ -1,5 +1,5 @@
 from typing import List
-from adaptivetesting.models import TestItem, ItemPool, AdaptiveTest,load_test_items_from_list
+from adaptivetesting.models import TestItem, ItemPool, AdaptiveTest
 from adaptivetesting.implementations import SemiAdaptiveImplementation
 from adaptivetesting.simulation import Simulation, ResultOutputFormat, StoppingCriterion
 
@@ -18,7 +18,7 @@ item_difficulties: List[float] = [-3,
                                   2]
 
 # convert to test items
-items: List[TestItem] = load_test_items_from_list(item_difficulties)
+items: List[TestItem] = ItemPool.load_from_list(b=item_difficulties).test_items
 
 # create simulated responses
 simulated_responses: List[int] = [1,

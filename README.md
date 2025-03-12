@@ -2,6 +2,9 @@
 [![Unittests](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml)
 [![Deploy to PyPi](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml)
 
+<img src="/docs/source/_static/logo.svg" style="width: 100%">
+</img>
+
 _adaptivetesting_ is a Python package for computer-aided adaptive 
 testing that can be used to simulate and implement custom adaptive tests 
 in real-world testing scenarios.
@@ -51,3 +54,15 @@ For more information, please consult the documentation for the ``AdaptiveTest`` 
 
 ## Documentation
 Extensive documentation of all programm code is available at [`/documentation`](/documentation).
+
+
+# ToDo:
+
+- 4PL Model
+    - ML
+    - Item Bank
+    - Test Information
+    - Implementations
+
+- Bayes Modal
+    - Change AdaptiveTesting stucture
