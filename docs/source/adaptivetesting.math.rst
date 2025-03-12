@@ -25,6 +25,29 @@ NormalPrior
    :undoc-members:
    :show-inheritance:
 
+probability_y1
+^^^^^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.estimators.probability_y1
+
+probability_y0
+^^^^^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.estimators.probability_y0
+
+maximize_likelihood_function
+^^^^^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.estimators.maximize_likelihood_function
+
+likelihood
+^^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.estimators.likelihood
+
+maximize_posterior
+^^^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.estimators.maximize_posterior
+
+
+
+
 
 Item Selection
 -------------------

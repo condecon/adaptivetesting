@@ -95,7 +95,8 @@ class ItemPool:
         d: List[float] | None = None,
         simulated_responses: List[int] | None = None
         ) -> "ItemPool":
-        """Creates test items from a list of floats.
+        """
+        Creates test items from a list of floats.
 
         Args:
             a (List[float]): discrimination parameter
@@ -106,6 +107,7 @@ class ItemPool:
 
         Returns:
             List[TestItem]: item pool
+        
         """
         items: List[TestItem] = []
 

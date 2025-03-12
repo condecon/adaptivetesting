@@ -34,10 +34,6 @@ TestItem
    :undoc-members:
    :show-inheritance:
 
-load\_test\_items\_from\_list
-------------------------------------------------------
-.. autofunction:: adaptivetesting.models.load_test_items_from_list
-
 
 TestResult
 ------------------------------------------
