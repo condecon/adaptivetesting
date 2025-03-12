@@ -33,7 +33,7 @@ jobs:
                     path: docs/build/html
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@
+              uses: actions/deploy-pages@v3
               
 permissions:
   id-token: write
