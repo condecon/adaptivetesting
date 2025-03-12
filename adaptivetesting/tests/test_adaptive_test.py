@@ -31,7 +31,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         )
         unittest.TestCase.__init__(self, methodName)
 
-    def estimate_ability_level(self, answered_items_difficulties: list[float]) -> float:
+    def estimate_ability_level(self) -> float:
         return 0
 
     def test_get_difficulties(self):
