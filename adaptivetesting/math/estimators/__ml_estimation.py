@@ -13,8 +13,7 @@ class MLEstimator(IEstimator):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
         item parameters.
-        The estimation is based on maximum likelihood estimation and the
-        Rasch model.
+        The estimation uses Maximum Likelihood Estimation.
 
         Args:
             response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
