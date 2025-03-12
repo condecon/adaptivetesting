@@ -31,7 +31,7 @@ class PreTest:
         quantiles = np.array([])
         # calculate quantiles
         for q in [0.25, 0.5, 0.75]:
-            quantile: np.floating = np.quantile(difficulties, q)
+            quantile: np.ndarray = np.quantile(np.array(difficulties), q)
             quantiles = np.append(quantiles, quantile)
 
         return quantiles
@@ -72,8 +72,8 @@ class PreTest:
 
         for i in range(len(quantiles)-1):
             selected_item = self.select_item_in_interval(
-                    lower=quantiles[i],
-                    upper=quantiles[i+1]
+                    lower=float(quantiles[i]),
+                    upper=float(quantiles[i+1])
             )
 
             selected_items.append(selected_item)
