@@ -33,7 +33,7 @@ def maximize_posterior(
                                              method="bounded")
     
     if not result.success:
-        raise Exception(f"Optimization failed: {result.message}")
+        raise AlgorithmException(f"Optimization failed: {result.message}")
     
     else:
         return float(result.x)

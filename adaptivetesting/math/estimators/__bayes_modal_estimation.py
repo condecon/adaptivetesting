@@ -2,7 +2,7 @@ from typing import List, Tuple
 import jax.numpy as np
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
-from ._functions.__bayes import maximize_posterior
+from .__functions.__bayes import maximize_posterior
 from .__prior import Prior
 
 class BayesModal(IEstimator):
