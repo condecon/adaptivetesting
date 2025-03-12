@@ -1,7 +1,7 @@
-adaptivetesting.models package
+models module
 ==============================
 
-adaptivetesting.models.AdaptiveTest
+AdaptiveTest
 --------------------------------------------
 
 .. autoclass:: adaptivetesting.models.AdaptiveTest
@@ -9,7 +9,7 @@ adaptivetesting.models.AdaptiveTest
    :undoc-members:
    :show-inheritance:
 
-adaptivetesting.models.AlgorithmException
+AlgorithmException
 --------------------------------------------------
 
 .. autoclass:: adaptivetesting.models.AlgorithmException
@@ -17,7 +17,7 @@ adaptivetesting.models.AlgorithmException
    :undoc-members:
    :show-inheritance:
 
-adaptivetesting.models.ItemPool
+ItemPool
 ----------------------------------------
 
 .. autoclass:: adaptivetesting.models.ItemPool
@@ -25,7 +25,8 @@ adaptivetesting.models.ItemPool
    :undoc-members:
    :show-inheritance:
 
-adaptivetesting.models.TestItem
+
+TestItem
 ----------------------------------------
 
 .. autoclass:: adaptivetesting.models.TestItem
@@ -33,12 +34,12 @@ adaptivetesting.models.TestItem
    :undoc-members:
    :show-inheritance:
 
-adaptivetesting.models.load\_test\_items\_from\_list
+load\_test\_items\_from\_list
 ------------------------------------------------------
 .. autofunction:: adaptivetesting.models.load_test_items_from_list
 
 
-adaptivetesting.models.TestResult
+TestResult
 ------------------------------------------
 
 .. autoclass:: adaptivetesting.models.TestResult

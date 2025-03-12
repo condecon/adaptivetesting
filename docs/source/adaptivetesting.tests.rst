@@ -1,4 +1,4 @@
-adaptivetesting.tests package
+tests module
 =============================
 
 This module includes unit tests for the functionality of the package.
