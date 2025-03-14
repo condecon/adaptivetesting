@@ -38,3 +38,20 @@ class TestStandardError(unittest.TestCase):
         result = standard_error(item_pool.test_items, 0)
 
         self.assertAlmostEqual(result, 1.444873, 3)
+
+    def test_calculation_bm(self):
+        items = pd.DataFrame({
+            "a": [1.32, 1.07, 0.84],
+            "b": [-0.63, 0.18, -0.84],
+            "c": [0.17, 0.10, 0.19],
+            "d": [0.87, 0.93, 1]
+        })
+
+        item_pool = ItemPool.load_from_dataframe(items)
+
+        result = standard_error(item_pool.test_items,
+                                0,
+                                estimator="BM",
+                                sd=1)
+
+        self.assertAlmostEqual(result, 0.8222712, 3)
