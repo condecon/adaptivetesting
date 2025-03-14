@@ -28,9 +28,13 @@ jobs:
             - name: Setup Pages
               uses: actions/configure-pages@v5
             - name: Upload artifact
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v4
               with:
-                  path: docs/_build/html
+                  path: docs/build/html
             - name: Deploy to GitHub Pages
               id: deployment
-              uses: actions/deploy-pages@v4
+              uses: actions/deploy-pages@v3
+              
+permissions:
+  id-token: write
+  pages: write
