@@ -22,6 +22,9 @@ def standard_error(answered_items: List[TestItem],
 
         sd (float | None): Standard deviation of the prior distribution. Only required for BM.
 
+    Raises:
+        ValueError
+    
     Returns:
         float: Standard error
     """
@@ -46,6 +49,9 @@ def standard_error(answered_items: List[TestItem],
                                                         b=b,
                                                         c=c,
                                                         d=d)
+        if sd is None:
+            raise ValueError("sd cannot be None if BM is used as estimator.")
+        
         error = 1 / math.sqrt(
             (1 / math.pow(sd, 2)) + information
         )
