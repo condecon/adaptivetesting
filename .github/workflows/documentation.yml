@@ -47,5 +47,5 @@ jobs:
               id: deployment
               uses: actions/deploy-pages@v4
               with:
-                artifact-name: documentation
+                artifact_name: documentation
               
