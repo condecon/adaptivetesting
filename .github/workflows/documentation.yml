@@ -26,10 +26,10 @@ jobs:
                     cd docs
                     make html
 
-            # check for symlinks
-            - name: Check for symlinks
+            # remove symlinks
+            - name: Remove symlinks
               run: |
-                find docs/build/html -type l -ls
+                find docs/build/html -type l -exec rm -f {} \;
 # GitHub Pages
             - name: Setup Pages
               uses: actions/configure-pages@v5
