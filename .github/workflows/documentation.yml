@@ -25,6 +25,11 @@ jobs:
               run: |
                     cd docs
                     make html
+
+            # check for symlinks
+            - name: Check for symlinks
+              run: |
+                find build/html -type l -ls
 # GitHub Pages
             - name: Setup Pages
               uses: actions/configure-pages@v5
