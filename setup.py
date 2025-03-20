@@ -7,7 +7,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
     name="adaptivetesting",
-    version="1.0.0-rc1",
+    version="1.0.0",
     author="Jonas Engicht",
     author_email="jonas.engicht@uni-jena.de",
     maintainer="Jonas Engicht",
