@@ -57,8 +57,8 @@ The package comes with two CAT implementations that are ready to use.
 Custom testing procedures can be implemented by implementing
 the abstract class ``AdaptiveTest``.
 Any existing functionality can be overridden while still
-retaining full compatability with the packages' functionality.
-For more information, please consult the documentation for the ``AdaptiveTest`` class
+retaining full compatibility with the packages' functionality.
+For more information, please consult the documentation for the ``AdaptiveTest`` class.
 
 ## Package structure
 | submodule | description |
@@ -72,4 +72,5 @@ For more information, please consult the documentation for the ``AdaptiveTest`` 
 | tests | Unit test for the entire package |
 
 ## Documentation
-Extensive documentation is available in the source code but it can also be compiled to a webpage using sphinx.
+Extensive documentation is available in the source code,
+but it can also be compiled to a webpage using sphinx.
