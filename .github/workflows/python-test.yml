@@ -32,10 +32,10 @@ jobs:
             uv add flake8
     - name: Type checking
       run: |
-        mypy
+        uv run mypy
     - name: Type checking code examples
       run: |
-        mypy code_examples
+        uv run mypy code_examples
     - name: Test with unittest
       run: |
         uv run python -m unittest
