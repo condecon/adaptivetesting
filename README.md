@@ -286,61 +286,24 @@ adaptive_test = TestAssembler(
 )
 ```
 
+### Custom testing procedures
+Custom testing procedures can be implemented by implementing
+the abstract class ``AdaptiveTest``.
+Any existing functionality can be overridden while still
+retaining full compatibility with the packages' functionality.
+For more information, please consult the documentation for the ``AdaptiveTest`` class.
+
+## Package structure
+| submodule | description |
+|------------|-------------|
+| data | data management and processing of test results |
+| implementations | concrete implementations of the adaptive process, provides actual |
+| math | mathematical utilities and functions, such as estimators, item selection, test information |
+| models | data model definitions and structures used in the package |
+| services | interfaces that concrete implementations inherit from |
+| simulations | functions and classes used in CAT simulation |
+| tests | Unit test for the entire package |
+
 ## Documentation
-
-Full documentation is available in the `docs/` directory:
-
-- [API Reference](docs/readme.md)
-- [Models Module](docs/models.md)
-- [Math Module](docs/math.md)
-- [Implementation Examples](docs/implementations.md)
-- [Simulation Guide](docs/simulation.md)
-
-## Testing
-
-The package includes comprehensive tests. Run them using:
-
-```bash
-python -m pytest adaptivetesting/tests/
-```
-
-## Contributing
-
-We welcome contributions! Please see our [GitHub repository](https://github.com/condecon/adaptivetesting) for:
-
-- Issue tracking
-- Feature requests  
-- Pull request guidelines
-- Development setup
-
-## Research and Applications
-
-This package is designed for researchers and practitioners in:
-
-- Educational assessment
-- Psychological testing
-- Cognitive ability measurement
-- Adaptive learning systems
-- Psychometric research
-
-The package facilitates the transition from research simulation to real-world testing applications without requiring major code modifications.
-
-## Citation
-If you use this package for your academic work, please provide the following reference:
-Engicht, J., Bee, R. M., & Koch, T. (2025). Customizable Bayesian Adaptive Testing with Python – The adaptivetesting Package. Open Science Framework. https://doi.org/10.31219/osf.io/d2xge_v1
-
-```
-@online{engichtCustomizableBayesianAdaptive2025,
-  title = {Customizable {{Bayesian Adaptive Testing}} with {{Python}} – {{The}} Adaptivetesting {{Package}}},
-  author = {Engicht, Jonas and Bee, R. Maximilian and Koch, Tobias},
-  date = {2025-08-06},
-  eprinttype = {Open Science Framework},
-  doi = {10.31219/osf.io/d2xge_v1},
-  url = {https://osf.io/d2xge_v1},
-  pubstate = {prepublished}
-}
-```
-
-## License
-
-This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
+Extensive documentation is available in the source code,
+but it can also be compiled to a webpage using sphinx.
