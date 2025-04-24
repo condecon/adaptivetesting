@@ -27,7 +27,6 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
-    "adaptivetesting",
     "flake8>=7.2.0",
     "mypy>=1.15.0",
     "pandas-stubs>=2.2.3.250308",
