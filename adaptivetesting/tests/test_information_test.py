@@ -4,6 +4,7 @@ import jax.numpy as np
 import pandas as pd
 import math
 
+
 class TestInformation(unittest.TestCase):
     def test_information_calculation_1pl(self):
         difficulties = np.array([0.7, 0.9, 0.6])

@@ -82,7 +82,7 @@ class AdaptiveTest(abc.ABC):
             float: standard error of the ability estimation
 
         """
-        answered_items= self.get_answered_items()
+        answered_items = self.get_answered_items()
         return standard_error(answered_items, self.ability_level)
 
     def get_next_item(self) -> TestItem:
@@ -180,4 +180,3 @@ class AdaptiveTest(abc.ABC):
             return True
         else:
             return False
-

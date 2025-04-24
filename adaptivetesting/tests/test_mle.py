@@ -3,6 +3,7 @@ from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.models import AlgorithmException, ItemPool
 import pandas as pd
 
+
 class TestMLE(unittest.TestCase):
 
     def test_ml_estimation(self):
@@ -23,7 +24,6 @@ class TestMLE(unittest.TestCase):
     def test_one_item(self):
         response = [0]
         dif = [0.9]
-        ability = 0
 
         items = ItemPool.load_from_list(dif).test_items
 
@@ -63,9 +63,9 @@ class TestMLE(unittest.TestCase):
             "c": [0.17, 0.10, 0.19],
             "d": [0.87, 0.93, 1]
         })
-        item_pool =  ItemPool.load_from_dataframe(items)
+        item_pool = ItemPool.load_from_dataframe(items)
 
-        response_pattern = [0,1,0]
+        response_pattern = [0, 1, 0]
         estimator = MLEstimator(response_pattern, item_pool.test_items)
 
         result = estimator.get_estimation()

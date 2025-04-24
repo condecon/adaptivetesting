@@ -1,5 +1,5 @@
 from typing import List
-from adaptivetesting.models import TestItem, ItemPool, AdaptiveTest 
+from adaptivetesting.models import TestItem, ItemPool, AdaptiveTest
 from adaptivetesting.implementations import DefaultImplementation
 from adaptivetesting.simulation import Simulation, ResultOutputFormat, StoppingCriterion
 
