@@ -2,8 +2,9 @@ from unittest import TestCase
 from adaptivetesting.models import TestItem, ItemPool
 import pandas as pd
 
+
 class TestLoadTestItems(TestCase):
-    def __init__(self, methodName = "runTest"):
+    def __init__(self, methodName="runTest"):
         super().__init__(methodName)
         self.item1 = TestItem()
         self.item1.a = 0.9
@@ -15,7 +16,6 @@ class TestLoadTestItems(TestCase):
         self.item2.b = 3
         self.item2.c = 1.9
 # List
-
 
 # Dict
     def test_load_test_items_from_dict_success(self):

@@ -1,5 +1,4 @@
 from typing import List
-from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_result import TestResult
 from ..services.__test_results_interface import ITestResults
 import sqlite3
@@ -26,8 +25,6 @@ class SQLiteContext(ITestResults):
         Args:
             test_results (List[TestResult]): list of test results
         """
-
-
         try:
             con = sqlite3.connect(self.filename)
         except sqlite3.OperationalError:

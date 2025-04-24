@@ -1,7 +1,3 @@
-from typing import Any, Dict, List
-from dataclasses import dataclass
-
-
 class TestItem:
     def __init__(self):
         """Representation of a test item in the item pool.
@@ -10,7 +6,7 @@ class TestItem:
         Properties:
             - a (float):
             - b (float): difficulty
-            - c (float): 
+            - c (float):
             - d (float):
 
         """

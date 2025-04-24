@@ -3,12 +3,11 @@ import jax.numpy as np
 from ...models.__test_item import TestItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
-from ...models.__test_item import TestItem
 
 
 class MLEstimator(IEstimator):
-    def __init__(self,  
-                 response_pattern: List[int] | np.ndarray, 
+    def __init__(self,
+                 response_pattern: List[int] | np.ndarray,
                  items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level

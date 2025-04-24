@@ -41,7 +41,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
     def test_standard_error(self):
         """This should calculate a standard error without failing"""
         self.answered_items = [item1, item2]
-        error = self.get_ability_se()
+        self.get_ability_se()
 
     def test_get_next_item(self):
         next_item = self.get_next_item()
@@ -64,4 +64,3 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         # test item is removed from pool
         # print(self.item_pool.test_items)
         self.assertEqual(self.item_pool.test_items, [item2, item3])
-

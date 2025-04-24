@@ -2,7 +2,7 @@ from typing import List
 from psychopy import visual, event # type: ignore
 from psychopy.hardware import keyboard # type: ignore
 from adaptivetesting.implementations import DefaultImplementation
-from adaptivetesting.models import AdaptiveTest , ItemPool, TestItem
+from adaptivetesting.models import AdaptiveTest, ItemPool, TestItem
 from adaptivetesting.data import PickleContext
 
 # ====================
@@ -25,7 +25,7 @@ items: List[TestItem] = ItemPool.load_from_list(item_difficulties).test_items
 # create example stimuli
 item_stimuli: List[str] = ["A",
                            "B",
-                           "C", 
+                           "C",
                            "D",
                            "E",
                            "F",
@@ -52,13 +52,14 @@ adaptive_test: AdaptiveTest = DefaultImplementation(
 # ====================
 
 # general setup
-win = visual.Window([800,600], 
-                    monitor="testMonitor", 
-                    units="deg", 
+win = visual.Window([800, 600],
+                    monitor="testMonitor",
+                    units="deg",
                     fullscr=False)
 
 # init keyboard
 keyboard.Keyboard()
+
 
 # define function to get user input
 def get_response(item: TestItem) -> int:
@@ -67,10 +68,10 @@ def get_response(item: TestItem) -> int:
     stimuli: str = item_stimuli[index]
 
     # create text box and display stimulus
-    text_box = visual.TextBox2(win=win, 
-                        text=stimuli, 
-                        alignment="center",
-                        size=24)
+    text_box = visual.TextBox2(win=win,
+                               text=stimuli,
+                               alignment="center",
+                               size=24)
     # draw text
     text_box.draw()
     # update window
@@ -89,6 +90,7 @@ def get_response(item: TestItem) -> int:
             # return 0
             if keys[0] == "left":
                 return 0
+
 
 # override adaptive test standard function
 adaptive_test.get_response = get_response # type: ignore
