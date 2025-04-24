@@ -1,4 +1,3 @@
-from typing import List
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__item_pool import ItemPool
 from ..models.__algorithm_exception import AlgorithmException

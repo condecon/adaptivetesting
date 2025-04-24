@@ -3,6 +3,7 @@ from typing import List, Tuple
 import jax.numpy as np
 from ..models.__test_item import TestItem
 
+
 class IEstimator(ABC):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,

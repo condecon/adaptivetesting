@@ -5,9 +5,10 @@ from ...models.__test_item import TestItem
 from .__functions.__bayes import maximize_posterior
 from .__prior import Prior
 
+
 class BayesModal(IEstimator):
-    def __init__(self, 
-                 response_pattern: List[int] | np.ndarray, 
+    def __init__(self,
+                 response_pattern: List[int] | np.ndarray,
                  items: List[TestItem],
                  prior: Prior,
                  optimization_interval: Tuple[float, float] = (-10, 10)):

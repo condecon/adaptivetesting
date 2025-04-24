@@ -16,7 +16,8 @@ class ItemPool:
         Args:
             test_items (List[TestItem]): A list of test items. Necessary for any adaptive test.
 
-            simulated_responses (List[int]): A list of simulated responses. Required for CAT simulations.
+            simulated_responses (List[int]): A list of simulated responses.
+            Required for CAT simulations.
         """
         self.test_items: List[TestItem] = test_items
         self.simulated_responses: List[int] | None = simulated_responses
@@ -89,12 +90,11 @@ class ItemPool:
 # STATIC LOAD METHODS
     @staticmethod
     def load_from_list(
-        b: List[float],
-        a: List[float] | None = None,
-        c: List[float] | None = None,
-        d: List[float] | None = None,
-        simulated_responses: List[int] | None = None
-        ) -> "ItemPool":
+            b: List[float],
+            a: List[float] | None = None,
+            c: List[float] | None = None,
+            d: List[float] | None = None,
+            simulated_responses: List[int] | None = None) -> "ItemPool":
         """
         Creates test items from a list of floats.
 
@@ -195,7 +195,6 @@ class ItemPool:
 
             items.append(item)
 
-        
         item_pool = ItemPool(items, simulated_responses)
         
         return item_pool
@@ -203,9 +202,9 @@ class ItemPool:
     @staticmethod
     def load_from_dataframe(source: DataFrame) -> "ItemPool":
         """Creates item pool from a pandas DataFrame.
-        Required columns are: `a`, `b`, `c`, `d`. 
+        Required columns are: `a`, `b`, `c`, `d`.
         Each column has to contain float values.
-        A `simulated_responses` (int values) column can be added to 
+        A `simulated_responses` (int values) column can be added to
         the DataFrame to provide simulated responses.
         
 
