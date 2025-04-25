@@ -23,10 +23,10 @@ pip install git+https://github.com/condecon/adaptivetesting
 
 # Contents:
 
-* [data Module](adaptivetesting.data.md)
-* [implementations Module](adaptivetesting.implementations.md)
-* [math Module](adaptivetesting.math.md)
-* [models Module](adaptivetesting.models.md)
-* [simulation Module](adaptivetesting.simulation.md)
-* [services Module](adaptivetesting.services.md)
-* [tests Module](adaptivetesting.tests.md)
+* [data Module](data.md)
+* [implementations Module](implementations.md)
+* [math Module](math.md)
+* [models Module](models.md)
+* [simulation Module](simulation.md)
+* [services Module](services.md)
+* [tests Module](tests.md)

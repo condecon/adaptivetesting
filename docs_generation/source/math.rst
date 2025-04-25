@@ -68,4 +68,10 @@ test\_information_function
 .. autofunction:: adaptivetesting.math.test_information_function
 
 
+Utilities
+------------
+
+generate_response_pattern
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.generate_response_pattern
 

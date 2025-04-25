@@ -4,7 +4,7 @@
 
 ### *class* adaptivetesting.data.PickleContext(simulation_id: str, participant_id: int)
 
-Bases: [`ITestResults`](adaptivetesting.services.md#adaptivetesting.services.ITestResults)
+Bases: [`ITestResults`](services.md#adaptivetesting.services.ITestResults)
 
 Implementation of the ITestResults interface for
 saving test results to the pickle format.
@@ -17,7 +17,7 @@ Args:
   <br/>
   participant_id (int): participant id and table name
 
-#### load() → List[[TestResult](adaptivetesting.models.md#adaptivetesting.models.TestResult)]
+#### load() → List[[TestResult](models.md#adaptivetesting.models.TestResult)]
 
 Loads results from the database.
 The implementation of this method is required
@@ -27,7 +27,7 @@ if used.
 
 Returns: List[TestResult]
 
-#### save(test_results: List[[TestResult](adaptivetesting.models.md#adaptivetesting.models.TestResult)]) → None
+#### save(test_results: List[[TestResult](models.md#adaptivetesting.models.TestResult)]) → None
 
 Saves a list of test results to a pickle binary file
 (<participant_id>.pickle).
@@ -39,7 +39,7 @@ Args:
 
 ### *class* adaptivetesting.data.SQLiteContext(simulation_id: str, participant_id: int)
 
-Bases: [`ITestResults`](adaptivetesting.services.md#adaptivetesting.services.ITestResults)
+Bases: [`ITestResults`](services.md#adaptivetesting.services.ITestResults)
 
 Implementation of the ITestResults interface for
 saving test results to a SQLITE database.
@@ -51,7 +51,7 @@ Args:
   <br/>
   participant_id (int): participant id and table name
 
-#### load() → List[[TestResult](adaptivetesting.models.md#adaptivetesting.models.TestResult)]
+#### load() → List[[TestResult](models.md#adaptivetesting.models.TestResult)]
 
 Loads results from the database.
 The implementation of this method is required
@@ -60,7 +60,7 @@ any implemented functionality and will throw an error.
 
 Returns: List[TestResult]
 
-#### save(test_results: List[[TestResult](adaptivetesting.models.md#adaptivetesting.models.TestResult)]) → None
+#### save(test_results: List[[TestResult](models.md#adaptivetesting.models.TestResult)]) → None
 
 Saves a list of test results to the database
 in the table <participant_id>.
