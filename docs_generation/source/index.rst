@@ -28,10 +28,10 @@ you can do so by running the following command:
    :maxdepth: 1
    :caption: Contents:
 
-   adaptivetesting.data
-   adaptivetesting.implementations
-   adaptivetesting.math
-   adaptivetesting.models
-   adaptivetesting.simulation
-   adaptivetesting.services
-   adaptivetesting.tests
+   data
+   implementations
+   math
+   models
+   simulation
+   services
+   tests
