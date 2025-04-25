@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # unignore built documentation
-!docs_generation/build/markdown/*
+
 
 # Distribution / packaging
 .Python
@@ -73,6 +73,9 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+!docs_generation/build/markdown/
+docs_generation/build/*
+!docs_generation/build/markdown/*
 
 # PyBuilder
 .pybuilder/
