@@ -2,7 +2,7 @@
 [![Unittests](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml)
 [![Deploy to PyPi](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml)
 
-<img src="/docs/source/_static/logo.svg" style="width: 100%">
+<img src="/docs_generation/source/_static/logo.svg" style="width: 100%">
 </img>
 
 _adaptivetesting_ is a Python package for computerized adaptive 
@@ -72,5 +72,5 @@ For more information, please consult the documentation for the ``AdaptiveTest`` 
 | tests | Unit test for the entire package |
 
 ## Documentation
-Extensive documentation is available in the source code,
-but it can also be compiled to a webpage using sphinx.
+
+You can find extensiv documentation in the <a href="/docs/">`docs` directory</a>.
