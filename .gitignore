@@ -72,10 +72,10 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
 !docs_generation/build/markdown/
-docs_generation/build/*
 !docs_generation/build/markdown/*
+docs_generation/build/*
+
 
 # PyBuilder
 .pybuilder/
