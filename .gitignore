@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# unignore built documentation
+!docs_generation/build/markdown/*
+
 # Distribution / packaging
 .Python
 build/
@@ -160,3 +163,5 @@ cython_debug/
 #.idea/
 
 .DS_Store
+
+
