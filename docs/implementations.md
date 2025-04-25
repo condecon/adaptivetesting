@@ -2,9 +2,9 @@
 
 ## DefaultImplementation
 
-### *class* adaptivetesting.implementations.DefaultImplementation(item_pool: [ItemPool](adaptivetesting.models.md#adaptivetesting.models.ItemPool), simulation_id: str, participant_id: int, true_ability_level: float, initial_ability_level: float = 0, simulation=True, debug=False)
+### *class* adaptivetesting.implementations.DefaultImplementation(item_pool: [ItemPool](models.md#adaptivetesting.models.ItemPool), simulation_id: str, participant_id: int, true_ability_level: float, initial_ability_level: float = 0, simulation=True, debug=False)
 
-Bases: [`AdaptiveTest`](adaptivetesting.models.md#adaptivetesting.models.AdaptiveTest)
+Bases: [`AdaptiveTest`](models.md#adaptivetesting.models.AdaptiveTest)
 
 This class represents the Default implementation using
 Maximum Likelihood Estimation and Urry’s rule during the test.
@@ -36,7 +36,7 @@ Returns:
 
 ## PreTest
 
-### *class* adaptivetesting.implementations.PreTest(items: List[[TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)], seed: int | None = None)
+### *class* adaptivetesting.implementations.PreTest(items: List[[TestItem](models.md#adaptivetesting.models.TestItem)], seed: int | None = None)
 
 Bases: `object`
 
@@ -55,7 +55,7 @@ Args:
 
 Calculates quantiles 0.25, 0.5, 0.75
 
-#### select_item_in_interval(lower: float, upper: float) → [TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)
+#### select_item_in_interval(lower: float, upper: float) → [TestItem](models.md#adaptivetesting.models.TestItem)
 
 Draws item from a pool in the specified interval.
 The item difficulty is > than the lower limit and <= the higher limit.
@@ -68,7 +68,7 @@ Args:
 Returns:
 : TestItem: Selected item.
 
-#### select_random_item_quantile() → List[[TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)]
+#### select_random_item_quantile() → List[[TestItem](models.md#adaptivetesting.models.TestItem)]
 
 Selects a random item from the 0.25, 0.5 and 0.75 quantiles.
 
@@ -77,9 +77,9 @@ Returns:
 
 ## SemiAdaptiveImplementation
 
-### *class* adaptivetesting.implementations.SemiAdaptiveImplementation(item_pool: [ItemPool](adaptivetesting.models.md#adaptivetesting.models.ItemPool), simulation_id: str, participant_id: int, true_ability_level: float, initial_ability_level: float = 0, simulation=True, debug=False, pretest_seed=12345)
+### *class* adaptivetesting.implementations.SemiAdaptiveImplementation(item_pool: [ItemPool](models.md#adaptivetesting.models.ItemPool), simulation_id: str, participant_id: int, true_ability_level: float, initial_ability_level: float = 0, simulation=True, debug=False, pretest_seed=12345)
 
-Bases: [`AdaptiveTest`](adaptivetesting.models.md#adaptivetesting.models.AdaptiveTest)
+Bases: [`AdaptiveTest`](models.md#adaptivetesting.models.AdaptiveTest)
 
 This class represents the Semi-Adaptive implementation using
 Maximum Likelihood Estimation and Urry’s rule during the test.
