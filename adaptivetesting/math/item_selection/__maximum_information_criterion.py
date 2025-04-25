@@ -42,7 +42,7 @@ def maximum_information_criterion(items: list[TestItem], ability: float) -> Test
                 max_information = information
                 best_item = item
         except Exception as e:
-            raise AlgorithmException(f"Errir calculating test information: {e}")
+            raise AlgorithmException(f"Error calculating test information: {e}")
         
     if best_item is None:
         raise ItemSelectionException("No appropriate item could be selected.")
