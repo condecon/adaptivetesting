@@ -49,6 +49,7 @@ def standard_error(answered_items: List[TestItem],
                                                 b=b,
                                                 c=c,
                                                 d=d)
+
         if sd is None:
             raise ValueError("sd cannot be None if BM is used as estimator.")
         

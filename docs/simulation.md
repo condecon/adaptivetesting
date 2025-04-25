@@ -28,7 +28,7 @@ for the adaptive test
 
 ## Simulation
 
-### *class* adaptivetesting.simulation.Simulation(test: [AdaptiveTest](adaptivetesting.models.md#adaptivetesting.models.AdaptiveTest), test_result_output: [ResultOutputFormat](#adaptivetesting.simulation.ResultOutputFormat))
+### *class* adaptivetesting.simulation.Simulation(test: [AdaptiveTest](models.md#adaptivetesting.models.AdaptiveTest), test_result_output: [ResultOutputFormat](#adaptivetesting.simulation.ResultOutputFormat))
 
 Bases: `object`
 

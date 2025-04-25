@@ -4,9 +4,9 @@
 
 ### MLEstimator
 
-### *class* adaptivetesting.math.estimators.MLEstimator(response_pattern: List[int] | Array, items: List[[TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)], optimization_interval: Tuple[float, float] = (-10, 10))
+### *class* adaptivetesting.math.estimators.MLEstimator(response_pattern: List[int] | Array, items: List[[TestItem](models.md#adaptivetesting.models.TestItem)], optimization_interval: Tuple[float, float] = (-10, 10))
 
-Bases: [`IEstimator`](adaptivetesting.services.md#adaptivetesting.services.IEstimator)
+Bases: [`IEstimator`](services.md#adaptivetesting.services.IEstimator)
 
 This class can be used to estimate the current ability level
 of a respondent given the response pattern and the corresponding
@@ -183,7 +183,7 @@ Returns:
 
 ### urrys_rule
 
-### adaptivetesting.math.item_selection.urrys_rule(items: List[[TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)], ability: float) → [TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)
+### adaptivetesting.math.item_selection.urrys_rule(items: List[[TestItem](models.md#adaptivetesting.models.TestItem)], ability: float) → [TestItem](models.md#adaptivetesting.models.TestItem)
 
 Urry’s rule selects the test item
 which has the minimal difference between
@@ -199,7 +199,7 @@ Returns:
 
 ## standard_error
 
-### adaptivetesting.math.standard_error(answered_items: List[[TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)], estimated_ability_level: float, estimator: Literal['ML', 'BM'] = 'ML', sd: float | None = None) → float
+### adaptivetesting.math.standard_error(answered_items: List[[TestItem](models.md#adaptivetesting.models.TestItem)], estimated_ability_level: float, estimator: Literal['ML', 'BM'] = 'ML', sd: float | None = None) → float
 
 Calculates the standard error using the test information function.
 If Bayes Modal is used for the ability estimation, a standard deviation value
@@ -235,3 +235,20 @@ Args:
 
 Returns:
 : float: test information
+
+## Utilities
+
+### generate_response_pattern
+
+### adaptivetesting.math.generate_response_pattern(ability: float, items: list[[TestItem](models.md#adaptivetesting.models.TestItem)], seed: int | None = None) → list[int]
+
+Generates a response pattern for a given ability level
+and item difficulties. Also, a seed can be set.
+
+Args:
+: ability (float): participants ability
+  items (list[TestItem]): test items
+  seed (int, optional): Seed for the random process.
+
+Returns:
+: list[int]: response pattern

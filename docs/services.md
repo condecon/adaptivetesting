@@ -2,7 +2,7 @@
 
 ## IEstimator
 
-### *class* adaptivetesting.services.IEstimator(response_pattern: List[int] | Array, items: List[[TestItem](adaptivetesting.models.md#adaptivetesting.models.TestItem)], optimization_interval: Tuple[float, float] = (-10, 10))
+### *class* adaptivetesting.services.IEstimator(response_pattern: List[int] | Array, items: List[[TestItem](models.md#adaptivetesting.models.TestItem)], optimization_interval: Tuple[float, float] = (-10, 10))
 
 Bases: `ABC`
 
@@ -37,6 +37,6 @@ Args:
   <br/>
   participant_id (int): The participant ID.
 
-#### *abstractmethod* load() → List[[TestResult](adaptivetesting.models.md#adaptivetesting.models.TestResult)]
+#### *abstractmethod* load() → List[[TestResult](models.md#adaptivetesting.models.TestResult)]
 
-#### *abstractmethod* save(test_results: List[[TestResult](adaptivetesting.models.md#adaptivetesting.models.TestResult)]) → None
+#### *abstractmethod* save(test_results: List[[TestResult](models.md#adaptivetesting.models.TestResult)]) → None
