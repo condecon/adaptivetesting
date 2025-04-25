@@ -2,10 +2,10 @@
 [![Unittests](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml)
 [![Deploy to PyPi](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml)
 
-<img src="/docs/source/_static/logo.svg" style="width: 100%">
+<img src="/docs_generation/source/_static/logo.svg" style="width: 100%">
 </img>
 
-_adaptivetesting_ is a Python package for computer-aided adaptive 
+_adaptivetesting_ is a Python package for computerized adaptive 
 testing that can be used to simulate and implement custom adaptive tests 
 in real-world testing scenarios.
 
@@ -24,27 +24,28 @@ you can do so by running the following command:
 pip install git+https://github.com/condecon/adaptivetesting
 ``
 
-Other dependencies:
-- numpy
-
 ## Features
-- Rasch Model
-- fast Maximum Likelihood Estimation of the current ability
-- Item selection with Urry's rule
-- __Fully customizable testing behavior__
+- IRT-Models: 
+    - 4PL
+    - simplified derivates (e.g., 3PL, Rasch model)
+- Ability estimators: 
+    - Maximum Likelihood Estimation
+    - Bayes Modal
+- Item selection algorithm: 
+    - Urry’s rule
+- Stopping criteria: 
+    - test length
+    - ability estimation standard error
+- Test results output formats
+    - SQLITE
+    - Pickle
+- Functions and wrappers for CAT simulations and application implementations
 
-The package comes with two testing procedures:
-- Default implementation
-- Semi-Adaptive implementation
+__Any functionality can be modified and extended.__
 
-Custom testing procedures can be implemented by implementing
-the abstract class ``AdaptiveTest``.
-Any existing functionality can be overridden while still
-retaining full compatability with the packages' functionality.
-For more information, please consult the documentation for the ``AdaptiveTest`` class
-([``AdaptiveTest`` documentation](/documentation/adaptivetesting.models.txt)).
 
 ## Implementations
+The package comes with two CAT implementations that are ready to use.
 ### Default implementation
 
 ![Schematic overview of the Default implementation](/images/default.svg)
@@ -52,17 +53,24 @@ For more information, please consult the documentation for the ``AdaptiveTest`` 
 ### Semi-Adaptive implementation
 ![Schematic overview of the Semi-Adaptive implementation](/images/semi-adaptive.svg)
 
+### Custom testing procedures
+Custom testing procedures can be implemented by implementing
+the abstract class ``AdaptiveTest``.
+Any existing functionality can be overridden while still
+retaining full compatibility with the packages' functionality.
+For more information, please consult the documentation for the ``AdaptiveTest`` class.
+
+## Package structure
+| submodule | description |
+|------------|-------------|
+| data | data management and processing of test results |
+| implementations | concrete implementations of the adaptive process, provides actual |
+| math | mathematical utilities and functions, such as estimators, item selection, test information |
+| models | data model definitions and structures used in the package |
+| services | interfaces that concrete implementations inherit from |
+| simulations | functions and classes used in CAT simulation |
+| tests | Unit test for the entire package |
+
 ## Documentation
-Extensive documentation of all programm code is available at [`/documentation`](/documentation).
 
-
-# ToDo:
-
-- 4PL Model
-    - ML
-    - Item Bank
-    - Test Information
-    - Implementations
-
-- Bayes Modal
-    - Change AdaptiveTesting stucture
+You can find extensiv documentation in the <a href="/docs/">`docs` directory</a>.

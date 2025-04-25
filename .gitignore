@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# unignore built documentation
+
+
 # Distribution / packaging
 .Python
 build/
@@ -69,7 +72,10 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+!docs_generation/build/markdown/
+!docs_generation/build/markdown/*
+docs_generation/build/*
+
 
 # PyBuilder
 .pybuilder/
@@ -160,3 +166,5 @@ cython_debug/
 #.idea/
 
 .DS_Store
+
+

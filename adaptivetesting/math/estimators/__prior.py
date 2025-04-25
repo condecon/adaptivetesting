@@ -2,6 +2,7 @@ import jax.numpy as np
 from abc import ABC, abstractmethod
 from scipy.stats import norm
 
+
 class Prior(ABC):
     def __init__(self):
         """Base class for prior distributions
@@ -19,6 +20,7 @@ class Prior(ABC):
             ndarray: function value
         """
         pass
+
 
 class NormalPrior(Prior):
     def __init__(self, mean: float, sd: float):
@@ -43,4 +45,3 @@ class NormalPrior(Prior):
             ndarray: function value
         """
         return norm.pdf(x, self.mean, self.sd) # type: ignore
-        

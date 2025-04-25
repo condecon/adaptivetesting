@@ -4,6 +4,7 @@ from adaptivetesting.math import standard_error
 from adaptivetesting.models import ItemPool, TestItem
 import pandas as pd
 
+
 class TestStandardError(unittest.TestCase):
     def test_dummy_items(self):
         items = [0.7, 0.9, 0.6]

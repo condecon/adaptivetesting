@@ -49,7 +49,8 @@ class PreTest:
             TestItem: Selected item.
         """
         # select only items with difficulty in interval
-        items_in_interval: List[TestItem] = [item for item in list(self.items) if lower < item.b <= upper]
+        items_in_interval: List[TestItem] = [item for item in list(self.items)
+                                             if lower < item.b <= upper]
         # draw one item randomly
         if self.seed is not None:
             random.seed(self.seed)
@@ -71,11 +72,10 @@ class PreTest:
         quantiles.extend(list(self.calculate_quantiles()))
         quantiles.extend([difficulties.max()])
 
-        for i in range(len(quantiles)-1):
+        for i in range(len(quantiles) - 1):
             selected_item = self.select_item_in_interval(
-                    lower=float(quantiles[i]),
-                    upper=float(quantiles[i+1])
-            )
+                lower=float(quantiles[i]),
+                upper=float(quantiles[i + 1]))
 
             selected_items.append(selected_item)
 

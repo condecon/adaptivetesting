@@ -28,10 +28,10 @@ def standard_error(answered_items: List[TestItem],
     Returns:
         float: Standard error
     """
-    a=np.array([item.a for item in answered_items])   
-    b=np.array([item.b for item in answered_items])
-    c=np.array([item.c for item in answered_items])
-    d=np.array([item.d for item in answered_items])
+    a = np.array([item.a for item in answered_items])
+    b = np.array([item.b for item in answered_items])
+    c = np.array([item.c for item in answered_items])
+    d = np.array([item.d for item in answered_items])
 
     if estimator == "ML":
         error = 1 / math.sqrt(test_information_function(mu=np.array(estimated_ability_level),
@@ -45,10 +45,11 @@ def standard_error(answered_items: List[TestItem],
     
     if estimator == "BM":
         information = test_information_function(mu=np.array(estimated_ability_level),
-                                                        a=a,
-                                                        b=b,
-                                                        c=c,
-                                                        d=d)
+                                                a=a,
+                                                b=b,
+                                                c=c,
+                                                d=d)
+
         if sd is None:
             raise ValueError("sd cannot be None if BM is used as estimator.")
         

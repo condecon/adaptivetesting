@@ -1,16 +1,16 @@
 import jax.numpy as np
-from jax import jit
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from .__estimators import likelihood
 from ..__prior import Prior
 from ....models.__algorithm_exception import AlgorithmException
 
+
 def maximize_posterior(
-    a: np.ndarray, 
-    b: np.ndarray, 
-    c: np.ndarray, 
-    d: np.ndarray, 
-    response_pattern: np.ndarray, 
+    a: np.ndarray,
+    b: np.ndarray,
+    c: np.ndarray,
+    d: np.ndarray,
+    response_pattern: np.ndarray,
     prior: Prior
 ) -> float:
     """_summary_
@@ -31,9 +31,10 @@ def maximize_posterior(
     Returns:
         float: Bayes Modal estimator for the given parameters
     """
-    posterior = lambda mu: likelihood(mu, a, b, c, d, response_pattern) * prior.pdf(mu)
+    def posterior(mu) -> np.ndarray:
+        return likelihood(mu, a, b, c, d, response_pattern) * prior.pdf(mu)
     
-    result: OptimizeResult = minimize_scalar(lambda mu: posterior(mu), 
+    result: OptimizeResult = minimize_scalar(lambda mu: posterior(mu),
                                              bounds=(-10, 10),
                                              method="bounded") # type: ignore
     

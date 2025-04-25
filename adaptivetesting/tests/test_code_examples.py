@@ -1,7 +1,8 @@
 import unittest
 
+
 class TestCodeExamples(unittest.TestCase):
-    def __init__(self, methodName = "runTest"):
+    def __init__(self, methodName="runTest"):
         super().__init__(methodName)
 
     def test_default_example(self):
@@ -19,4 +20,3 @@ class TestCodeExamples(unittest.TestCase):
             file.close()
 
         exec(content)
-    
