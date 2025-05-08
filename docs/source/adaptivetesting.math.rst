@@ -56,6 +56,10 @@ urrys_rule
 ^^^^^^^^^^^^
 .. autofunction:: adaptivetesting.math.item_selection.urrys_rule
 
+maximum_information_criterion
+^^^^^^^^^^^^
+.. autofunction:: adaptivetesting.math.maximum_information_criterion
+
 standard\_error
 -------------------------------------------
 
