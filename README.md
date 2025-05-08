@@ -33,6 +33,7 @@ pip install git+https://github.com/condecon/adaptivetesting
     - Bayes Modal
 - Item selection algorithm: 
     - Urry’s rule
+    - Maximum Information Criterion
 - Stopping criteria: 
     - test length
     - ability estimation standard error
