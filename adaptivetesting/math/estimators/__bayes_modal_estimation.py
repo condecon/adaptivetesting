@@ -3,7 +3,7 @@ import jax.numpy as np
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
 from .__functions.__bayes import maximize_posterior
-from .__prior import Prior
+from .__prior import Prior, NormalPrior
 
 
 class BayesModal(IEstimator):
@@ -15,15 +15,18 @@ class BayesModal(IEstimator):
         """This class can be used to estimate the current ability level
             of a respondent given the response pattern and the corresponding
             item difficulties.
-            The estimation is based on maximum likelihood estimation and the
-            Rasch model.
+            
+            This type of estimation finds the maximum of the posterior distribution.
+
 
             Args:
-                response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
+                response_pattern (List[int] | np.ndarray ): list of response patterns (0: wrong, 1:right)
 
                 items (List[TestItem]): list of answered items
             
                 prior (Prior): prior distribution
+
+                optimization_interval (Tuple[float, float]): interval used for the optimization function
             """
         super().__init__(response_pattern, items, optimization_interval)
 
@@ -43,3 +46,13 @@ class BayesModal(IEstimator):
             self.response_pattern,
             self.prior
         )
+
+    def get_standard_error(self, estimation: float) -> float:
+
+        # check for prior
+        if isinstance(self.prior, NormalPrior):
+            pass
+        else:
+            pass
+
+        raise NotImplementedError()
