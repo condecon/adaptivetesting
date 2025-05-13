@@ -4,13 +4,14 @@ from .__bayes_modal_estimation import BayesModal
 from ...models.__test_item import TestItem
 from .__functions.__bayes import likelihood
 from .__prior import Prior
+from math import pow
 
 
 class ExpectedAPosteriori(BayesModal):
-    def __init__(self, 
-                 response_pattern: list[int] | np.ndarray, 
-                 items: list[TestItem], 
-                 prior: Prior, 
+    def __init__(self,
+                 response_pattern: list[int] | np.ndarray,
+                 items: list[TestItem],
+                 prior: Prior,
                  optimization_interval: tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
             of a respondent given the response pattern and the corresponding
@@ -37,16 +38,55 @@ class ExpectedAPosteriori(BayesModal):
         """
         integral_likelihood_times_prior_times_mu, _ = quad(lambda mu: mu * likelihood(
             mu, self.a, self.b, self.c, self.d, self.response_pattern
-        ) * self.prior.pdf(mu),
-        a=self.optimization_interval[0],
-        b=self.optimization_interval[1])
+            ) * self.prior.pdf(mu),
+            a=self.optimization_interval[0],
+            b=self.optimization_interval[1])
 
 
         integral_likelihood_times_prior, _ = quad(lambda mu: likelihood(
             mu, self.a, self.b, self.c, self.d, self.response_pattern
-        ) * self.prior.pdf(mu),
-        a=self.optimization_interval[0],
-        b=self.optimization_interval[1])
+            ) * self.prior.pdf(mu),
+            a=self.optimization_interval[0],
+            b=self.optimization_interval[1])
 
         estimation = integral_likelihood_times_prior_times_mu / integral_likelihood_times_prior
         return estimation
+
+    def get_standard_error(self, estimated_ability: float) -> float:
+        """Calculates the standard error for the items used at the 
+        construction of the class instance (answered items).
+        The currently estimated ability level is required as parameter.
+
+        Args:
+            estimated_ability (float): _description_
+
+        Raises:
+            NotImplementedError: Either an instance of NormalPrior or CustomPrior has to be used.
+                                 If you want to use another calculation method for the standard,
+                                 you have to specifically override this method.
+
+        Returns:
+            float: standard error of the ability estimation
+        """
+        # upper integral
+        upper_integral, _ = quad(
+            lambda mu: pow(mu - estimated_ability, 2) * self.prior.pdf(mu) *\
+                  likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern),
+            a=self.optimization_interval[0],
+            b=self.optimization_interval[1]
+        )
+
+        lower_integral, _ = quad(
+            lambda mu: self.prior.pdf(mu) * \
+                likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern),
+            a=self.optimization_interval[0],
+            b=self.optimization_interval[1]
+        )
+
+        standard_error_result = pow(
+            upper_integral / lower_integral,
+            1 / 2
+        )
+
+        return standard_error_result
+        
