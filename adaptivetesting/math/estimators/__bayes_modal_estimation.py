@@ -2,7 +2,8 @@ from typing import List, Tuple
 import jax.numpy as np
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
-from .__functions.__bayes import maximize_posterior
+from ...models.__algorithm_exception import AlgorithmException
+from .__functions.__bayes import maximize_posterior, likelihood
 from .__prior import Prior, NormalPrior
 
 
@@ -34,18 +35,50 @@ class BayesModal(IEstimator):
 
     def get_estimation(self) -> float:
         """Estimate the current ability level using Bayes Modal.
+
+        Raises:
+            AlgorithmException: Raised when maximum could not be found.
         
         Returns:
             float: ability estimation
         """
-        return maximize_posterior(
-            self.a,
-            self.b,
-            self.c,
-            self.d,
-            self.response_pattern,
-            self.prior
-        )
+        if isinstance(self.prior, NormalPrior):
+            # get estimate using a classical optimizers approach
+            return maximize_posterior(
+                self.a,
+                self.b,
+                self.c,
+                self.d,
+                self.response_pattern,
+                self.prior
+            )
+        # else, we have to calculate the full posterior distribution
+        # because the optimizers do not correctly identify the maximum of the function
+        else:
+            mu = np.linspace(self.optimization_interval[0],
+                             self.optimization_interval[1],
+                             num=1000)
+            # calculate likelihood values for every mu
+            try:
+                lik_values = np.array([
+                    likelihood(
+                        i,
+                        self.a,
+                        self.b,
+                        self.c,
+                        self.d,
+                        self.response_pattern
+                    )
+                    for i in mu
+                ])
+
+                # add prior
+                unmarginalized_posterior = lik_values * self.prior.pdf(mu)
+                # find argmax and return mu
+                estimate_index = np.argmax(unmarginalized_posterior)
+                return float(mu[estimate_index].astype(float))
+            except Exception as e:
+                raise AlgorithmException(e)
 
     def get_standard_error(self, estimation: float) -> float:
 
