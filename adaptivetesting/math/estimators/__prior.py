@@ -86,3 +86,12 @@ class CustomPrior(Prior):
             self.scale
         )
         return np.array(result)
+
+class CustomPriorException(Exception):
+    """This exception can be used is the custom prior
+    is not correctly specified.
+
+    It is usually raised if a non-normal prior is used
+    that was not correctly inherited from the `CustomPrior` class.
+    """
+    pass

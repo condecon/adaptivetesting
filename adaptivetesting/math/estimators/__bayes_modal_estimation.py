@@ -4,7 +4,7 @@ from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
 from ...models.__algorithm_exception import AlgorithmException
 from .__functions.__bayes import maximize_posterior, likelihood
-from .__prior import Prior, NormalPrior
+from .__prior import Prior, NormalPrior, CustomPrior, CustomPriorException
 
 
 class BayesModal(IEstimator):
@@ -35,6 +35,16 @@ class BayesModal(IEstimator):
 
     def get_estimation(self) -> float:
         """Estimate the current ability level using Bayes Modal.
+        If a `NormalPrior` is used, the `bounded` optimizer is used
+        to get the ability estimate.
+        For any other prior, it cannot be guaranteed that the optimizer will converge correctly.
+        Therefore, the full posterior distribution is calculated
+        and the maximum posterior value is selected.
+
+        Because this function uses a switch internally to determine
+        whether a optimizer is used for the estimate or not,
+        you have to create your custom priors from the correct base class (`CustomPrior`).
+        Otherwise, the estimate may not necessarily be correct!
 
         Raises:
             AlgorithmException: Raised when maximum could not be found.
@@ -55,6 +65,11 @@ class BayesModal(IEstimator):
         # else, we have to calculate the full posterior distribution
         # because the optimizers do not correctly identify the maximum of the function
         else:
+            # check that the used prior is really inherited from
+            # the CustomPrior base class
+            if not issubclass(self.prior, CustomPrior):
+                raise CustomPriorException("It seems like you are using a non-normal prior but did not use the CustomPrior base class!")
+            
             mu = np.linspace(self.optimization_interval[0],
                              self.optimization_interval[1],
                              num=1000)
