@@ -48,11 +48,12 @@ class BayesModal(IEstimator):
 
         Raises:
             AlgorithmException: Raised when maximum could not be found.
+            CustomPriorException: Raised when custom prior is not based on the `CustomPrior` class.
         
         Returns:
             float: ability estimation
         """
-        if isinstance(self.prior, NormalPrior):
+        if type(self.prior) is NormalPrior:
             # get estimate using a classical optimizers approach
             return maximize_posterior(
                 self.a,
@@ -67,7 +68,7 @@ class BayesModal(IEstimator):
         else:
             # check that the used prior is really inherited from
             # the CustomPrior base class
-            if not issubclass(self.prior, CustomPrior):
+            if not isinstance(self.prior, CustomPrior):
                 raise CustomPriorException("It seems like you are using a non-normal prior but did not use the CustomPrior base class!")
             
             mu = np.linspace(self.optimization_interval[0],
@@ -89,8 +90,8 @@ class BayesModal(IEstimator):
 
                 # add prior
                 unmarginalized_posterior = lik_values * self.prior.pdf(mu)
-                # find argmax and return mu
-                estimate_index = np.argmax(unmarginalized_posterior)
+                # find argmin and return mu
+                estimate_index = np.argmin(unmarginalized_posterior)
                 return float(mu[estimate_index].astype(float))
             except Exception as e:
                 raise AlgorithmException(e)
