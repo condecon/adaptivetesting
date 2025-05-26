@@ -138,6 +138,38 @@ def posterior(mu: jnp.ndarray,
     return unnormalized(mu) / evidence
 
 
+@jit
+def log_posterior(
+               mu: jnp.ndarray,
+               a: jnp.ndarray,
+               b: jnp.ndarray,
+               c: jnp.ndarray,
+               d: jnp.ndarray,
+               response_pattern: jnp.ndarray,
+               prior: Prior | None = None,
+               border: tuple[float, float] = (-10, 10),
+                ) -> jnp.ndarray:
+    """Calculates the log-posterior function.
+
+    Args:
+        mu (jnp.ndarray): _description_
+        a (jnp.ndarray): _description_
+        b (jnp.ndarray): _description_
+        c (jnp.ndarray): _description_
+        d (jnp.ndarray): _description_
+        response_pattern (jnp.ndarray): _description_
+        prior (Prior | None, optional): _description_. Defaults to None.
+        border (tuple[float, float], optional): _description_. Defaults to (-10, 10).
+        num_points (int, optional): _description_. Defaults to 500.
+
+    Returns:
+        jnp.ndarray: _description_
+    """
+    return jnp.log(posterior(
+        mu, a, b, c, d, response_pattern, prior, border
+    ))
+
+
 
 
 def maximize_likelihood_function(a: jnp.ndarray,

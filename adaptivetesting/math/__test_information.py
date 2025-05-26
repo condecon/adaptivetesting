@@ -1,6 +1,7 @@
 import jax.numpy as np
 from jax import grad
-from .estimators.__functions.__estimators import posterior as p
+from .estimators.__functions.__estimators import log_posterior as log_p
+from .estimators.__functions.__estimators import posterior
 from .estimators.__prior import Prior
 from jax.scipy.integrate import trapezoid
 from scipy.integrate import quad
@@ -17,8 +18,12 @@ def test_information_function(
         prior: Prior | None = None,
         optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
-    """
+    r"""
     Calculates test information.
+
+    \[
+    I{posterior}(\theta) = E{\theta|X}\left[ \left( \frac{\partial}{\partial \theta} \log p(\theta|X) \right)^2 \right]
+    \]
 
     Args:
         mu (np.ndarray): ability level
@@ -31,37 +36,27 @@ def test_information_function(
         float: test information
 
     """
-    posterior = lambda mu: p(mu, a, b, c, d, response_pattern, prior, border=optimization_interval)
+    log_posterior = lambda mu: log_p(mu, a, b, c, d, response_pattern, prior, border=optimization_interval)
     # calcualte first derivative of the log-likelihood function
-    score_function = grad(posterior)
+    score_function = grad(log_posterior)
 
     # plot function
-    x = np.linspace(-10, 10, 1000)  # shape (1000,)
-    post_values = np.array([posterior(xi) for xi in x])
+    x = np.linspace(optimization_interval[0], optimization_interval[1], 1000)  # shape (1000,)
+    posterior_values = np.array([posterior(xi, a, b, c, d, response_pattern, prior) for xi in x])
+
+    post_values = np.array([log_posterior(xi) for xi in x])
     score_values = np.array([score_function(xi) for xi in x])
-    plt.plot(x, post_values, label="Posterior")
-    plt.plot(x, score_values, label="Score function")
-    plt.legend()
-    plt.show()
-    
-    print(f"Mean: {np.mean(score_values**2)}")
-    print(f"Mean: {np.var(score_values)}")
+    information_values = (score_values ** 2) * posterior_values
+    # plt.plot(x, post_values, label="Posterior")
+    # plt.plot(x, score_values, label="Score function")
+    # plt.plot(x, information_values, label="Information Function")
+    # plt.legend()
+    # plt.show()
 
-    # calculate the mean of the (score function)**2
-    # This is the expected Fisher information over the interval
-    numerator, _ = quad(
-        lambda x: score_function(x) ** 2 * posterior(x),
-        a=optimization_interval[0],
-        b=optimization_interval[1],
-        limit=400
+    # calculate the mean of scoring_function ** 2
+    information: np.ndarray = trapezoid(
+        information_values,
+        x
     )
-
-    denominator, _ = quad(
-        lambda x: posterior(x),
-        a=optimization_interval[0],
-        b=optimization_interval[1],
-        limit=400
-    )
-    
-    return numerator / denominator
+    return information
 
