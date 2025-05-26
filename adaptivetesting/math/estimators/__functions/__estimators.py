@@ -1,7 +1,9 @@
 import jax.numpy as jnp
-from jax import jit
+from jax import jit, vmap
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ....models.__algorithm_exception import AlgorithmException
+from ...estimators.__prior import Prior
+from scipy.integrate import quad
 
 
 @jit
@@ -82,12 +84,60 @@ def likelihood(mu: jnp.ndarray,
         d (jnp.ndarray): inattention parameter
 
     Returns:
-        float: likelihood value of given ability value
+        float: negative likelihood value of given ability value
     """
+    # reshape
+    a = jnp.expand_dims(a, axis=0)
+    b = jnp.expand_dims(b, axis=0)
+    c = jnp.expand_dims(c, axis=0)
+    d = jnp.expand_dims(d, axis=0)
+
     terms = (probability_y1(mu, a, b, c, d)**response_pattern) * \
         (probability_y0(mu, a, b, c, d) ** (1 - response_pattern))
     
-    return -jnp.cumulative_prod(terms)[-1].astype(float)
+    
+    return -jnp.prod(terms)
+
+
+@jit
+def posterior(mu: jnp.ndarray,
+               a: jnp.ndarray,
+               b: jnp.ndarray,
+               c: jnp.ndarray,
+               d: jnp.ndarray,
+               response_pattern: jnp.ndarray,
+               prior: Prior | None = None,
+               border: tuple[float, float] = (-10, 10),
+               num_points: int = 500) -> jnp.ndarray:
+    """_summary_
+
+    Args:
+        a (jnp.ndarray): _description_
+        b (jnp.ndarray): _description_
+        c (jnp.ndarray): _description_
+        d (jnp.ndarray): _description_
+        response_pattern (jnp.ndarray): _description_
+        prior (Prior | None, optional): _description_. Defaults to None.
+        border (tuple[float, float]): _description_. Defaults to (-10, 10).
+
+    Returns:
+        jnp.ndarray: _description_
+    """
+    grid = jnp.linspace(border[0], border[1], num_points)
+    def unnormalized(theta):
+        like = -likelihood(theta, a, b, c, d, response_pattern)
+        if prior:
+            return like * prior.pdf(theta)
+        return like
+    
+    # Vectorize over grid
+    unnormalized_vec = vmap(unnormalized)
+    values = unnormalized_vec(grid)
+    evidence = jnp.trapezoid(values, grid)
+
+    return unnormalized(mu) / evidence
+
+
 
 
 def maximize_likelihood_function(a: jnp.ndarray,
