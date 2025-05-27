@@ -23,12 +23,13 @@ class TestInformation(unittest.TestCase):
             mu=ability,
             a=np.array(1),
             b=difficulties,
-            c=np.array(1),
-            d=np.array(0),
+            c=np.array(0),
+            d=np.array(1),
             response_pattern=np.array(response_pattern)
         )
 
-        self.assertAlmostEqual(result, 0.6858721, 3)
+
+        self.assertAlmostEqual(result, 0.4704, 3)
 
     def test_information_calculation_4pl(self):
         items = pd.DataFrame({
@@ -38,11 +39,15 @@ class TestInformation(unittest.TestCase):
             "d": [0.87, 0.93, 1]
         })
 
+        item_pool = ItemPool.load_from_dict(items)
+        response_pattern = generate_response_pattern(0, item_pool.test_items, 1234)
+
         result = test_information_function(np.array(0),
                                            np.array(items.a.to_numpy()),
                                            np.array(items.b.to_numpy()),
                                            np.array(items.c.to_numpy()),
-                                           np.array(items.d.to_numpy()))
+                                           np.array(items.d.to_numpy()),
+                                           np.array(response_pattern))
         # convert test information into standard error
         result = 1 / math.sqrt(result)
 

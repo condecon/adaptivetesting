@@ -107,8 +107,7 @@ def posterior(mu: jnp.ndarray,
                d: jnp.ndarray,
                response_pattern: jnp.ndarray,
                prior: Prior | None = None,
-               border: tuple[float, float] = (-10, 10),
-               num_points: int = 500) -> jnp.ndarray:
+               border: tuple[float, float] = (-10, 10)) -> jnp.ndarray:
     """_summary_
 
     Args:
@@ -123,18 +122,18 @@ def posterior(mu: jnp.ndarray,
     Returns:
         jnp.ndarray: _description_
     """
-    grid = jnp.linspace(border[0], border[1], num_points)
+    grid = jnp.linspace(border[0], border[1], 1000)
     def unnormalized(theta):
         like = -likelihood(theta, a, b, c, d, response_pattern)
         if prior:
             return like * prior.pdf(theta)
         return like
-    
+
     # Vectorize over grid
     unnormalized_vec = vmap(unnormalized)
     values = unnormalized_vec(grid)
     evidence = jnp.trapezoid(values, grid)
-
+    
     return unnormalized(mu) / evidence
 
 
