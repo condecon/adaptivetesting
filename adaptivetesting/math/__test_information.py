@@ -42,16 +42,12 @@ def test_information_function(
 
     # plot function
     x = np.linspace(optimization_interval[0], optimization_interval[1], 1000)  # shape (1000,)
-    posterior_values = np.array([posterior(xi, a, b, c, d, response_pattern, prior) for xi in x])
+    unnormal_posterior_values = np.array([posterior(xi, a, b, c, d, response_pattern, prior) for xi in x])
+    evidence = trapezoid(unnormal_posterior_values, x)
+    posterior_values = unnormal_posterior_values / evidence
 
-    post_values = np.array([log_posterior(xi) for xi in x])
     score_values = np.array([score_function(xi) for xi in x])
     information_values = (score_values ** 2) * posterior_values
-    # plt.plot(x, post_values, label="Posterior")
-    # plt.plot(x, score_values, label="Score function")
-    # plt.plot(x, information_values, label="Information Function")
-    # plt.legend()
-    # plt.show()
 
     # calculate the mean of scoring_function ** 2
     information: np.ndarray = trapezoid(
