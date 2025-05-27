@@ -1,11 +1,62 @@
 import jax.numpy as np
 from jax import grad
-from .estimators.__functions.__estimators import log_posterior as log_p
-from .estimators.__functions.__estimators import posterior
+from .estimators.__functions.__estimators import probability_y1
 from .estimators.__prior import Prior
 from jax.scipy.integrate import trapezoid
-from scipy.integrate import quad
-import matplotlib.pyplot as plt
+from scipy.integrate import trapezoid
+import numpy
+from scipy.differentiate import derivative
+
+
+def item_information_function(
+        mu: np.ndarray,
+        a: np.ndarray,
+        b: np.ndarray,
+        c: np.ndarray,
+        d: np.ndarray
+) -> np.ndarray:
+    """Calculate the information of a test item given the currently
+    estimated ability `mu`.
+
+    Args:
+        mu (np.ndarray): currently estimated ability
+        a (np.ndarray): _description_
+        b (np.ndarray): _description_
+        c (np.ndarray): _description_
+        d (np.ndarray): _description_
+
+    Returns:
+        np.ndarray: _description_
+    """
+    p_y1 = probability_y1(mu, a, b, c, d)
+    
+    p_y1_grad = grad(lambda x: probability_y1(x, a, b, c, d))
+
+    product = (p_y1_grad(mu) ** 2) / (p_y1 * (1 - p_y1))
+    information = np.sum(product)
+    return information
+
+def prior_information_function(prior: Prior,
+                               optimization_interval: tuple[float, float] = (-10, 10)) -> np.ndarray:
+    """Calculates the fisher information for the probability density function
+    of the specified prior
+
+    Args:
+        prior (Prior): _description_
+
+    Returns:
+        np.ndarray: _description_
+    """
+    log_prior = lambda x: numpy.log(prior.pdf(x))
+    x_vals = np.linspace(optimization_interval[0], optimization_interval[1], 1000)
+    score_values = np.array(derivative(log_prior, x_vals).df)
+
+    information = trapezoid(
+        (score_values ** 2) * prior.pdf(x_vals),
+        x_vals
+    )
+    
+    return information
 
 
 def test_information_function(
@@ -14,16 +65,15 @@ def test_information_function(
         b: np.ndarray,
         c: np.ndarray,
         d: np.ndarray,
-        response_pattern: np.ndarray,
         prior: Prior | None = None,
         optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
-    r"""
+    """
     Calculates test information.
-
-    \[
-    I{posterior}(\theta) = E{\theta|X}\left[ \left( \frac{\partial}{\partial \theta} \log p(\theta|X) \right)^2 \right]
-    \]
+    Therefore, the information is calculated for every item
+    and then summed up.
+    If a prior is specified, the fisher information of the prior
+    is calculated as well and added to the information sum. 
 
     Args:
         mu (np.ndarray): ability level
@@ -34,25 +84,14 @@ def test_information_function(
 
     Returns:
         float: test information
-
     """
-    log_posterior = lambda mu: log_p(mu, a, b, c, d, response_pattern, prior, border=optimization_interval)
-    # calcualte first derivative of the log-likelihood function
-    score_function = grad(log_posterior)
-
-    # plot function
-    x = np.linspace(optimization_interval[0], optimization_interval[1], 1000)  # shape (1000,)
-    unnormal_posterior_values = np.array([posterior(xi, a, b, c, d, response_pattern, prior) for xi in x])
-    evidence = trapezoid(unnormal_posterior_values, x)
-    posterior_values = unnormal_posterior_values / evidence
-
-    score_values = np.array([score_function(xi) for xi in x])
-    information_values = (score_values ** 2) * posterior_values
-
-    # calculate the mean of scoring_function ** 2
-    information: np.ndarray = trapezoid(
-        information_values,
-        x
+    # calcualte information for every item
+    item_information = np.vectorize(item_information_function)(
+        mu, a, b, c, d
     )
-    return information
 
+    if prior:
+        prior_information = prior_information_function(prior, optimization_interval)
+        return item_information.sum() + prior_information
+    else:
+        return item_information.sum()

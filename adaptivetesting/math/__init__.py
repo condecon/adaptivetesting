@@ -1,3 +1,3 @@
 from .__standard_error import standard_error
-from .__test_information import test_information_function
+from .__test_information import test_information_function, prior_information_function, item_information_function
 from .__gen_response_pattern import generate_response_pattern
