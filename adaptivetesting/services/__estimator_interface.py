@@ -39,3 +39,15 @@ class IEstimator(ABC):
             float: ability
         """
         pass
+
+    @abstractmethod
+    def get_standard_error(self, estimation: float) -> float:
+        """Calculates the standard error for the given estimated ability level.
+
+        Args:
+            estimation (float): currently estimated ability level
+
+        Returns:
+            float: standard error of the ability estimation
+        """
+        pass

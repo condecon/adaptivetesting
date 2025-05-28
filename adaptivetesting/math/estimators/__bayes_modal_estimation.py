@@ -5,6 +5,7 @@ from ...models.__test_item import TestItem
 from ...models.__algorithm_exception import AlgorithmException
 from .__functions.__bayes import maximize_posterior, likelihood
 from .__prior import Prior, NormalPrior, CustomPrior, CustomPriorException
+from ..__test_information import test_information_function
 
 
 class BayesModal(IEstimator):
@@ -97,11 +98,23 @@ class BayesModal(IEstimator):
                 raise AlgorithmException(e)
 
     def get_standard_error(self, estimation: float) -> float:
+        """Calculates the standard error for the given estimated ability level.
 
-        # check for prior
-        if isinstance(self.prior, NormalPrior):
-            pass
-        else:
-            pass
+        Args:
+            estimation (float): currently estimated ability level
 
-        raise NotImplementedError()
+        Returns:
+            float: standard error of the ability estimation
+        """
+        test_information = test_information_function(
+            np.array(estimation, dtype=float),
+            a=self.a,
+            b=self.b,
+            c=self.c,
+            d=self.d,
+            prior=self.prior,
+            optimization_interval=self.optimization_interval
+        )
+
+        sd_error = 1 / np.sqrt(test_information)
+        return float(sd_error)

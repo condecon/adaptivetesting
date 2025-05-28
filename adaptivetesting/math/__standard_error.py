@@ -34,7 +34,7 @@ def standard_error(answered_items: List[TestItem],
     d = np.array([item.d for item in answered_items])
 
     if estimator == "ML":
-        error = 1 / math.sqrt(test_information_function(mu=np.array(estimated_ability_level),
+        error = 1 / math.sqrt(test_information_function(mu=np.array(estimated_ability_level, dtype=float),
                                                         a=a,
                                                         b=b,
                                                         c=c,
