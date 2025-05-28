@@ -5,7 +5,7 @@ from ...models.__test_item import TestItem
 from ...models.__algorithm_exception import AlgorithmException
 from .__functions.__bayes import maximize_posterior, likelihood
 from .__prior import Prior, NormalPrior, CustomPrior, CustomPriorException
-from ..__test_information import test_information_function
+from .__test_information import test_information_function
 
 
 class BayesModal(IEstimator):

@@ -1,6 +1,6 @@
 from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
-from ...math.__test_information import test_information_function
+from ..estimators.__test_information import test_information_function
 from ...models.__algorithm_exception import AlgorithmException
 import jax.numpy as np
 
@@ -20,7 +20,7 @@ def maximum_information_criterion(items: list[TestItem], ability: float) -> Test
         ItemSelectionException: raised if no appropriate item was found
         AlgorithmException: raised if test information function could not be calculated
     """
-    max_information = float("-inf")
+    max_information = np.array(float("-inf"))
     best_item = None
 
     for item in items:

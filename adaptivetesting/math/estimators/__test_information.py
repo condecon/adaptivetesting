@@ -1,9 +1,8 @@
 import jax.numpy as np
 from jax import grad
-from .estimators.__functions.__estimators import probability_y1
-from .estimators.__prior import Prior
+from .__functions.__estimators import probability_y1
+from .__prior import Prior
 from jax.scipy.integrate import trapezoid
-from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
 

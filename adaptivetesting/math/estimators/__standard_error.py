@@ -2,7 +2,7 @@ import math
 from typing import List, Literal
 import jax.numpy as np
 from .__test_information import test_information_function
-from ..models.__test_item import TestItem
+from ...models.__test_item import TestItem
 
 
 def standard_error(answered_items: List[TestItem],

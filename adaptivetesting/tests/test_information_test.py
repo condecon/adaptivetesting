@@ -1,6 +1,6 @@
 import unittest
-from adaptivetesting.math import test_information_function, generate_response_pattern, prior_information_function
-from adaptivetesting.math.estimators import NormalPrior
+from adaptivetesting.math import generate_response_pattern
+from adaptivetesting.math.estimators import NormalPrior, test_information_function, prior_information_function
 from adaptivetesting.models import ItemPool
 import jax.numpy as np
 import pandas as pd
@@ -33,7 +33,7 @@ class TestTestInformation(unittest.TestCase):
             "d": [0.87, 0.93, 1]
         })
 
-        item_pool = ItemPool.load_from_dict(items)
+        item_pool = ItemPool.load_from_dict(items.to_dict())
         response_pattern = generate_response_pattern(0, item_pool.test_items, 1234)
 
         result = test_information_function(np.array(0, dtype=float),

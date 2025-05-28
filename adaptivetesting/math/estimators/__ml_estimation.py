@@ -3,7 +3,7 @@ import jax.numpy as np
 from ...models.__test_item import TestItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
-from ..__test_information import test_information_function
+from .__test_information import test_information_function
 
 
 class MLEstimator(IEstimator):
