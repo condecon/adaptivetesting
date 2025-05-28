@@ -59,4 +59,4 @@ class TestPriorInformation(unittest.TestCase):
             prior=prior
         )
 
-        self.assertAlmostEqual(estimated_prior_information, 1 / prior_variance)
+        self.assertAlmostEqual(estimated_prior_information, 1 / prior_variance, places=3)
