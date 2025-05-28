@@ -2,6 +2,7 @@ import unittest
 from typing import List
 from adaptivetesting.math import standard_error
 from adaptivetesting.models import ItemPool, TestItem
+from adaptivetesting.math.estimators import ExpectedAPosteriori, NormalPrior
 import pandas as pd
 
 
@@ -56,3 +57,22 @@ class TestStandardError(unittest.TestCase):
                                 sd=1)
 
         self.assertAlmostEqual(result, 0.8222712, 3)
+
+
+class TestStandardErrorEAP(unittest.TestCase):
+    def test_calculations_4pl_ability_0(self):
+        items = {
+            "a": [1.32, 1.07, 0.84],
+            "b": [-0.63, 0.18, -0.84],
+            "c": [0.17, 0.10, 0.19],
+            "d": [0.87, 0.93, 1]
+        }
+        item_pool = ItemPool.load_from_dict(items)
+        response_pattern = [0, 1, 0]
+        estimator = ExpectedAPosteriori(response_pattern,
+                                        item_pool.test_items,
+                                        NormalPrior(0, 1),
+                                        optimization_interval=[-4, 4])
+        
+        standard_error = estimator.get_standard_error(0)
+        self.assertAlmostEqual(standard_error, 0.9866929, places=3)

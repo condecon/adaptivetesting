@@ -1,5 +1,5 @@
 import jax.numpy as np
-from scipy.integrate import quad
+from jax.scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
 from ...models.__test_item import TestItem
 from .__functions.__bayes import likelihood
@@ -36,20 +36,18 @@ class ExpectedAPosteriori(BayesModal):
         Returns:
             float: ability estimation
         """
-        integral_likelihood_times_prior_times_mu, _ = quad(lambda mu: mu * likelihood(
-            mu, self.a, self.b, self.c, self.d, self.response_pattern
-            ) * self.prior.pdf(mu),
-            a=self.optimization_interval[0],
-            b=self.optimization_interval[1])
-
-
-        integral_likelihood_times_prior, _ = quad(lambda mu: likelihood(
-            mu, self.a, self.b, self.c, self.d, self.response_pattern
-            ) * self.prior.pdf(mu),
-            a=self.optimization_interval[0],
-            b=self.optimization_interval[1])
-
-        estimation = integral_likelihood_times_prior_times_mu / integral_likelihood_times_prior
+        x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
+        
+        prior_pdf = self.prior.pdf(x)
+        
+        likelihood_vals = np.vectorize(lambda mu: likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern))(x)
+        
+        numerator = trapezoid(x * likelihood_vals * prior_pdf, x)
+        
+        denominator = trapezoid(likelihood_vals * prior_pdf, x)
+        
+        estimation = numerator / denominator
+        
         return estimation
 
     def get_standard_error(self, estimated_ability: float) -> float:
@@ -68,25 +66,17 @@ class ExpectedAPosteriori(BayesModal):
         Returns:
             float: standard error of the ability estimation
         """
-        # upper integral
-        upper_integral, _ = quad(
-            lambda mu: pow(mu - estimated_ability, 2) * self.prior.pdf(mu) *\
-                  likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern),
-            a=self.optimization_interval[0],
-            b=self.optimization_interval[1]
-        )
-
-        lower_integral, _ = quad(
-            lambda mu: self.prior.pdf(mu) * \
-                likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern),
-            a=self.optimization_interval[0],
-            b=self.optimization_interval[1]
-        )
-
-        standard_error_result = pow(
-            upper_integral / lower_integral,
-            1 / 2
-        )
+        x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
+        prior_pdf = self.prior.pdf(x)
+        
+        likelihood_vals = np.vectorize(lambda mu: likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern))(x)
+        
+        numerator = trapezoid((x - estimated_ability) ** 2 * likelihood_vals * prior_pdf, x)
+        
+        denominator = trapezoid(likelihood_vals * prior_pdf, x)
+        
+        standard_error_result = pow(numerator / denominator, 0.5)
+    
 
         return standard_error_result
         
