@@ -1,8 +1,7 @@
 import unittest
 from typing import List
-from adaptivetesting.math import standard_error
 from adaptivetesting.models import ItemPool, TestItem
-from adaptivetesting.math.estimators import ExpectedAPosteriori, NormalPrior
+from adaptivetesting.math.estimators import MLEstimator, ExpectedAPosteriori, BayesModal, NormalPrior
 import pandas as pd
 
 
@@ -12,8 +11,8 @@ class TestStandardError(unittest.TestCase):
         ability = 0
 
         item_list: List[TestItem] = ItemPool.load_from_list(items).test_items
-
-        result = standard_error(item_list, ability)
+        estimator = MLEstimator([], item_list)
+        result = estimator.get_standard_error(ability)
 
         self.assertAlmostEqual(result, 1.234664423, 3)
 
@@ -22,8 +21,8 @@ class TestStandardError(unittest.TestCase):
         ability = -0.347
 
         item_list = ItemPool.load_from_list(items).test_items
-
-        result = standard_error(item_list, ability)
+        estimator = MLEstimator([], item_list)
+        result = estimator.get_standard_error(ability)
 
         self.assertAlmostEqual(result, 1.702372, 3)
 
@@ -37,10 +36,12 @@ class TestStandardError(unittest.TestCase):
 
         item_pool = ItemPool.load_from_dataframe(items)
 
-        result = standard_error(item_pool.test_items, 0)
+        estimator = MLEstimator([], item_pool.test_items)
+        result = estimator.get_standard_error(0)
 
         self.assertAlmostEqual(result, 1.444873, 3)
 
+class TestStandardErrorBM(unittest.TestCase):
     def test_calculation_bm(self):
         items = pd.DataFrame({
             "a": [1.32, 1.07, 0.84],
@@ -50,11 +51,8 @@ class TestStandardError(unittest.TestCase):
         })
 
         item_pool = ItemPool.load_from_dataframe(items)
-
-        result = standard_error(item_pool.test_items,
-                                0,
-                                estimator="BM",
-                                sd=1)
+        estimator = BayesModal([], item_pool.test_items, NormalPrior(0, 1))
+        result = estimator.get_standard_error(0)
 
         self.assertAlmostEqual(result, 0.8222712, 3)
 
