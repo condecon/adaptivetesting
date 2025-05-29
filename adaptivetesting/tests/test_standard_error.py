@@ -70,7 +70,7 @@ class TestStandardErrorEAP(unittest.TestCase):
         estimator = ExpectedAPosteriori(response_pattern,
                                         item_pool.test_items,
                                         NormalPrior(0, 1),
-                                        optimization_interval=[-4, 4])
+                                        optimization_interval=(-4, 4))
         
         standard_error = estimator.get_standard_error(0)
         self.assertAlmostEqual(standard_error, 0.9866929, places=3)

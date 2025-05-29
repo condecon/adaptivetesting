@@ -66,7 +66,7 @@ def test_information_function(
         d: np.ndarray,
         prior: Prior | None = None,
         optimization_interval: tuple[float, float] = (-10, 10)
-) -> np.ndarray:
+) -> float:
     """
     Calculates test information.
     Therefore, the information is calculated for every item
@@ -91,6 +91,6 @@ def test_information_function(
 
     if prior:
         prior_information = prior_information_function(prior, optimization_interval)
-        return item_information.sum() + prior_information
+        return float(item_information.sum() + prior_information)
     else:
-        return item_information.sum()
+        return float(item_information.sum())

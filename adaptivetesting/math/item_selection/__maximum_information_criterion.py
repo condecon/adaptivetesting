@@ -9,7 +9,7 @@ import jax.numpy as np
 def maximum_information_criterion(items: list[TestItem],
                                   ability: float,
                                   prior: Prior | None = None,
-                                  optimization_interval: tuple[float, float] = [-10, 10]) -> TestItem:
+                                  optimization_interval: tuple[float, float] = (-10, 10)) -> TestItem:
     """The maximum information criterion selected the next item for the respondent
     by finding the item that maximizes the test information function.
 
@@ -24,7 +24,7 @@ def maximum_information_criterion(items: list[TestItem],
         ItemSelectionException: raised if no appropriate item was found
         AlgorithmException: raised if test information function could not be calculated
     """
-    max_information = np.array(float("-inf"))
+    max_information = float("-inf")
     best_item = None
 
     for item in items:
