@@ -1,11 +1,15 @@
 from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ..estimators.__test_information import test_information_function
+from ..estimators.__prior import Prior
 from ...models.__algorithm_exception import AlgorithmException
 import jax.numpy as np
 
 
-def maximum_information_criterion(items: list[TestItem], ability: float) -> TestItem:
+def maximum_information_criterion(items: list[TestItem],
+                                  ability: float,
+                                  prior: Prior | None = None,
+                                  optimization_interval: tuple[float, float] = [-10, 10]) -> TestItem:
     """The maximum information criterion selected the next item for the respondent
     by finding the item that maximizes the test information function.
 
@@ -33,7 +37,13 @@ def maximum_information_criterion(items: list[TestItem], ability: float) -> Test
         # calculate test information for the current item
         try:
             information = test_information_function(
-                mu=np.array([ability]), a=a, b=b, c=c, d=d
+                mu=np.array([ability], dtype=float),
+                a=a,
+                b=b,
+                c=c,
+                d=d,
+                prior=prior,
+                optimization_interval=optimization_interval
             )
             
             # if information is higher than before
