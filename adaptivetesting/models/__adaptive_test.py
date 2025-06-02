@@ -42,6 +42,7 @@ class AdaptiveTest(abc.ABC):
         self.participant_id: int = participant_id
         # set start values
         self.ability_level = initial_ability_level
+        self.standard_error = float("NaN")
         self.answered_items: List[TestItem] = []
         self.response_pattern: List[int] = []
         self.test_results: List[TestResult] = []
@@ -73,17 +74,17 @@ class AdaptiveTest(abc.ABC):
         """
         return self.answered_items
 
-    def get_ability_se(self) -> float:
-        """
-        Calculate the current standard error
-        of the ability estimation.
+    # def get_ability_se(self) -> float:
+    #     """
+    #     Calculate the current standard error
+    #     of the ability estimation.
 
-        Returns:
-            float: standard error of the ability estimation
+    #     Returns:
+    #         float: standard error of the ability estimation
 
-        """
-        answered_items = self.get_answered_items()
-        return standard_error(answered_items, self.ability_level)
+    #     """
+    #     answered_items = self.get_answered_items()
+    #     return standard_error(answered_items, self.ability_level)
 
     def get_next_item(self) -> TestItem:
         """Select next item using Urry's rule.
@@ -95,13 +96,13 @@ class AdaptiveTest(abc.ABC):
         return item
 
     @abc.abstractmethod
-    def estimate_ability_level(self) -> float:
+    def estimate_ability_level(self) -> tuple[float, float]:
         """
         Estimates ability level.
         The method has to be implemented by subclasses.
 
         Returns:
-            float: estimated ability level
+            (float, float): estimated ability level, standard error of the estimation
         """
         pass
 
@@ -146,12 +147,14 @@ class AdaptiveTest(abc.ABC):
         self.answered_items.append(item)
 
         # estimate ability level
-        estimation = self.estimate_ability_level()
+        estimation, sd_error = self.estimate_ability_level()
 
-        # update estimated ability level
+        # update estimated ability level and standard error
         self.ability_level = estimation
+        self.standard_error = sd_error
         if self.DEBUG:
-            print(f"New estimation is {self.ability_level}")
+            print(f"New estimation is {self.ability_level} with standard error {self.standard_error}.")
+
         # remove item from item pool
         self.item_pool.delete_item(item)
         if self.DEBUG:
@@ -170,7 +173,7 @@ class AdaptiveTest(abc.ABC):
         self.test_results.append(result)
 
     def check_se_criterion(self, value: float) -> bool:
-        if self.get_ability_se() <= value:
+        if self.standard_error <= value:
             return True
         else:
             return False
