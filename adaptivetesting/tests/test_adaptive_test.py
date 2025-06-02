@@ -1,5 +1,6 @@
 import unittest
 from adaptivetesting.models import AdaptiveTest, TestItem, ItemPool
+from adaptivetesting.math.estimators import MLEstimator
 
 item1 = TestItem()
 item1.b = 0.24
@@ -31,8 +32,8 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
         )
         unittest.TestCase.__init__(self, methodName)
 
-    def estimate_ability_level(self) -> float:
-        return 0
+    def estimate_ability_level(self) -> tuple[float, float]:
+        return 0, float("NaN")
 
     def test_get_difficulties(self):
         difficulties = self.get_item_difficulties()
@@ -41,7 +42,9 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
     def test_standard_error(self):
         """This should calculate a standard error without failing"""
         self.answered_items = [item1, item2]
-        self.get_ability_se()
+        response_pattern: list[int] = []
+        estimator = MLEstimator(response_pattern, self.answered_items)
+        estimator.get_standard_error(0)
 
     def test_get_next_item(self):
         next_item = self.get_next_item()

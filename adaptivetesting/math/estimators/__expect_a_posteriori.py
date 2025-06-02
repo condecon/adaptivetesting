@@ -40,7 +40,12 @@ class ExpectedAPosteriori(BayesModal):
         
         prior_pdf = self.prior.pdf(x)
         
-        likelihood_vals = np.vectorize(lambda mu: likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern))(x)
+        likelihood_vals = np.vectorize(lambda mu: likelihood(mu,
+                                                             self.a,
+                                                             self.b,
+                                                             self.c,
+                                                             self.d,
+                                                             self.response_pattern))(x)
         
         numerator = trapezoid(x * likelihood_vals * prior_pdf, x)
         
@@ -51,7 +56,7 @@ class ExpectedAPosteriori(BayesModal):
         return estimation
 
     def get_standard_error(self, estimated_ability: float) -> float:
-        """Calculates the standard error for the items used at the 
+        """Calculates the standard error for the items used at the
         construction of the class instance (answered items).
         The currently estimated ability level is required as parameter.
 
@@ -69,7 +74,12 @@ class ExpectedAPosteriori(BayesModal):
         x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
         prior_pdf = self.prior.pdf(x)
         
-        likelihood_vals = np.vectorize(lambda mu: likelihood(mu, self.a, self.b, self.c, self.d, self.response_pattern))(x)
+        likelihood_vals = np.vectorize(lambda mu: likelihood(mu,
+                                                             self.a,
+                                                             self.b,
+                                                             self.c,
+                                                             self.d,
+                                                             self.response_pattern))(x)
         
         numerator = trapezoid((x - estimated_ability) ** 2 * likelihood_vals * prior_pdf, x)
         
@@ -77,6 +87,4 @@ class ExpectedAPosteriori(BayesModal):
         
         standard_error_result = pow(numerator / denominator, 0.5)
     
-
         return standard_error_result
-        

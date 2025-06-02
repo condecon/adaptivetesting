@@ -35,6 +35,7 @@ def item_information_function(
     information = np.sum(product)
     return information
 
+
 def prior_information_function(prior: Prior,
                                optimization_interval: tuple[float, float] = (-10, 10)) -> np.ndarray:
     """Calculates the fisher information for the probability density function
@@ -46,7 +47,8 @@ def prior_information_function(prior: Prior,
     Returns:
         np.ndarray: _description_
     """
-    log_prior = lambda x: numpy.log(prior.pdf(x))
+    def log_prior(x):
+        return numpy.log(prior.pdf(x))
     x_vals = np.linspace(optimization_interval[0], optimization_interval[1], 1000)
     score_values = np.array(derivative(log_prior, x_vals).df)
 
@@ -72,7 +74,7 @@ def test_information_function(
     Therefore, the information is calculated for every item
     and then summed up.
     If a prior is specified, the fisher information of the prior
-    is calculated as well and added to the information sum. 
+    is calculated as well and added to the information sum.
 
     Args:
         mu (np.ndarray): ability level

@@ -1,9 +1,7 @@
 import jax.numpy as jnp
-from jax import jit, vmap
+from jax import jit
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ....models.__algorithm_exception import AlgorithmException
-from ...estimators.__prior import Prior
-from scipy.integrate import quad
 
 
 @jit
@@ -94,7 +92,6 @@ def likelihood(mu: jnp.ndarray,
 
     terms = (probability_y1(mu, a, b, c, d)**response_pattern) * \
         (probability_y0(mu, a, b, c, d) ** (1 - response_pattern))
-    
     
     return -jnp.prod(terms)
 

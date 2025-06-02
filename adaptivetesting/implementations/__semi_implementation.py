@@ -126,7 +126,7 @@ class SemiAdaptiveImplementation(AdaptiveTest):
         # create test result for first ability estimation
         intermediate_result = TestResult(
             ability_estimation=self.ability_level,
-            standard_error=self.get_ability_se(),
+            standard_error=self.standard_error,
             showed_item=random_items[-1].b,
             response=self.response_pattern[-1],
             test_id=self.simulation_id,

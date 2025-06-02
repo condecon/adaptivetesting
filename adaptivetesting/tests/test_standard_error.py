@@ -41,6 +41,7 @@ class TestStandardError(unittest.TestCase):
 
         self.assertAlmostEqual(result, 1.444873, 3)
 
+
 class TestStandardErrorBM(unittest.TestCase):
     def test_calculation_bm(self):
         items = pd.DataFrame({

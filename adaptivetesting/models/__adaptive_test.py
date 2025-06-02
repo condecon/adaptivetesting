@@ -1,7 +1,6 @@
 from typing import List
 from .__test_item import TestItem
 from ..math.item_selection.__urrys_rule import urrys_rule
-from ..math.estimators.__standard_error import standard_error
 import abc
 from .__test_result import TestResult
 from .__item_pool import ItemPool
@@ -162,7 +161,7 @@ class AdaptiveTest(abc.ABC):
         # create result
         result: TestResult = TestResult(
             ability_estimation=estimation,
-            standard_error=self.get_ability_se(),
+            standard_error=self.standard_error,
             showed_item=item.b,
             response=response,
             test_id=self.simulation_id,

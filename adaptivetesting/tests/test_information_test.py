@@ -1,7 +1,5 @@
 import unittest
-from adaptivetesting.math import generate_response_pattern
 from adaptivetesting.math.estimators import NormalPrior, test_information_function, prior_information_function
-from adaptivetesting.models import ItemPool
 import jax.numpy as np
 import pandas as pd
 import math
@@ -9,10 +7,8 @@ import math
 
 class TestTestInformation(unittest.TestCase):
     def test_information_calculation_1pl(self):
-        difficulties = [-0.6265,0.1836,-0.8356]
+        difficulties = [-0.6265, 0.1836, -0.8356]
         ability = np.array([0], dtype="float32")
-        # convert difficulties into items
-        item_pool = ItemPool.load_from_list(b=difficulties)
 
         result = test_information_function(
             mu=ability,
@@ -21,7 +17,6 @@ class TestTestInformation(unittest.TestCase):
             c=np.array(0),
             d=np.array(1)
         )
-
 
         self.assertAlmostEqual(result, 0.6859, 3)
 
@@ -33,7 +28,6 @@ class TestTestInformation(unittest.TestCase):
             "d": [0.87, 0.93, 1]
         })
 
-
         result = test_information_function(np.array(0, dtype=float),
                                            np.array(items.a.to_numpy()),
                                            np.array(items.b.to_numpy()),
@@ -43,6 +37,7 @@ class TestTestInformation(unittest.TestCase):
         result = 1 / math.sqrt(result)
 
         self.assertAlmostEqual(result, 1.444873, 3)
+
 
 class TestPriorInformation(unittest.TestCase):
     def test_normal_prior_variance(self):
