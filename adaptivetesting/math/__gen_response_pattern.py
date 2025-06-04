@@ -1,6 +1,6 @@
 from .estimators.__functions.__estimators import probability_y1
 from ..models.__test_item import TestItem
-import numpy as np
+import numpy as jnp
 
 
 def generate_response_pattern(ability: float,
@@ -28,8 +28,8 @@ def generate_response_pattern(ability: float,
         
         # simulate response based on probability of scucess
         if seed is not None:
-            np.random.seed(seed)
-        response = int(np.random.binomial(n=1, p=probability_of_success)) # ensure that the result is not an array
+            jnp.random.seed(seed)
+        response = int(jnp.random.binomial(n=1, p=probability_of_success)) # ensure that the result is not an array
         responses.append(response)
 
     return responses
