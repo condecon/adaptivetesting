@@ -1,11 +1,6 @@
 import jax.numpy as np
 from abc import ABC, abstractmethod
-from scipy.stats import norm, rv_continuous, beta
-from typing import Callable, TypeAlias
-
-
-ContinousRandomVariable: TypeAlias = rv_continuous
-"""Type alias for a continous random variable."""
+from scipy.stats import norm, rv_continuous
 
 
 class Prior(ABC):
@@ -51,11 +46,12 @@ class NormalPrior(Prior):
         """
         return norm.pdf(x, self.mean, self.sd) # type: ignore
 
+
 class CustomPrior(Prior):
-    def __init__(self, 
-                 random_variable: ContinousRandomVariable, 
-                 *args: float, 
-                 loc: float = 0, 
+    def __init__(self,
+                 random_variable: rv_continuous,
+                 *args: float,
+                 loc: float = 0,
                  scale: float = 1):
         """This class is for using a custom prior in the ability estimation
         in Bayes Modal or Expected a Posteriori.
@@ -64,7 +60,7 @@ class CustomPrior(Prior):
         the probability density function (pdf) of that particular random variable.
 
         Args:
-            random_variable (ContinousRandomVariable): Any continous, univariate random variable from the scipy.stats module 
+            random_variable (rv_continuous): Any continous, univariate random variable from the scipy.stats module.
             
             *args (float): Custom parameters required to calculate the pdf of that specific random variable.
 
@@ -86,6 +82,7 @@ class CustomPrior(Prior):
             self.scale
         )
         return np.array(result)
+
 
 class CustomPriorException(Exception):
     """This exception can be used is the custom prior

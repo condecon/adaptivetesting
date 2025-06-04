@@ -70,7 +70,8 @@ class BayesModal(IEstimator):
             # check that the used prior is really inherited from
             # the CustomPrior base class
             if not isinstance(self.prior, CustomPrior):
-                raise CustomPriorException("It seems like you are using a non-normal prior but did not use the CustomPrior base class!")
+                raise CustomPriorException("It seems like you are using a non-normal prior but",
+                                           "did not use the CustomPrior base class!")
             
             mu = np.linspace(self.optimization_interval[0],
                              self.optimization_interval[1],
