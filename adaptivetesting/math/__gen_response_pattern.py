@@ -19,12 +19,14 @@ def generate_response_pattern(ability: float,
         list[int]: response pattern
     """
     # check if items is list of items or ItemPool
+    test_items: list[TestItem]
     if type(items) is ItemPool:
-        items = items.test_items
-
+        test_items = items.test_items
+    if type(items) is list[TestItem]:
+        test_items = items
     responses: list[int] = []
 
-    for item in items:
+    for item in test_items:
         probability_of_success = probability_y1(mu=ability,
                                                 a=item.a,
                                                 b=item.b,

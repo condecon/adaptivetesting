@@ -41,11 +41,11 @@ class ExpectedAPosteriori(BayesModal):
         prior_pdf = self.prior.pdf(x)
         
         likelihood_vals = jnp.vectorize(lambda mu: likelihood(mu,
-                                                             self.a,
-                                                             self.b,
-                                                             self.c,
-                                                             self.d,
-                                                             self.response_pattern))(x)
+                                                              self.a,
+                                                              self.b,
+                                                              self.c,
+                                                              self.d,
+                                                              self.response_pattern))(x)
         
         numerator = trapezoid(x * likelihood_vals * prior_pdf, x)
         
@@ -75,11 +75,11 @@ class ExpectedAPosteriori(BayesModal):
         prior_pdf = self.prior.pdf(x)
         
         likelihood_vals = jnp.vectorize(lambda mu: likelihood(mu,
-                                                             self.a,
-                                                             self.b,
-                                                             self.c,
-                                                             self.d,
-                                                             self.response_pattern))(x)
+                                                              self.a,
+                                                              self.b,
+                                                              self.c,
+                                                              self.d,
+                                                              self.response_pattern))(x)
         
         numerator = trapezoid((x - estimated_ability) ** 2 * likelihood_vals * prior_pdf, x)
         
