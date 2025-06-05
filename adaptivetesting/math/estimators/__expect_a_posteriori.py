@@ -31,7 +31,7 @@ class ExpectedAPosteriori(BayesModal):
         super().__init__(response_pattern, items, prior, optimization_interval)
 
     def get_estimation(self) -> float:
-        """Estimate the crrent ability level using EAP.
+        """Estimate the current ability level using EAP.
 
         Returns:
             float: ability estimation
