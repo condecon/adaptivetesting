@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class ResultOutputFormat(Enum):
     """
     Enum for selecting the output format for
