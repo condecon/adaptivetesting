@@ -31,6 +31,7 @@ pip install git+https://github.com/condecon/adaptivetesting
 - Ability estimators: 
     - Maximum Likelihood Estimation
     - Bayes Modal
+    - Expected a Posteriori (EAP)
 - Item selection algorithm: 
     - Urry’s rule
     - Maximum Information Criterion

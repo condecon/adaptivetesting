@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
-import jax.numpy as np
+import jax.numpy as jnp
 from ..models.__test_item import TestItem
 
 
 class IEstimator(ABC):
     def __init__(self,
-                 response_pattern: List[int] | np.ndarray,
+                 response_pattern: List[int] | jnp.ndarray,
                  items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This is the interface required for every possible
@@ -19,17 +19,17 @@ class IEstimator(ABC):
             
             items (List[TestItem]): list of answered items
         """
-        if type(response_pattern) is not np.ndarray:
-            self.response_pattern = np.array(response_pattern)
+        if type(response_pattern) is not jnp.ndarray:
+            self.response_pattern = jnp.array(response_pattern)
         else:
             self.response_pattern = response_pattern
         self.optimization_interval = optimization_interval
 
         # convert items to parameter arrays
-        self.a = np.array([i.a for i in items])
-        self.b = np.array([i.b for i in items])
-        self.c = np.array([i.c for i in items])
-        self.d = np.array([i.d for i in items])
+        self.a = jnp.array([i.a for i in items])
+        self.b = jnp.array([i.b for i in items])
+        self.c = jnp.array([i.c for i in items])
+        self.d = jnp.array([i.d for i in items])
         
     @abstractmethod
     def get_estimation(self) -> float:
@@ -37,5 +37,17 @@ class IEstimator(ABC):
 
         Returns:
             float: ability
+        """
+        pass
+
+    @abstractmethod
+    def get_standard_error(self, estimation: float) -> float:
+        """Calculates the standard error for the given estimated ability level.
+
+        Args:
+            estimation (float): currently estimated ability level
+
+        Returns:
+            float: standard error of the ability estimation
         """
         pass

@@ -11,6 +11,21 @@ MLEstimator
    :undoc-members:
    :show-inheritance:
 
+
+BayesModal
+^^^^^^^^^^^^^^^^^^^^^^
+.. autoclass:: adaptivetesting.math.estimators.BayesModal
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ExpectedAPosteriori
+^^^^^^^^^^^^^^^^^^^^^^
+.. autoclass:: adaptivetesting.math.estimators.ExpectedAPosteriori
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Prior
 ^^^^^^^^^^
 .. autoclass:: adaptivetesting.math.estimators.Prior

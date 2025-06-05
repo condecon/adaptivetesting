@@ -82,12 +82,18 @@ def likelihood(mu: jnp.ndarray,
         d (jnp.ndarray): inattention parameter
 
     Returns:
-        float: likelihood value of given ability value
+        float: negative likelihood value of given ability value
     """
+    # reshape
+    a = jnp.expand_dims(a, axis=0)
+    b = jnp.expand_dims(b, axis=0)
+    c = jnp.expand_dims(c, axis=0)
+    d = jnp.expand_dims(d, axis=0)
+
     terms = (probability_y1(mu, a, b, c, d)**response_pattern) * \
         (probability_y0(mu, a, b, c, d) ** (1 - response_pattern))
     
-    return -jnp.cumulative_prod(terms)[-1].astype(float)
+    return -jnp.prod(terms)
 
 
 def maximize_likelihood_function(a: jnp.ndarray,

@@ -39,7 +39,7 @@ class DefaultImplementation(AdaptiveTest):
                          simulation,
                          debug)
 
-    def estimate_ability_level(self) -> float:
+    def estimate_ability_level(self) -> tuple[float, float]:
         """
         Estimates latent ability level using ML.
         If responses are only 1 or 0,
@@ -47,15 +47,16 @@ class DefaultImplementation(AdaptiveTest):
         of the boundaries of the estimation interval (`[-10,10]`).
         
         Returns:
-            float: ability estimation
+            (float, float): estimated ability level, standard error of the estimation
         """
         estimator = MLEstimator(
             self.response_pattern,
             self.get_answered_items()
         )
-        estimation: float = float("NaN")
+
         try:
             estimation = estimator.get_estimation()
+            standard_error = estimator.get_standard_error(estimation)
         except AlgorithmException as exception:
             # check if all responses are the same
             if len(set(self.response_pattern)) == 1:
@@ -63,9 +64,10 @@ class DefaultImplementation(AdaptiveTest):
                     estimation = -10
                 elif self.response_pattern[0] == 1:
                     estimation = 10
+                standard_error = estimator.get_standard_error(estimation)
 
             else:
                 raise AlgorithmException("""Something else
                 when wrong when running MLE""") from exception
 
-        return estimation
+        return estimation, standard_error

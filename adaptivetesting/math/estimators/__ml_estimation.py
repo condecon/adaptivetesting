@@ -1,13 +1,14 @@
 from typing import List, Tuple
-import jax.numpy as np
+import jax.numpy as jnp
 from ...models.__test_item import TestItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
+from .__test_information import test_information_function
 
 
 class MLEstimator(IEstimator):
     def __init__(self,
-                 response_pattern: List[int] | np.ndarray,
+                 response_pattern: List[int] | jnp.ndarray,
                  items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
@@ -37,3 +38,25 @@ class MLEstimator(IEstimator):
                                             d=self.d,
                                             response_pattern=self.response_pattern,
                                             border=self.optimization_interval)
+    
+    def get_standard_error(self, estimation) -> float:
+        """Calculates the standard error for the given estimated ability level.
+
+        Args:
+            estimation (float): currently estimated ability level
+
+        Returns:
+            float: standard error of the ability estimation
+        """
+        test_information = test_information_function(
+            jnp.array(estimation, dtype=float),
+            a=self.a,
+            b=self.b,
+            c=self.c,
+            d=self.d,
+            prior=None,
+            optimization_interval=self.optimization_interval
+        )
+
+        sd_error = 1 / jnp.sqrt(test_information)
+        return float(sd_error)
