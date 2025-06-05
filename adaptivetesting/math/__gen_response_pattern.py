@@ -1,10 +1,11 @@
 from .estimators.__functions.__estimators import probability_y1
 from ..models.__test_item import TestItem
+from ..models.__item_pool import ItemPool
 import numpy as np
 
 
 def generate_response_pattern(ability: float,
-                              items: list[TestItem],
+                              items: list[TestItem] | ItemPool,
                               seed: int | None = None) -> list[int]:
     """Generates a response pattern for a given ability level
     and item difficulties. Also, a seed can be set.
@@ -17,6 +18,10 @@ def generate_response_pattern(ability: float,
     Returns:
         list[int]: response pattern
     """
+    # check if items is list of items or ItemPool
+    if type(items) == ItemPool:
+        items = items.test_items
+
     responses: list[int] = []
 
     for item in items:
