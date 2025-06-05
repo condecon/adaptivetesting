@@ -1,7 +1,7 @@
 from .estimators.__functions.__estimators import probability_y1
 from ..models.__test_item import TestItem
 from ..models.__item_pool import ItemPool
-import numpy as jnp
+import numpy as np
 
 
 def generate_response_pattern(ability: float,
