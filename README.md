@@ -35,7 +35,24 @@ For the latest development version:
 pip install git+https://github.com/condecon/adaptivetesting
 ```
 
-## Requirements
+## Features
+- IRT-Models: 
+    - 4PL
+    - simplified derivates (e.g., 3PL, Rasch model)
+- Ability estimators: 
+    - Maximum Likelihood Estimation
+    - Bayes Modal
+    - Expected a Posteriori (EAP)
+- Item selection algorithm: 
+    - Urry’s rule
+    - Maximum Information Criterion
+- Stopping criteria: 
+    - test length
+    - ability estimation standard error
+- Test results output formats
+    - SQLITE
+    - Pickle
+- Functions and wrappers for CAT simulations and application implementations
 
 - Python >= 3.10
 - NumPy >= 2.0.0

@@ -6,7 +6,6 @@ from scipy.stats import beta
 from adaptivetesting.math.estimators import CustomPriorException
 
 
-
 class TestBayesModal(unittest.TestCase):
     def __init__(self, methodName="runTest"):
         super().__init__(methodName)

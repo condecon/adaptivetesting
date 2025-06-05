@@ -40,7 +40,7 @@ class NormalPrior(Prior):
         """Probability density function for a prior distribution
 
         Args:
-            x (float | np.ndarray): point at which to calculate the function value
+            x (float | jnp.ndarray): point at which to calculate the function value
         
         Returns:
             ndarray: function value
