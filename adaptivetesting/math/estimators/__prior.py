@@ -1,4 +1,4 @@
-import jax.numpy as np
+import jax.numpy as jnp
 from abc import ABC, abstractmethod
 from scipy.stats import norm, rv_continuous
 
@@ -10,11 +10,11 @@ class Prior(ABC):
         pass
 
     @abstractmethod
-    def pdf(self, x: float | np.ndarray) -> np.ndarray:
+    def pdf(self, x: float | jnp.ndarray) -> jnp.ndarray:
         """Probability density function for a prior distribution
 
         Args:
-            x (float | np.ndarray): point at which to calculate the function value
+            x (float | jnp.ndarray): point at which to calculate the function value
         
         Returns:
             ndarray: function value
@@ -35,11 +35,11 @@ class NormalPrior(Prior):
         self.sd = sd
         super().__init__()
 
-    def pdf(self, x: float | np.ndarray) -> np.ndarray:
+    def pdf(self, x: float | jnp.ndarray) -> jnp.ndarray:
         """Probability density function for a prior distribution
 
         Args:
-            x (float | np.ndarray): point at which to calculate the function value
+            x (float | jnp.ndarray): point at which to calculate the function value
         
         Returns:
             ndarray: function value
@@ -74,14 +74,14 @@ class CustomPrior(Prior):
         self.loc = loc
         self.scale = scale
     
-    def pdf(self, x: float | np.ndarray) -> np.ndarray:
+    def pdf(self, x: float | jnp.ndarray) -> jnp.ndarray:
         result = self.random_variable.pdf(
             x,
             *self.args,
             self.loc,
             self.scale
         )
-        return np.array(result)
+        return jnp.array(result)
 
 
 class CustomPriorException(Exception):

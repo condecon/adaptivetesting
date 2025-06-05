@@ -1,5 +1,5 @@
 from typing import List, Tuple
-import jax.numpy as np
+import jax.numpy as jnp
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
 from ...models.__algorithm_exception import AlgorithmException
@@ -10,7 +10,7 @@ from .__test_information import test_information_function
 
 class BayesModal(IEstimator):
     def __init__(self,
-                 response_pattern: List[int] | np.ndarray,
+                 response_pattern: List[int] | jnp.ndarray,
                  items: List[TestItem],
                  prior: Prior,
                  optimization_interval: Tuple[float, float] = (-10, 10)):
@@ -22,7 +22,7 @@ class BayesModal(IEstimator):
 
 
             Args:
-                response_pattern (List[int] | np.ndarray ): list of response patterns (0: wrong, 1:right)
+                response_pattern (List[int] | jnp.ndarray ): list of response patterns (0: wrong, 1:right)
 
                 items (List[TestItem]): list of answered items
             
@@ -73,12 +73,12 @@ class BayesModal(IEstimator):
                 raise CustomPriorException("It seems like you are using a non-normal prior but",
                                            "did not use the CustomPrior base class!")
             
-            mu = np.linspace(self.optimization_interval[0],
+            mu = jnp.linspace(self.optimization_interval[0],
                              self.optimization_interval[1],
                              num=1000)
             # calculate likelihood values for every mu
             try:
-                lik_values = np.array([
+                lik_values = jnp.array([
                     likelihood(
                         i,
                         self.a,
@@ -93,7 +93,7 @@ class BayesModal(IEstimator):
                 # add prior
                 unmarginalized_posterior = lik_values * self.prior.pdf(mu)
                 # find argmin and return mu
-                estimate_index = np.argmin(unmarginalized_posterior)
+                estimate_index = jnp.argmin(unmarginalized_posterior)
                 return float(mu[estimate_index].astype(float))
             except Exception as e:
                 raise AlgorithmException(e)
@@ -108,7 +108,7 @@ class BayesModal(IEstimator):
             float: standard error of the ability estimation
         """
         test_information = test_information_function(
-            np.array(estimation, dtype=float),
+            jnp.array(estimation, dtype=float),
             a=self.a,
             b=self.b,
             c=self.c,
@@ -117,5 +117,5 @@ class BayesModal(IEstimator):
             optimization_interval=self.optimization_interval
         )
 
-        sd_error = 1 / np.sqrt(test_information)
+        sd_error = 1 / jnp.sqrt(test_information)
         return float(sd_error)
