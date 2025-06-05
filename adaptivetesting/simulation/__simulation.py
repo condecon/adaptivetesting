@@ -2,23 +2,7 @@ from ..models.__adaptive_test import AdaptiveTest
 from ..data.__sqlite_context import SQLiteContext
 from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults
-from enum import Enum
-
-
-class ResultOutputFormat(Enum):
-    """
-    Enum for selecting the output format for
-    the test results
-    """
-    SQLITE = 1
-    PICKLE = 2
-
-
-class StoppingCriterion(Enum):
-    """Enum for selecting the stopping criterion
-    for the adaptive test"""
-    SE = 1
-    LENGTH = 2
+from ..models.__misc import ResultOutputFormat, StoppingCriterion
 
 
 class Simulation:
