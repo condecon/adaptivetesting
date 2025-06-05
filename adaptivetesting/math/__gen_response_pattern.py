@@ -19,7 +19,7 @@ def generate_response_pattern(ability: float,
         list[int]: response pattern
     """
     # check if items is list of items or ItemPool
-    if type(items) == ItemPool:
+    if type(items) is ItemPool:
         items = items.test_items
 
     responses: list[int] = []
@@ -33,8 +33,8 @@ def generate_response_pattern(ability: float,
         
         # simulate response based on probability of scucess
         if seed is not None:
-            jnp.random.seed(seed)
-        response = int(jnp.random.binomial(n=1, p=probability_of_success)) # ensure that the result is not an array
+            np.random.seed(seed)
+        response = int(np.random.binomial(n=1, p=probability_of_success)) # ensure that the result is not an array
         responses.append(response)
 
     return responses
