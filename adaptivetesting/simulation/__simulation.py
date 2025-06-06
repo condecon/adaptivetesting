@@ -1,5 +1,4 @@
 from ..models.__adaptive_test import AdaptiveTest
-from ..models.__test_result import TestResult
 from ..data.__sqlite_context import SQLiteContext
 from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults

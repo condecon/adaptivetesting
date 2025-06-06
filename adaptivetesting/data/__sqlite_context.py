@@ -39,9 +39,18 @@ class SQLiteContext(ITestResults):
         for result in test_results:
             sql_query = f"""
             INSERT INTO p_{self.participant_id}
-            VALUES ("{result.test_id}", {result.ability_estimation}, {result.standard_error},
-            {result.showed_item}, {result.response}, {result.true_ability_level})"""
-            cur.execute(sql_query)
+            VALUES (?, ?, ?, ?, ?, ?)"""
+            cur.execute(
+                sql_query,
+                (
+                    result.test_id,
+                    result.ability_estimation,
+                    result.standard_error,
+                    result.showed_item,
+                    result.response,
+                    result.true_ability_level,
+                ),
+            )
         # commit changes
         con.commit()
         # close connection
