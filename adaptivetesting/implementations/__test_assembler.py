@@ -1,7 +1,7 @@
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__item_pool import ItemPool
 from ..models.__test_item import TestItem
-from ..services.__estimator_interface import IEstimator, EstimatorKwargs
+from ..services.__estimator_interface import IEstimator
 from ..math.estimators.__bayes_modal_estimation import BayesModal
 from ..math.estimators.__expect_a_posteriori import ExpectedAPosteriori
 from ..math.estimators.__ml_estimation import MLEstimator
@@ -79,12 +79,13 @@ class TestAssembler(AdaptiveTest):
 
          return estimation, standard_error
     
-    def get_next_item(self):
+    def get_next_item(self) -> TestItem:
         item = self.__item_selector(
             self.item_pool.test_items,
             self.ability_level,
             **self.__item_selector_args
         )
+        return item
 
     def run_test_once(self):
         # check if to run pretest

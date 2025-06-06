@@ -64,7 +64,7 @@ class AdaptiveTest(abc.ABC):
         # if simulation is True
         # generate a response pattern if 
         # it is not yet set in the item pool
-        if simulation == True:
+        if simulation is True:
             if self.item_pool.simulated_responses is None:
                 self.item_pool.simulated_responses = generate_response_pattern(
                     ability=self.true_ability_level,
