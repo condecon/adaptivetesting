@@ -98,7 +98,6 @@ def setup_simulation_and_start(test: AdaptiveTest,
     # save results
     simulation.save_test_results()
 
-
 class SimulationPool():
     def __init__(self,
                  adaptive_tests: list[AdaptiveTest],

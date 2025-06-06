@@ -10,7 +10,7 @@ resolution-markers = [
 
 [[package]]
 name = "adaptivetesting"
-version = "1.0.1"
+version = "1.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "jax" },
@@ -21,6 +21,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "adaptivetesting" },
     { name = "flake8" },
     { name = "mypy" },
     { name = "pandas-stubs" },
@@ -39,6 +40,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "adaptivetesting", editable = "." },
     { name = "flake8", specifier = ">=7.2.0" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
