@@ -1,24 +1,21 @@
 from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ..estimators.__test_information import item_information_function
-from ..estimators.__prior import Prior
 from ...models.__algorithm_exception import AlgorithmException
 import jax.numpy as jnp
 
 
 def maximum_information_criterion(items: list[TestItem],
-                                  ability: float,
-                                  prior: Prior | None = None,
-                                  optimization_interval: tuple[float, float] = (-10, 10)) -> TestItem:
+                                  ability: float) -> TestItem:
     """The maximum information criterion selected the next item for the respondent
-    by finding the item that maximizes the test information function.
+    by finding the item that has the highest information value.
 
     Args:
         items (list[TestItem]): list of available items
         ability (float): currently estimated ability
 
     Returns:
-        TestItem: item that maximizes the test information function
+        TestItem: item that has the highest information value
 
     Raises:
         ItemSelectionException: raised if no appropriate item was found
@@ -34,10 +31,10 @@ def maximum_information_criterion(items: list[TestItem],
         c = jnp.array([item.c])
         d = jnp.array([item.d])
 
-        # calculate test information for the current item
+        # calculate information for the current item
         try:
             information = float(item_information_function(
-                mu=jnp.array([ability], dtype=float),
+                mu=jnp.array(ability, dtype=float),
                 a=a,
                 b=b,
                 c=c,

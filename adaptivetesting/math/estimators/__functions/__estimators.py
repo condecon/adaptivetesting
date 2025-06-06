@@ -30,7 +30,7 @@ def probability_y1(mu: jnp.ndarray,
     value = c + (d - c) * (jnp.exp(a * (mu - b))) / \
         (1 + jnp.exp(a * (mu - b)))
     
-    return value
+    return jnp.squeeze(value)
 
 
 @jit
