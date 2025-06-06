@@ -4,6 +4,7 @@ from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults
 from ..models.__misc import ResultOutputFormat, StoppingCriterion
 from multiprocessing import Pool
+from functools import partial
 
 class Simulation:
     def __init__(self,
@@ -86,9 +87,13 @@ class SimulationPool():
         self.value = value
         
     def start(self):
-        with Pool(len(self.adaptive_tests)) as pool:
-            pool.map(lambda test: setup_simulation_and_start(test,
-                                                             self.test_results_output,
-                                                             self.criterion,
-                                                             self.value),
-                                                             self.adaptive_tests)
+        # set number of processes in pool to 60
+        # due to a windows api restriction
+        with Pool(60) as pool:
+            func = partial(
+                setup_simulation_and_start,
+                test_result_output=self.test_results_output,
+                criterion=self.criterion,
+                value=self.value
+            )
+            pool.map(func, self.adaptive_tests)
