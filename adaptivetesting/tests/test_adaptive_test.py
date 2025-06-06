@@ -28,7 +28,7 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
             item_pool=item_pool,
             simulation_id="1",
             true_ability_level=0,
-            participant_id=0
+            participant_id="0"
         )
         unittest.TestCase.__init__(self, methodName)
 

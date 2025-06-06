@@ -66,11 +66,12 @@ class AdaptiveTest(abc.ABC):
         # it is not yet set in the item pool
         if simulation is True:
             if self.item_pool.simulated_responses is None:
-                self.item_pool.simulated_responses = generate_response_pattern(
-                    ability=self.true_ability_level,
-                    items=self.item_pool.test_items,
-                    seed=kwargs["seed"] if "seed" in kwargs.keys() else None
-                )
+                if self.true_ability_level is not None:
+                    self.item_pool.simulated_responses = generate_response_pattern(
+                        ability=self.true_ability_level,
+                        items=self.item_pool.test_items,
+                        seed=kwargs["seed"] if "seed" in kwargs.keys() else None
+                    )
 
     def get_item_difficulties(self) -> List[float]:
         """
@@ -187,7 +188,7 @@ class AdaptiveTest(abc.ABC):
             showed_item=item.as_dict(),
             response=response,
             test_id=self.simulation_id,
-            true_ability_level=self.true_ability_level
+            true_ability_level=self.true_ability_level if self.true_ability_level is not None else float("NaN")
         )
 
         # add result to memory

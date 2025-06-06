@@ -8,7 +8,7 @@ from ..services.__test_results_interface import ITestResults
 class PickleContext(ITestResults):
     def __init__(self,
                  simulation_id: str,
-                 participant_id: int):
+                 participant_id: str):
         """Implementation of the ITestResults interface for
         saving test results to the pickle format.
         The resulting pickle file <simulation_id>.pickle
@@ -16,9 +16,9 @@ class PickleContext(ITestResults):
         on the used python version.
 
         Args:
-            simulation_id (str): Not used but required by the interface
+            simulation_id (str): folder name
 
-            participant_id (int): participant id and table name
+            participant_id (str): participant id
         """
         super().__init__(simulation_id, participant_id)
 
@@ -35,7 +35,7 @@ class PickleContext(ITestResults):
         path = pathlib.Path(f"data/{dir_name}")
         path.mkdir(parents=True, exist_ok=True)
         # write results in file
-        with open(f"data/{dir_name}/{str(self.participant_id)}.pickle", "wb") as file:
+        with open(f"data/{dir_name}/{self.participant_id}.pickle", "wb") as file:
             pickle.dump(test_results, file)
             file.close()
 

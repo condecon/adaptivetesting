@@ -1,16 +1,16 @@
 from ..models.__adaptive_test import AdaptiveTest
-from ..models.__item_pool import ItemPool
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from typing import Protocol
+from typing import Protocol, Any, runtime_checkable, Type
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
 from ..models.__test_result import TestResult
 
 
+@runtime_checkable
 class ItemSelectionStrategy(Protocol):
-    def select(self, item_pool: ItemPool, ability: float, **kwargs) -> TestItem:
+    def __call__(self, items: list[TestItem], ability: float, **kwargs) -> TestItem:
         ...
 
 
@@ -19,13 +19,13 @@ class TestAssembler(AdaptiveTest):
                  item_pool,
                  simulation_id,
                  participant_id,
-                 ability_estimator: IEstimator,
-                 estimator_args: dict[str, any] = {
+                 ability_estimator: Type[IEstimator],
+                 estimator_args: dict[str, Any] = {
                      "prior": None,
                      "optimization_interval": (-10, 10)
                  },
-                 item_selector: ItemSelectionStrategy = maximum_information_criterion,
-                 item_selector_args: dict[str, any] = {},
+                 item_selector: ItemSelectionStrategy = maximum_information_criterion, # type: ignore
+                 item_selector_args: dict[str, Any] = {},
                  pretest: bool = False,
                  pretest_seed: int | None = None,
                  true_ability_level=None,
@@ -50,7 +50,7 @@ class TestAssembler(AdaptiveTest):
                          **kwargs)
     
     def estimate_ability_level(self):
-        estimator: IEstimator = self.__ability_estimator(
+        estimator = self.__ability_estimator(
             self.response_pattern,
             self.answered_items,
             **self.__estimator_args
@@ -98,7 +98,7 @@ class TestAssembler(AdaptiveTest):
                     # not simulation
                     response = self.get_response(item)
 
-                if self.debug:
+                if self.DEBUG:
                     print(f"Response: {response}")
                 # add response to response pattern
                 self.response_pattern.append(response)
@@ -109,15 +109,17 @@ class TestAssembler(AdaptiveTest):
                 self.item_pool.delete_item(item)
             # estimate ability level
             estimation, sd_error = self.estimate_ability_level()
+            self.ability_level = estimation
+            self.standard_error = sd_error
             # create test results for all n-1 random items
             for i in range(0, len(random_items) - 1):
                 result = TestResult(
                     ability_estimation=float("nan"),
                     standard_error=float("nan"),
-                    showed_item=random_items[i].b,
+                    showed_item=random_items[i].as_dict(),
                     response=self.response_pattern[i],
                     test_id=self.simulation_id,
-                    true_ability_level=self.true_ability_level,
+                    true_ability_level=self.true_ability_level if self.true_ability_level is not None else float("NaN"),
                 )
                 # append to memory
                 self.test_results.append(result)
@@ -126,10 +128,10 @@ class TestAssembler(AdaptiveTest):
             intermediate_result = TestResult(
                 ability_estimation=self.ability_level,
                 standard_error=self.standard_error,
-                showed_item=random_items[-1].b,
+                showed_item=random_items[-1].as_dict(),
                 response=self.response_pattern[-1],
                 test_id=self.simulation_id,
-                true_ability_level=self.true_ability_level,
+                true_ability_level=self.true_ability_level if self.true_ability_level is not None else float("NaN"),
             )
             self.test_results.append(intermediate_result)
 

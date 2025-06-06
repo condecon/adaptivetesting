@@ -12,7 +12,7 @@ class SemiAdaptiveImplementation(AdaptiveTest):
     def __init__(self,
                  item_pool: ItemPool,
                  simulation_id: str,
-                 participant_id: int,
+                 participant_id: str,
                  true_ability_level: float,
                  initial_ability_level: float = 0,
                  simulation=True,
@@ -28,7 +28,7 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
             simulation_id (str): simulation id
 
-            participant_id (int): participant id
+            participant_id (str): participant id
 
             true_ability_level (float): true ability level (must always be set)
 
@@ -124,10 +124,10 @@ class SemiAdaptiveImplementation(AdaptiveTest):
             result = TestResult(
                 ability_estimation=float("nan"),
                 standard_error=float("nan"),
-                showed_item=random_items[i].b,
+                showed_item=random_items[i].as_dict(),
                 response=self.response_pattern[i],
                 test_id=self.simulation_id,
-                true_ability_level=self.true_ability_level,
+                true_ability_level=self.true_ability_level if self.true_ability_level is not None else float("NaN"),
             )
             # append to memory
             self.test_results.append(result)
@@ -136,9 +136,9 @@ class SemiAdaptiveImplementation(AdaptiveTest):
         intermediate_result = TestResult(
             ability_estimation=self.ability_level,
             standard_error=self.standard_error,
-            showed_item=random_items[-1].b,
+            showed_item=random_items[-1].as_dict(),
             response=self.response_pattern[-1],
             test_id=self.simulation_id,
-            true_ability_level=self.true_ability_level,
+            true_ability_level=self.true_ability_level if self.true_ability_level is not None else float("NaN"),
         )
         self.test_results.append(intermediate_result)

@@ -8,16 +8,16 @@ from ..services.__test_results_interface import ITestResults
 class CSVContext(ITestResults):
     def __init__(self,
                  simulation_id: str,
-                 participant_id: int):
+                 participant_id: str):
         """Implementation of the ITestResults interface for
         saving test results to the CSV format.
         The resulting CSV file <participant_id>.csv
         will be a standard comma-separated values file.
 
         Args:
-            simulation_id (str): Not used but required by the interface
+            simulation_id (str): folder name
 
-            participant_id (int): participant id and table name
+            participant_id (str): participant id
         """
         super().__init__(simulation_id, participant_id)
 
@@ -37,7 +37,7 @@ class CSVContext(ITestResults):
         # Get field names from the first TestResult object
         fieldnames = list(vars(test_results[0]).keys())
 
-        with open(f"data/{dir_name}/{str(self.participant_id)}.csv", "w", newline='', encoding='utf-8') as file:
+        with open(f"data/{dir_name}/{self.participant_id}.csv", "w", newline='', encoding='utf-8') as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for result in test_results:

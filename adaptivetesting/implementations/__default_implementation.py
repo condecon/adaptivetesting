@@ -10,7 +10,7 @@ class DefaultImplementation(AdaptiveTest):
     Maximum Likelihood Estimation and Urry's rule during the test."""
     def __init__(self, item_pool: ItemPool,
                  simulation_id: str,
-                 participant_id: int,
+                 participant_id: str,
                  true_ability_level: float,
                  initial_ability_level: float = 0,
                  simulation=True,
@@ -21,7 +21,7 @@ class DefaultImplementation(AdaptiveTest):
 
             simulation_id (str): simulation id
 
-            participant_id (int): participant id
+            participant_id (str): participant id
 
             true_ability_level (float): true ability level (must always be set)
 
