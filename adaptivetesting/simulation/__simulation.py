@@ -1,9 +1,10 @@
 from ..models.__adaptive_test import AdaptiveTest
+from ..models.__test_result import TestResult
 from ..data.__sqlite_context import SQLiteContext
 from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults
 from ..models.__misc import ResultOutputFormat, StoppingCriterion
-
+from multiprocessing import Pool
 
 class Simulation:
     def __init__(self,
@@ -57,3 +58,38 @@ class Simulation:
             )
         # save results
         data_context.save(self.test.test_results)
+
+
+def setup_simulation_and_start(test: AdaptiveTest,
+                               test_result_output: ResultOutputFormat,
+                               criterion: StoppingCriterion,
+                               value: float):
+    """
+    Args:
+        test (AdaptiveTest): _description_
+    """
+    simulation = Simulation(test=test,
+                            test_result_output=test_result_output)
+    simulation.simulate(criterion=criterion,
+                        value=value)
+    # save results
+    simulation.save_test_results()
+
+class SimulationPool():
+    def __init__(self,
+                 adaptive_tests: list[AdaptiveTest],
+                 test_result_output: ResultOutputFormat,
+                 criterion: StoppingCriterion = StoppingCriterion.SE,
+                 value: float = 0.4):
+        self.adaptive_tests = adaptive_tests
+        self.test_results_output = test_result_output
+        self.criterion = criterion
+        self.value = value
+        
+    def start(self):
+        with Pool(len(self.adaptive_tests)) as pool:
+            pool.map(lambda test: setup_simulation_and_start(test,
+                                                             self.test_results_output,
+                                                             self.criterion,
+                                                             self.value),
+                                                             self.adaptive_tests)

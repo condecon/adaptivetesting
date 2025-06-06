@@ -26,9 +26,11 @@ class SQLiteContext(ITestResults):
             test_results (List[TestResult]): list of test results
         """
         try:
-            con = sqlite3.connect(self.filename)
+            con = sqlite3.connect(self.filename,
+                                  timeout=1e9)
         except sqlite3.OperationalError:
-            con = sqlite3.connect(f"../{self.filename}")
+            con = sqlite3.connect(f"../{self.filename}",
+                                  timeout=1e9)
 
         cur: sqlite3.Cursor = con.cursor()
         # create table

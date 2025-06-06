@@ -1,7 +1,9 @@
 from typing import List
+import abc
+import copy
 from .__test_item import TestItem
 from ..math.item_selection.__urrys_rule import urrys_rule
-import abc
+from ..math.__gen_response_pattern import generate_response_pattern
 from .__test_result import TestResult
 from .__item_pool import ItemPool
 
@@ -9,11 +11,12 @@ from .__item_pool import ItemPool
 class AdaptiveTest(abc.ABC):
     def __init__(self, item_pool: ItemPool,
                  simulation_id: str,
-                 participant_id: int,
+                 participant_id: str,
                  true_ability_level: float,
                  initial_ability_level: float = 0,
                  simulation: bool = True,
-                 DEBUG=False):
+                 DEBUG=False,
+                 **kwargs):
         """Abstract implementation of an adaptive test.
         All abstract methods have to be overridden
         to create an instance of this class.
@@ -26,31 +29,48 @@ class AdaptiveTest(abc.ABC):
 
             simulation_id (str): simulation id
 
-            participant_id (int): participant id
+            participant_id (str): participant id
 
             true_ability_level (float): true ability level (must always be set)
 
             initial_ability_level (float): initially assumed ability level
 
-            simulation (bool): will the test be simulated
+            simulation (bool): will the test be simulated. 
+                If it is simulated and a response pattern is not yet set in the item pool,
+                it will be generated for the given true ability level.
+                A seed may also be set using the additional argument `seed` and set it to an int value, e.g.
+                `AdaptiveTest(..., seed=1234)`
 
             DEBUG (bool): enables debug mode
         """
-        self.true_ability_level: float = true_ability_level
+        self.true_ability_level = true_ability_level
         self.simulation_id = simulation_id
-        self.participant_id: int = participant_id
+        self.participant_id = participant_id
         # set start values
         self.ability_level = initial_ability_level
         self.standard_error = float("NaN")
         self.answered_items: List[TestItem] = []
         self.response_pattern: List[int] = []
         self.test_results: List[TestResult] = []
-        # load items
-        self.item_pool = item_pool
+        # make a deep copy of the item pool so
+        # that it can be referenced by other instances as well
+        # without modifying all other instances
+        self.item_pool = copy.deepcopy(item_pool)
 
         # debug
         self.DEBUG = DEBUG
         self.simulation = simulation
+
+        # if simulation is True
+        # generate a response pattern if 
+        # it is not yet set in the item pool
+        if simulation == True:
+            if self.item_pool.simulated_responses is None:
+                self.item_pool.simulated_responses = generate_response_pattern(
+                    ability=self.true_ability_level,
+                    items=self.item_pool.test_items,
+                    seed=kwargs["seed"] if "seed" in kwargs.keys() else None
+                )
 
     def get_item_difficulties(self) -> List[float]:
         """
