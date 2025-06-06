@@ -1,10 +1,13 @@
 from ..models.__adaptive_test import AdaptiveTest
-from ..data.__sqlite_context import SQLiteContext
+from ..data.__csv_context import CSVContext
 from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults
 from ..models.__misc import ResultOutputFormat, StoppingCriterion
 from multiprocessing import Pool
 from functools import partial
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from tqdm import tqdm
+
 
 class Simulation:
     def __init__(self,
@@ -52,7 +55,7 @@ class Simulation:
             data_context = PickleContext(simulation_id=self.test.simulation_id,
                                          participant_id=self.test.participant_id)
         else:
-            data_context = SQLiteContext(
+            data_context = CSVContext(
                 simulation_id=self.test.simulation_id,
                 participant_id=self.test.participant_id
             )
@@ -87,13 +90,15 @@ class SimulationPool():
         self.value = value
         
     def start(self):
-        # set number of processes in pool to 60
-        # due to a windows api restriction
-        with Pool(60) as pool:
-            func = partial(
-                setup_simulation_and_start,
-                test_result_output=self.test_results_output,
-                criterion=self.criterion,
-                value=self.value
-            )
-            pool.map(func, self.adaptive_tests)
+        func = partial(
+            setup_simulation_and_start,
+            test_result_output=self.test_results_output,
+            criterion=self.criterion,
+            value=self.value
+        )
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(func, test) for test in self.adaptive_tests]
+            for _ in tqdm(as_completed(futures), total=len(futures)):
+                pass
+
+

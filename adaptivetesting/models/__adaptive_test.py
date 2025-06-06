@@ -180,9 +180,9 @@ class AdaptiveTest(abc.ABC):
             print(f"Now, there are only {len(self.item_pool.test_items)} left in the item pool.")
         # create result
         result: TestResult = TestResult(
-            ability_estimation=estimation,
+            ability_estimation=float(estimation),
             standard_error=self.standard_error,
-            showed_item=item.b,
+            showed_item=item.as_dict(),
             response=response,
             test_id=self.simulation_id,
             true_ability_level=self.true_ability_level

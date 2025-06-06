@@ -5,7 +5,7 @@ class ResultOutputFormat(Enum):
     Enum for selecting the output format for
     the test results
     """
-    SQLITE = 1
+    CSV = 1
     PICKLE = 2
 
 
