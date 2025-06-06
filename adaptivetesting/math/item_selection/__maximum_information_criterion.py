@@ -1,6 +1,6 @@
 from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
-from ..estimators.__test_information import test_information_function
+from ..estimators.__test_information import item_information_function
 from ..estimators.__prior import Prior
 from ...models.__algorithm_exception import AlgorithmException
 import jax.numpy as jnp
@@ -36,15 +36,13 @@ def maximum_information_criterion(items: list[TestItem],
 
         # calculate test information for the current item
         try:
-            information = test_information_function(
+            information = float(item_information_function(
                 mu=jnp.array([ability], dtype=float),
                 a=a,
                 b=b,
                 c=c,
-                d=d,
-                prior=prior,
-                optimization_interval=optimization_interval
-            )
+                d=d
+            ))
             
             # if information is higher than before
             # set the item as new best item
