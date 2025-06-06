@@ -12,7 +12,7 @@ class AdaptiveTest(abc.ABC):
     def __init__(self, item_pool: ItemPool,
                  simulation_id: str,
                  participant_id: str,
-                 true_ability_level: float,
+                 true_ability_level: float | None = None,
                  initial_ability_level: float = 0,
                  simulation: bool = True,
                  DEBUG=False,
