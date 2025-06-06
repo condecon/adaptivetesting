@@ -35,7 +35,7 @@ class AdaptiveTest(abc.ABC):
 
             initial_ability_level (float): initially assumed ability level
 
-            simulation (bool): will the test be simulated. 
+            simulation (bool): will the test be simulated.
                 If it is simulated and a response pattern is not yet set in the item pool,
                 it will be generated for the given true ability level.
                 A seed may also be set using the additional argument `seed` and set it to an int value, e.g.
@@ -62,7 +62,7 @@ class AdaptiveTest(abc.ABC):
         self.simulation = simulation
 
         # if simulation is True
-        # generate a response pattern if 
+        # generate a response pattern if
         # it is not yet set in the item pool
         if simulation is True:
             if self.item_pool.simulated_responses is None:

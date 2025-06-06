@@ -2,12 +2,8 @@ from ..models.__adaptive_test import AdaptiveTest
 from ..models.__item_pool import ItemPool
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from ..math.estimators.__bayes_modal_estimation import BayesModal
-from ..math.estimators.__expect_a_posteriori import ExpectedAPosteriori
-from ..math.estimators.__ml_estimation import MLEstimator
-from typing import Protocol, Type, Union, Unpack, Literal
+from typing import Protocol
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
-from ..models.__misc import StoppingCriterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
 from ..models.__test_result import TestResult
@@ -17,6 +13,7 @@ class ItemSelectionStrategy(Protocol):
     def select(self, item_pool: ItemPool, ability: float, **kwargs) -> TestItem:
         ...
 
+
 class TestAssembler(AdaptiveTest):
     def __init__(self,
                  item_pool,
@@ -24,8 +21,8 @@ class TestAssembler(AdaptiveTest):
                  participant_id,
                  ability_estimator: IEstimator,
                  estimator_args: dict[str, any] = {
-                      "prior": None,
-                      "optimization_interval": (-10, 10)
+                     "prior": None,
+                     "optimization_interval": (-10, 10)
                  },
                  item_selector: ItemSelectionStrategy = maximum_information_criterion,
                  item_selector_args: dict[str, any] = {},
@@ -33,38 +30,36 @@ class TestAssembler(AdaptiveTest):
                  pretest_seed: int | None = None,
                  true_ability_level=None,
                  initial_ability_level=0,
-                 simulation=True, 
-                 debug=False, 
-                 
+                 simulation=True,
+                 debug=False,
                  **kwargs):
-            self.__ability_estimator = ability_estimator
-            self.__estimator_args = estimator_args
-            self.__item_selector = item_selector
-            self.__item_selector_args = item_selector_args
-            self.__pretest = pretest
-            self.__pretest_seed = pretest_seed
+        self.__ability_estimator = ability_estimator
+        self.__estimator_args = estimator_args
+        self.__item_selector = item_selector
+        self.__item_selector_args = item_selector_args
+        self.__pretest = pretest
+        self.__pretest_seed = pretest_seed
             
-            
-            super().__init__(item_pool,
-                             simulation_id,
-                             participant_id,
-                             true_ability_level,
-                             initial_ability_level,
-                             simulation,
-                             debug,
-                             **kwargs)
+        super().__init__(item_pool,
+                         simulation_id,
+                         participant_id,
+                         true_ability_level,
+                         initial_ability_level,
+                         simulation,
+                         debug,
+                         **kwargs)
     
     def estimate_ability_level(self):
-         estimator: IEstimator = self.__ability_estimator(
-              self.response_pattern,
-              self.answered_items,
-              **self.__estimator_args
-         )
+        estimator: IEstimator = self.__ability_estimator(
+            self.response_pattern,
+            self.answered_items,
+            **self.__estimator_args
+        )
 
-         try:
+        try:
             estimation = estimator.get_estimation()
             standard_error = estimator.get_standard_error(estimation)
-         except AlgorithmException as exception:
+        except AlgorithmException as exception:
             # check if all responses are the same
             if len(set(self.response_pattern)) == 1:
                 if self.response_pattern[0] == 0:
@@ -77,7 +72,7 @@ class TestAssembler(AdaptiveTest):
                 raise AlgorithmException(f"""Something
                 when wrong when running {type(estimator)}""") from exception
 
-         return estimation, standard_error
+        return estimation, standard_error
     
     def get_next_item(self) -> TestItem:
         item = self.__item_selector(
@@ -89,7 +84,7 @@ class TestAssembler(AdaptiveTest):
 
     def run_test_once(self):
         # check if to run pretest
-        if self.__pretest == True:
+        if self.__pretest is True:
             pretest = PreTest(
                 self.item_pool.test_items,
                 self.__pretest_seed

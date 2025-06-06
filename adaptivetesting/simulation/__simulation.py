@@ -3,7 +3,6 @@ from ..data.__csv_context import CSVContext
 from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults
 from ..models.__misc import ResultOutputFormat, StoppingCriterion
-from multiprocessing import Pool
 from functools import partial
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
@@ -78,6 +77,7 @@ def setup_simulation_and_start(test: AdaptiveTest,
     # save results
     simulation.save_test_results()
 
+
 class SimulationPool():
     def __init__(self,
                  adaptive_tests: list[AdaptiveTest],
@@ -100,5 +100,3 @@ class SimulationPool():
             futures = [executor.submit(func, test) for test in self.adaptive_tests]
             for _ in tqdm(as_completed(futures), total=len(futures)):
                 pass
-
-

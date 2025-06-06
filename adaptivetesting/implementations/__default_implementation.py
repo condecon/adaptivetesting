@@ -42,8 +42,8 @@ class DefaultImplementation(AdaptiveTest):
         
         # warn deprecation
         warnings.warn(
-            "DefaultImplementation is deprecated and will be removed in future releases."+
-            "Please use TestAssembler for future projects.",
+            """DefaultImplementation is deprecated and will be removed in future releases.
+            Please use TestAssembler for future projects.""",
             DeprecationWarning,
             stacklevel=2
         )

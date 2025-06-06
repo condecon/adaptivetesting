@@ -34,7 +34,6 @@ class CSVContext(ITestResults):
         path = pathlib.Path(f"data/{dir_name}")
         path.mkdir(parents=True, exist_ok=True)
 
-
         # Get field names from the first TestResult object
         fieldnames = list(vars(test_results[0]).keys())
 

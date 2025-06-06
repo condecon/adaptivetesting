@@ -54,8 +54,8 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
         # deprecation warning
         warnings.warn(
-            "SemiAdaptiveImplementation is deprecated and will be removed in future releases."+
-            "Please use TestAssembler for future projects.",
+            """SemiAdaptiveImplementation is deprecated and will be removed in future releases.
+            Please use TestAssembler for future projects.""",
             DeprecationWarning,
             stacklevel=2
         )
