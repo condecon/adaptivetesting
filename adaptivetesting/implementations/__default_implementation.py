@@ -2,6 +2,7 @@ from ..models.__adaptive_test import AdaptiveTest
 from ..models.__item_pool import ItemPool
 from ..models.__algorithm_exception import AlgorithmException
 from ..math.estimators.__ml_estimation import MLEstimator
+import warnings
 
 
 class DefaultImplementation(AdaptiveTest):
@@ -38,6 +39,14 @@ class DefaultImplementation(AdaptiveTest):
                          initial_ability_level,
                          simulation,
                          debug)
+        
+        # warn deprecation
+        warnings.warn(
+            "DefaultImplementation is deprecated and will be removed in future releases."+
+            "Please use TestAssembler for future projects.",
+            DeprecationWarning,
+            stacklevel=2
+        )
 
     def estimate_ability_level(self) -> tuple[float, float]:
         """

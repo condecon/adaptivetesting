@@ -4,6 +4,7 @@ from ..models.__algorithm_exception import AlgorithmException
 from ..models.__test_result import TestResult
 from ..math.estimators.__ml_estimation import MLEstimator
 from .__pre_test import PreTest
+import warnings
 
 
 class SemiAdaptiveImplementation(AdaptiveTest):
@@ -50,6 +51,14 @@ class SemiAdaptiveImplementation(AdaptiveTest):
                          debug)
 
         self.pretest_seed = pretest_seed
+
+        # deprecation warning
+        warnings.warn(
+            "SemiAdaptiveImplementation is deprecated and will be removed in future releases."+
+            "Please use TestAssembler for future projects.",
+            DeprecationWarning,
+            stacklevel=2
+        )
 
     def estimate_ability_level(self) -> tuple[float, float]:
         """
