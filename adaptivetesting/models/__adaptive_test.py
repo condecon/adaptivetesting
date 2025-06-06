@@ -105,12 +105,14 @@ class AdaptiveTest(abc.ABC):
     #     answered_items = self.get_answered_items()
     #     return standard_error(answered_items, self.ability_level)
 
+    @abc.abstractmethod
     def get_next_item(self) -> TestItem:
-        """Select next item using Urry's rule.
+        """Select next item.
 
         Returns:
             TestItem: selected item
         """
+        raise NotImplementedError("This functionality is not implemented by default.")
         item = urrys_rule(self.item_pool.test_items, self.ability_level)
         return item
 
