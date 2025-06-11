@@ -5,7 +5,7 @@ for the ability estimation.
 It can be used to find out where slow operations are occurring.
 """
 from adaptivetesting.implementations import TestAssembler
-from adaptivetesting.math.estimators import MLEstimator
+from adaptivetesting.math.estimators import BayesModal, NormalPrior
 from adaptivetesting.math.item_selection import urrys_rule
 from adaptivetesting.models import ItemPool
 from adaptivetesting.simulation import Simulation, ResultOutputFormat, StoppingCriterion
@@ -26,7 +26,10 @@ test = TestAssembler(
         item_pool=item_pool,
         simulation_id="test",
         participant_id="0",
-        ability_estimator=MLEstimator,
+        ability_estimator=BayesModal,
+        estimator_args={
+            "prior": NormalPrior(0, 2)
+        },
         item_selector=urrys_rule,
         true_ability_level=theta,
         simulation=True
