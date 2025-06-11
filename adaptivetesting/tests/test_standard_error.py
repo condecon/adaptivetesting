@@ -157,4 +157,4 @@ class TestStandardErrorEAP(unittest.TestCase):
 
         except Exception as e:
             print(f"Standard Error estimation failed due to: {e}")
-        self.assertIsInstance(result, float)    
+        self.assertIsInstance(result, float)
