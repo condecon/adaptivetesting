@@ -10,7 +10,7 @@ class MLEstimator(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | jnp.ndarray,
                  items: List[TestItem],
-                 optimization_interval: Tuple[float, float] = (-10, 10)):
+                 optimization_interval: Tuple[float, float] = (-10, 10), **kwargs):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
         item parameters.
@@ -22,6 +22,9 @@ class MLEstimator(IEstimator):
             items (List[TestItem]): list of answered items
         """
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
+
+        # ignore additional kwargs
+        del kwargs
 
     def get_estimation(self) -> float:
         """Estimate the current ability level by searching
