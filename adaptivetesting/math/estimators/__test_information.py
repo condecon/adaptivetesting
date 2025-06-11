@@ -48,7 +48,8 @@ def prior_information_function(prior: Prior,
         jnp.ndarray: _description_
     """
     def log_prior(x):
-        return numpy.log(prior.pdf(x))
+        epsilon = 1e-12  # Small value to avoid log(0)
+        return numpy.log(prior.pdf(x) + epsilon)
     x_vals = jnp.linspace(optimization_interval[0], optimization_interval[1], 1000)
     score_values = jnp.array(derivative(log_prior, x_vals).df)
 
