@@ -8,7 +8,7 @@ from .__test_information import test_information_function
 
 class MLEstimator(IEstimator):
     def __init__(self,
-                 response_pattern: List[int] | jnp.ndarray,
+                 response_pattern: List[int] | np.ndarray,
                  items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10), **kwargs):
         """This class can be used to estimate the current ability level
