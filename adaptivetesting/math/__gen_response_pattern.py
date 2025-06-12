@@ -21,11 +21,11 @@ def generate_response_pattern(ability: float,
     responses: list[int] = []
 
     for item in items:
-        probability_of_success = probability_y1(mu=ability,
-                                                a=item.a,
-                                                b=item.b,
-                                                c=item.c,
-                                                d=item.d)
+        probability_of_success = probability_y1(mu=np.array(ability),
+                                                a=np.array(item.a),
+                                                b=np.array(item.b),
+                                                c=np.array(item.c),
+                                                d=np.array(item.d))
         
         # simulate response based on probability of scucess
         if seed is not None:

@@ -74,8 +74,8 @@ class BayesModal(IEstimator):
                                            "did not use the CustomPrior base class!")
             
             mu = np.linspace(self.optimization_interval[0],
-                              self.optimization_interval[1],
-                              num=1000)
+                             self.optimization_interval[1],
+                             num=1000)
             # calculate likelihood values for every mu
             try:
                 lik_values = np.array([

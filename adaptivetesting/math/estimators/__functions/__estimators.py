@@ -3,7 +3,6 @@ from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ....models.__algorithm_exception import AlgorithmException
 
 
-
 def probability_y1(mu: np.ndarray,
                    a: np.ndarray,
                    b: np.ndarray,
@@ -32,7 +31,6 @@ def probability_y1(mu: np.ndarray,
     return np.squeeze(value)
 
 
-
 def probability_y0(mu: np.ndarray,
                    a: np.ndarray,
                    b: np.ndarray,
@@ -56,7 +54,6 @@ def probability_y0(mu: np.ndarray,
     """
     value = 1 - probability_y1(mu, a, b, c, d)
     return value
-
 
 
 def likelihood(mu: np.ndarray,
@@ -130,7 +127,7 @@ def maximize_likelihood_function(a: np.ndarray,
             "Response pattern is invalid. It consists of only one type of response.")
     
     result: OptimizeResult = minimize_scalar(likelihood, args=(a, b, c, d, response_pattern),
-                                             bounds=border, method='bounded')
+                                             bounds=border, method='bounded') # type: ignore
 
     if not result.success:
         raise AlgorithmException(f"Optimization failed: {result.message}")
