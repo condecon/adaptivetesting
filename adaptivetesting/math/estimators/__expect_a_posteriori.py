@@ -1,5 +1,5 @@
-import jax.numpy as jnp
-from jax.scipy.integrate import trapezoid
+import numpy as np
+from scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
 from ...models.__test_item import TestItem
 from .__functions.__bayes import likelihood
@@ -9,7 +9,7 @@ from math import pow
 
 class ExpectedAPosteriori(BayesModal):
     def __init__(self,
-                 response_pattern: list[int] | jnp.ndarray,
+                 response_pattern: list[int] | np.ndarray,
                  items: list[TestItem],
                  prior: Prior,
                  optimization_interval: tuple[float, float] = (-10, 10)):
@@ -20,7 +20,7 @@ class ExpectedAPosteriori(BayesModal):
             This type of estimation finds the mean of the posterior distribution.
 
             Args:
-                response_pattern (List[int] | jnp.ndarray): list of response patterns (0: wrong, 1:right)
+                response_pattern (List[int] | np.ndarray): list of response patterns (0: wrong, 1:right)
 
                 items (List[TestItem]): list of answered items
             
@@ -36,11 +36,11 @@ class ExpectedAPosteriori(BayesModal):
         Returns:
             float: ability estimation
         """
-        x = jnp.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
+        x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
         
         prior_pdf = self.prior.pdf(x)
         
-        likelihood_vals = jnp.vectorize(lambda mu: likelihood(mu,
+        likelihood_vals = np.vectorize(lambda mu: likelihood(mu,
                                                               self.a,
                                                               self.b,
                                                               self.c,
@@ -71,10 +71,10 @@ class ExpectedAPosteriori(BayesModal):
         Returns:
             float: standard error of the ability estimation
         """
-        x = jnp.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
+        x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
         prior_pdf = self.prior.pdf(x)
         
-        likelihood_vals = jnp.vectorize(lambda mu: likelihood(mu,
+        likelihood_vals = np.vectorize(lambda mu: likelihood(mu,
                                                               self.a,
                                                               self.b,
                                                               self.c,

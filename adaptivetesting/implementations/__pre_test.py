@@ -1,5 +1,5 @@
 from typing import List
-import jax.numpy as jnp
+import numpy as np
 from ..models.__test_item import TestItem
 import random
 
@@ -22,17 +22,17 @@ class PreTest:
         self.items = items
         self.seed = seed
 
-    def calculate_quantiles(self) -> jnp.ndarray:
+    def calculate_quantiles(self) -> np.ndarray:
         """Calculates quantiles 0.25, 0.5, 0.75
         """
         # get difficulties
         difficulties: List[float] = [item.b for item in self.items]
 
-        quantiles = jnp.array([])
+        quantiles = np.array([])
         # calculate quantiles
         for q in [0.25, 0.5, 0.75]:
-            quantile: jnp.ndarray = jnp.quantile(jnp.array(difficulties), q)
-            quantiles = jnp.append(quantiles, quantile)
+            quantile: np.ndarray = np.quantile(np.array(difficulties), q)
+            quantiles = np.append(quantiles, quantile)
 
         return quantiles
 
@@ -65,7 +65,7 @@ class PreTest:
         """
         selected_items: List[TestItem] = []
         # create difficulties array
-        difficulties = jnp.array([item.b for item in self.items])
+        difficulties = np.array([item.b for item in self.items])
         # add minimum and maximum difficulty values to
         # the quantiles list for correct item selection
         quantiles = [difficulties.min()]

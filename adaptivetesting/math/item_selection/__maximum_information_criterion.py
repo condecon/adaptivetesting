@@ -2,7 +2,7 @@ from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ..estimators.__test_information import item_information_function
 from ...models.__algorithm_exception import AlgorithmException
-import jax.numpy as jnp
+import numpy as np
 
 
 def maximum_information_criterion(items: list[TestItem],
@@ -26,15 +26,15 @@ def maximum_information_criterion(items: list[TestItem],
 
     for item in items:
         # extract parameters from the current item
-        a = jnp.array([item.a])
-        b = jnp.array([item.b])
-        c = jnp.array([item.c])
-        d = jnp.array([item.d])
+        a = np.array([item.a])
+        b = np.array([item.b])
+        c = np.array([item.c])
+        d = np.array([item.d])
 
         # calculate information for the current item
         try:
             information = float(item_information_function(
-                mu=jnp.array(ability, dtype=float),
+                mu=np.array(ability, dtype=float),
                 a=a,
                 b=b,
                 c=c,

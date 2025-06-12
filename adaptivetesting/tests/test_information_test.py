@@ -1,6 +1,6 @@
 import unittest
 from adaptivetesting.math.estimators import NormalPrior, test_information_function, prior_information_function
-import jax.numpy as np
+import numpy as np
 import pandas as pd
 import math
 
