@@ -4,8 +4,9 @@ from ..data.__pickle_context import PickleContext
 from ..services.__test_results_interface import ITestResults
 from ..models.__misc import ResultOutputFormat, StoppingCriterion
 from functools import partial
-from concurrent.futures import ThreadPoolExecutor, as_completed
+# from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 
 class Simulation:
@@ -96,7 +97,7 @@ class SimulationPool():
             criterion=self.criterion,
             value=self.value
         )
-        with ThreadPoolExecutor() as executor:
+        with ProcessPoolExecutor() as executor:
             futures = [executor.submit(func, test) for test in self.adaptive_tests]
             for _ in tqdm(as_completed(futures), total=len(futures)):
                 pass
