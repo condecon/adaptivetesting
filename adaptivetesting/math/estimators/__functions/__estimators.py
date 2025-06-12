@@ -1,120 +1,119 @@
-import jax.numpy as jnp
-from jax import jit
+import numpy as np
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ....models.__algorithm_exception import AlgorithmException
 
 
-@jit
-def probability_y1(mu: jnp.ndarray,
-                   a: jnp.ndarray,
-                   b: jnp.ndarray,
-                   c: jnp.ndarray,
-                   d: jnp.ndarray) -> jnp.ndarray:
+
+def probability_y1(mu: np.ndarray,
+                   a: np.ndarray,
+                   b: np.ndarray,
+                   c: np.ndarray,
+                   d: np.ndarray) -> np.ndarray:
     """Probability of getting the item correct given the ability level.
 
     Args:
-        mu (jnp.ndarray): latent ability level
+        mu (np.ndarray): latent ability level
         
-        a (jnp.ndarray): item discrimination parameter
+        a (np.ndarray): item discrimination parameter
         
-        b (jnp.ndarray): item difficulty parameter
+        b (np.ndarray): item difficulty parameter
         
-        c (jnp.ndarray): pseudo guessing parameter
+        c (np.ndarray): pseudo guessing parameter
         
-        d (jnp.ndarray): inattention parameter
+        d (np.ndarray): inattention parameter
 
     Returns:
-        jnp.ndarray: probability of getting the item correct
+        np.ndarray: probability of getting the item correct
     """
 
-    value = c + (d - c) * (jnp.exp(a * (mu - b))) / \
-        (1 + jnp.exp(a * (mu - b)))
+    value = c + (d - c) * (np.exp(a * (mu - b))) / \
+        (1 + np.exp(a * (mu - b)))
     
-    return jnp.squeeze(value)
+    return np.squeeze(value)
 
 
-@jit
-def probability_y0(mu: jnp.ndarray,
-                   a: jnp.ndarray,
-                   b: jnp.ndarray,
-                   c: jnp.ndarray,
-                   d: jnp.ndarray) -> jnp.ndarray:
+
+def probability_y0(mu: np.ndarray,
+                   a: np.ndarray,
+                   b: np.ndarray,
+                   c: np.ndarray,
+                   d: np.ndarray) -> np.ndarray:
     """Probability of getting the item wrong given the ability level.
 
     Args:
-            mu (jnp.ndarray): latent ability level
+            mu (np.ndarray): latent ability level
             
-            a (jnp.ndarray): item discrimination parameter
+            a (np.ndarray): item discrimination parameter
             
-            b (jnp.ndarray): item difficulty parameter
+            b (np.ndarray): item difficulty parameter
             
-            c (jnp.ndarray): pseudo guessing parameter
+            c (np.ndarray): pseudo guessing parameter
             
-            d (jnp.ndarray): inattention parameter
+            d (np.ndarray): inattention parameter
 
     Returns:
-        jnp.ndarray: probability of getting the item wrong
+        np.ndarray: probability of getting the item wrong
     """
     value = 1 - probability_y1(mu, a, b, c, d)
     return value
 
 
-@jit
-def likelihood(mu: jnp.ndarray,
-               a: jnp.ndarray,
-               b: jnp.ndarray,
-               c: jnp.ndarray,
-               d: jnp.ndarray,
-               response_pattern: jnp.ndarray) -> jnp.ndarray:
+
+def likelihood(mu: np.ndarray,
+               a: np.ndarray,
+               b: np.ndarray,
+               c: np.ndarray,
+               d: np.ndarray,
+               response_pattern: np.ndarray) -> np.ndarray:
     """Likelihood function of the 4-PL model.
     For optimization purposes, the function returns the negative value of the likelihood function.
     To get the *real* value, multiply the result by -1.
 
     Args:
-        mu (jnp.ndarray): ability level
+        mu (np.ndarray): ability level
         
-        a (jnp.ndarray): item discrimination parameter
+        a (np.ndarray): item discrimination parameter
         
-        b (jnp.ndarray): item difficulty parameter
+        b (np.ndarray): item difficulty parameter
         
-        c (jnp.ndarray): pseudo guessing parameter
+        c (np.ndarray): pseudo guessing parameter
         
-        d (jnp.ndarray): inattention parameter
+        d (np.ndarray): inattention parameter
 
     Returns:
         float: negative likelihood value of given ability value
     """
     # reshape
-    a = jnp.expand_dims(a, axis=0)
-    b = jnp.expand_dims(b, axis=0)
-    c = jnp.expand_dims(c, axis=0)
-    d = jnp.expand_dims(d, axis=0)
+    a = np.expand_dims(a, axis=0)
+    b = np.expand_dims(b, axis=0)
+    c = np.expand_dims(c, axis=0)
+    d = np.expand_dims(d, axis=0)
 
     terms = (probability_y1(mu, a, b, c, d)**response_pattern) * \
         (probability_y0(mu, a, b, c, d) ** (1 - response_pattern))
     
-    return -jnp.prod(terms)
+    return -np.prod(terms)
 
 
-def maximize_likelihood_function(a: jnp.ndarray,
-                                 b: jnp.ndarray,
-                                 c: jnp.ndarray,
-                                 d: jnp.ndarray,
-                                 response_pattern: jnp.ndarray,
+def maximize_likelihood_function(a: np.ndarray,
+                                 b: np.ndarray,
+                                 c: np.ndarray,
+                                 d: np.ndarray,
+                                 response_pattern: np.ndarray,
                                  border: tuple[float, float] = (-10, 10)) -> float:
     """Find the ability value that maximizes the likelihood function.
     This function uses the minimize_scalar function from scipy and the "bounded" method.
     
     Args:
-        a (jnp.ndarray): item discrimination parameter
+        a (np.ndarray): item discrimination parameter
         
-        b (jnp.ndarray): item difficulty parameter
+        b (np.ndarray): item difficulty parameter
         
-        c (jnp.ndarray): pseudo guessing parameter
+        c (np.ndarray): pseudo guessing parameter
         
-        d (jnp.ndarray): inattention parameter
+        d (np.ndarray): inattention parameter
 
-        response_pattern (jnp.ndarray): response pattern of the item
+        response_pattern (np.ndarray): response pattern of the item
         border (tuple[float, float], optional): border of the optimization interval.
         Defaults to (-10, 10).
 

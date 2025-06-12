@@ -1,5 +1,5 @@
 from typing import List, Tuple
-import jax.numpy as jnp
+import numpy as np
 from ...models.__test_item import TestItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
@@ -8,7 +8,7 @@ from .__test_information import test_information_function
 
 class MLEstimator(IEstimator):
     def __init__(self,
-                 response_pattern: List[int] | jnp.ndarray,
+                 response_pattern: List[int] | np.ndarray,
                  items: List[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10), **kwargs):
         """This class can be used to estimate the current ability level
@@ -52,7 +52,7 @@ class MLEstimator(IEstimator):
             float: standard error of the ability estimation
         """
         test_information = test_information_function(
-            jnp.array(estimation, dtype=float),
+            np.array(estimation, dtype=float),
             a=self.a,
             b=self.b,
             c=self.c,
@@ -61,5 +61,5 @@ class MLEstimator(IEstimator):
             optimization_interval=self.optimization_interval
         )
 
-        sd_error = 1 / jnp.sqrt(test_information)
+        sd_error = 1 / np.sqrt(test_information)
         return float(sd_error)
