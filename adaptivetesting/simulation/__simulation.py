@@ -140,7 +140,7 @@ class SimulationPool():
         # this is because multiprocessing is not as well supported on windows
         # therefore, multithreading is used instead
         if platform.system == "Windows":
-            with ThreadPoolExecutor() as executor:
+            with ThreadPoolExecutor(max_workers=60) as executor:
                 futures = [executor.submit(func, test) for test in self.adaptive_tests]
                 for _ in tqdm(as_completed(futures), total=len(futures)):
                     pass
