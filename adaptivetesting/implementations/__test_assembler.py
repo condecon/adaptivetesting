@@ -45,9 +45,11 @@ class TestAssembler(AdaptiveTest):
         
         ability_estimator (Type[IEstimator]): The estimator class used for ability estimation.
         
-        estimator_args (dict[str, Any], optional): Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
+        estimator_args (dict[str, Any], optional):
+            Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
         
-        item_selector (ItemSelectionStrategy, optional): Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
+        item_selector (ItemSelectionStrategy, optional):
+            Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
         
         item_selector_args (dict[str, Any], optional): Arguments for the item selector. Defaults to {}.
         
@@ -77,7 +79,7 @@ class TestAssembler(AdaptiveTest):
             Runs a single iteration of the test, including an optional pretest phase. Handles item
             administration, response collection, ability estimation, and result recording.
     
-    Attributes:    
+    Attributes:
         __ability_estimator: The estimator class for ability estimation.
         
         __estimator_args: Arguments for the ability estimator.
@@ -128,8 +130,10 @@ class TestAssembler(AdaptiveTest):
         """
         Estimates the ability level of a test-taker based on their response pattern and answered items.
         This method uses the configured ability estimator to calculate the ability estimation and its standard error.
-        If an AlgorithmException occurs during estimation, and all responses are identical (all correct or all incorrect),
-        it assigns a default estimation value (-10 for all incorrect, 10 for all correct) and recalculates the standard error.
+        If an AlgorithmException occurs during estimation,
+        and all responses are identical (all correct or all incorrect),
+        it assigns a default estimation value (-10 for all incorrect, 10 for all correct)
+        and recalculates the standard error.
         Otherwise, it raises an AlgorithmException with additional context.
         
         Returns:
