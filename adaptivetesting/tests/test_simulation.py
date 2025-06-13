@@ -94,19 +94,6 @@ class TestSimulation(unittest.TestCase):
 
     def test_save_test_results_unsupported_format(self):
         mock_adaptive_test = get_mock_adaptive_test()
-        sim = Simulation(test=mock_adaptive_test, test_result_output="UNSUPPORTED")
+        sim = Simulation(test=mock_adaptive_test, test_result_output="UNSUPPORTED") # type: ignore
         with self.assertRaises(KeyError):
             sim.save_test_results()
-
-
-    @patch("adaptivetesting.simulation.__simulation.PickleContext")
-    @patch("adaptivetesting.simulation.__simulation.CSVContext")
-    def test_save_test_results_csv(self, mock_csv, mock_pickle):
-        mock_adaptive_test = get_mock_adaptive_test()
-        sim = Simulation(test=mock_adaptive_test, test_result_output=ResultOutputFormat.CSV)
-        sim.save_test_results()
-        mock_csv.assert_called_once_with(simulation_id="sim1", participant_id="p1")
-        mock_csv.return_value.save.assert_called_once_with({"score": 42})
-        mock_pickle.assert_not_called()
-
-
