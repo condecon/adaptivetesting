@@ -10,11 +10,86 @@ from ..models.__test_result import TestResult
 
 @runtime_checkable
 class ItemSelectionStrategy(Protocol):
+    """
+    A protocol for item selection strategies in adaptive testing.
+
+    This protocol defines a callable interface for selecting a test item from a list of available items,
+    given the current ability estimate and optional additional parameters.
+
+    Args:
+        
+        items (list[TestItem]): The list of available test items to select from.
+        
+        ability (float): The current ability estimate of the test taker.
+        
+        **kwargs: Additional keyword arguments that may be required by specific selection strategies.
+
+    Returns:
+        TestItem: The selected test item based on the implemented strategy.
+    """
     def __call__(self, items: list[TestItem], ability: float, **kwargs) -> TestItem:
         ...
 
 
 class TestAssembler(AdaptiveTest):
+    """
+    TestAssembler is a subclass of AdaptiveTest designed to assemble and administer adaptive tests,
+    optionally including a pretest phase. It supports customizable ability estimation and item selection strategies.
+    Args:
+        
+        item_pool: The pool of test items available for selection.
+        
+        simulation_id: Identifier for the simulation run.
+        
+        participant_id: Identifier for the participant.
+        
+        ability_estimator (Type[IEstimator]): The estimator class used for ability estimation.
+        
+        estimator_args (dict[str, Any], optional): Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
+        
+        item_selector (ItemSelectionStrategy, optional): Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
+        
+        item_selector_args (dict[str, Any], optional): Arguments for the item selector. Defaults to {}.
+        
+        pretest (bool, optional): Whether to run a pretest phase before the main test. Defaults to False.
+        
+        pretest_seed (int | None, optional): Random seed for pretest item selection. Defaults to None.
+        
+        true_ability_level (optional): The true ability level of the participant (for simulation).
+        
+        initial_ability_level (optional): The initial ability estimate. Defaults to 0.
+        
+        simulation (bool, optional): Whether the test is run in simulation mode. Defaults to True.
+        
+        debug (bool, optional): Whether to enable debug output. Defaults to False.
+        
+        **kwargs: Additional keyword arguments passed to the AdaptiveTest superclass.
+    
+    Methods:
+        estimate_ability_level():
+            Estimates the current ability level using the specified estimator and handles exceptions
+            for specific response patterns (all correct or all incorrect).
+        
+        get_next_item() -> TestItem:
+            Selects the next item to administer using the specified item selection strategy.
+        
+        run_test_once():
+            Runs a single iteration of the test, including an optional pretest phase. Handles item
+            administration, response collection, ability estimation, and result recording.
+    
+    Attributes:    
+        __ability_estimator: The estimator class for ability estimation.
+        
+        __estimator_args: Arguments for the ability estimator.
+        
+        __item_selector: The item selection strategy.
+        
+        __item_selector_args: Arguments for the item selector.
+        
+        __pretest: Whether to run a pretest phase.
+        
+        __pretest_seed: Random seed for pretest item selection.
+    """
     def __init__(self,
                  item_pool,
                  simulation_id,
@@ -50,6 +125,19 @@ class TestAssembler(AdaptiveTest):
                          **kwargs)
     
     def estimate_ability_level(self):
+        """
+        Estimates the ability level of a test-taker based on their response pattern and answered items.
+        This method uses the configured ability estimator to calculate the ability estimation and its standard error.
+        If an AlgorithmException occurs during estimation, and all responses are identical (all correct or all incorrect),
+        it assigns a default estimation value (-10 for all incorrect, 10 for all correct) and recalculates the standard error.
+        Otherwise, it raises an AlgorithmException with additional context.
+        
+        Returns:
+            tuple[float, float]: A tuple containing the estimated ability level (float) and its standard error (float).
+        
+        Raises:
+            AlgorithmException: If estimation fails for reasons other than all responses being identical.
+        """
         estimator = self.__ability_estimator(
             self.response_pattern,
             self.answered_items,
@@ -75,6 +163,15 @@ class TestAssembler(AdaptiveTest):
         return estimation, standard_error
     
     def get_next_item(self) -> TestItem:
+        """
+        Selects and returns the next test item based on the current ability level and item selector strategy.
+
+        Returns:
+            TestItem: The next item to be administered in the test, as determined by the item selector.
+
+        Raises:
+            Any exceptions raised by the item selector function.
+        """
         item = self.__item_selector(
             self.item_pool.test_items,
             self.ability_level,
@@ -83,6 +180,20 @@ class TestAssembler(AdaptiveTest):
         return item
 
     def run_test_once(self):
+        """
+        Executes a single run of the test, including optional pretest logic.
+        If pretesting is enabled, this method:
+            - Selects a random quantile of items from the item pool using a PreTest instance.
+            - For each selected item:
+                - Obtains a response (either simulated or real).
+                - Appends the response and item to the respective lists.
+                - Removes the item from the item pool.
+            - Estimates the ability level and standard error after pretest responses.
+            - Records test results for each pretest item, with the final item including the first ability estimation.
+        
+        Returns:
+            The result of the superclass's run_test_once() method.
+        """
         # check if to run pretest
         if self.__pretest is True:
             pretest = PreTest(
