@@ -1,9 +1,3 @@
-"""
-Profiler example for using Maximum Likelihood Estimation
-for the ability estimation.
-
-It can be used to find out where slow operations are occurring.
-"""
 from adaptivetesting.implementations import TestAssembler
 from adaptivetesting.math.estimators import BayesModal, NormalPrior
 from adaptivetesting.math.item_selection import urrys_rule

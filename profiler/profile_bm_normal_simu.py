@@ -1,5 +1,5 @@
 """
-Profiler example for using Maximum Likelihood Estimation
+Profiler example for using Bayes Modal
 for the ability estimation.
 
 It can be used to find out where slow operations are occurring.
