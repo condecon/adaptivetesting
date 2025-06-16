@@ -26,7 +26,7 @@ class Simulation:
 
     def simulate(self,
                  criterion: StoppingCriterion | list[StoppingCriterion] = StoppingCriterion.SE,
-                 value: float = 0.4):
+                 value: float | list[float | int] = 0.4):
         """
         Runs the adaptive test simulation until the specified stopping criterion or criteria are met.
 
@@ -35,8 +35,8 @@ class Simulation:
                 The stopping criterion or list of criteria to determine when the test should stop.
                 Supported values are StoppingCriterion.SE (standard error) and StoppingCriterion.LENGTH (test length).
 
-            value (float):
-                The threshold value for the stopping criterion. For SE, this is the maximum allowed standard error.
+            value (float | list[float | int]):
+                The threshold value(s) for the stopping criterion. For SE, this is the maximum allowed standard error.
                 For LENGTH, this is the maximum number of items administered.
 
         """
@@ -48,13 +48,14 @@ class Simulation:
             if len(self.test.item_pool.test_items) == 0:
                 stop_test = True
             else:
-                # Support both single criterion and list of criteria
+                # Support both single criterion and list of criteria/values
                 criteria = criterion if isinstance(criterion, list) else [criterion]
+                values = value if isinstance(value, list) else [value]
                 stop_test = any(
-                    self.test.check_se_criterion(value) if c == StoppingCriterion.SE
-                    else self.test.check_length_criterion(value) if c == StoppingCriterion.LENGTH
+                    self.test.check_se_criterion(v) if c == StoppingCriterion.SE
+                    else self.test.check_length_criterion(v) if c == StoppingCriterion.LENGTH
                     else False
-                    for c in criteria
+                    for c, v in zip(criteria, values)
                 )
 
     def save_test_results(self):
