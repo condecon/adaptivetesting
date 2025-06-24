@@ -1,34 +1,12 @@
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from typing import Protocol, Any, runtime_checkable, Type
+from typing import Any, Type
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
 from ..models.__test_result import TestResult
-
-
-@runtime_checkable
-class ItemSelectionStrategy(Protocol):
-    """
-    A protocol for item selection strategies in adaptive testing.
-
-    This protocol defines a callable interface for selecting a test item from a list of available items,
-    given the current ability estimate and optional additional parameters.
-
-    Args:
-        
-        items (list[TestItem]): The list of available test items to select from.
-        
-        ability (float): The current ability estimate of the test taker.
-        
-        **kwargs: Additional keyword arguments that may be required by specific selection strategies.
-
-    Returns:
-        TestItem: The selected test item based on the implemented strategy.
-    """
-    def __call__(self, items: list[TestItem], ability: float, **kwargs) -> TestItem:
-        ...
+from ..services.__item_selection_protocol import ItemSelectionStrategy
 
 
 class TestAssembler(AdaptiveTest):
