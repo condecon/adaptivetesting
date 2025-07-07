@@ -39,3 +39,9 @@ dev = [
 
 [tool.uv.sources]
 adaptivetesting = { workspace = true }
+
+[project.urls]
+Homepage = "https://github.com/condecon/adaptivetesting"
+Documentation = "https://github.com/condecon/adaptivetesting/tree/main/docs"
+Repository = "https://github.com/condecon/adaptivetesting.git"
+Issues = "https://github.com/condecon/adaptivetesting/issues"
