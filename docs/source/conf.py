@@ -12,8 +12,8 @@ sys.path.insert(0, os.path.abspath('../'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'adaptivetesting'
-copyright = '2025, Jonas Engicht, R. Maximilian Bee, Tobias Koch'
-author = 'Jonas Engicht, R. Maximilian Bee, Tobias Koch'
+copyright = '2025, Jonas Engicht'
+author = 'Jonas Engicht'
 release = '2025'
 
 # -- General configuration ---------------------------------------------------
