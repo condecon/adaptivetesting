@@ -12,8 +12,8 @@ sys.path.insert(0, os.path.abspath('../'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'adaptivetesting'
-copyright = '2025, Jonas Engicht, R. Maximilian Bee, Tobias Koch'
-author = 'Jonas Engicht, R. Maximilian Bee, Tobias Koch'
+copyright = '2025, Jonas Engicht'
+author = 'Jonas Engicht'
 release = '2025'
 
 # -- General configuration ---------------------------------------------------
@@ -29,7 +29,7 @@ autoclass_content = 'both'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_css_files = [
     'main.css',
@@ -41,6 +41,7 @@ html_theme_options = {
     "logo_only": True,
 
 }
+
 
 def setup(app: Sphinx):
     app.add_css_file("main.css")

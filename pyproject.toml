@@ -1,6 +1,8 @@
 [project]
 name="adaptivetesting"
-version="1.0.1"
+version="1.1.0"
+author="Jonas Engicht"
+author_email="jonas.engicht@uni-jena.de"
 description="adaptivetesting is a Python package that can be used to simulate and evaluate custom CAT scenarios as well as implement them in real-world testing scenarios from a single codebase"
 readme = "README.md"
 authors = [
@@ -11,10 +13,10 @@ maintainters = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "jax>=0.5.1",
-    "numpy>=1.20.0",
+    "numpy>=2.0.0",
     "pandas>=2.2.0",
     "scipy>=1.15.0",
+    "tqdm>=4.67.1",
 ]
 license-files=["LICENSE"]
 keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"]
@@ -25,12 +27,22 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "adaptivetesting",
     "flake8>=7.2.0",
     "mypy>=1.15.0",
     "pandas-stubs>=2.2.3.250308",
     "scipy-stubs>=1.15.2.2",
+    "snakeviz>=2.2.2",
     "sphinx>=8.1.3",
-    "sphinx-book-theme>=1.1.4",
     "sphinx-markdown-builder>=0.6.8",
-    "sphinx-rtd-theme>=3.0.2",
+    "types-tqdm>=4.67.0.20250516",
 ]
+
+[tool.uv.sources]
+adaptivetesting = { workspace = true }
+
+[project.urls]
+Homepage = "https://github.com/condecon/adaptivetesting"
+Documentation = "https://github.com/condecon/adaptivetesting/tree/main/docs"
+Repository = "https://github.com/condecon/adaptivetesting.git"
+Issues = "https://github.com/condecon/adaptivetesting/issues"

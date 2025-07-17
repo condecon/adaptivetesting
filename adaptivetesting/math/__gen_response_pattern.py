@@ -17,19 +17,20 @@ def generate_response_pattern(ability: float,
     Returns:
         list[int]: response pattern
     """
+    # check if items is list of items or ItemPool
     responses: list[int] = []
 
     for item in items:
-        probability_of_success = probability_y1(mu=ability,
-                                                a=item.a,
-                                                b=item.b,
-                                                c=item.c,
-                                                d=item.d)
+        probability_of_success = probability_y1(mu=np.array(ability),
+                                                a=np.array(item.a),
+                                                b=np.array(item.b),
+                                                c=np.array(item.c),
+                                                d=np.array(item.d))
         
         # simulate response based on probability of scucess
         if seed is not None:
             np.random.seed(seed)
-        response = np.random.binomial(n=1, p=probability_of_success)
+        response = int(np.random.binomial(n=1, p=probability_of_success)) # ensure that the result is not an array
         responses.append(response)
 
     return responses

@@ -1,4 +1,4 @@
-import jax.numpy as np
+import numpy as np
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from .__estimators import likelihood
 from ..__prior import Prior

@@ -1,77 +1,21 @@
 math Module
 ============================
 
-Estimators
------------
-
-MLEstimator
-^^^^^^^^^^^^
-.. autoclass:: adaptivetesting.math.estimators.MLEstimator
+.. automodule:: adaptivetesting.math
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
-Prior
-^^^^^^^^^^
-.. autoclass:: adaptivetesting.math.estimators.Prior
+
+.. automodule:: adaptivetesting.math.estimators
    :members:
    :undoc-members:
    :show-inheritance:
+   :imported-members:
 
-NormalPrior
-^^^^^^^^^^^^^^
-.. autoclass:: adaptivetesting.math.estimators.NormalPrior
+.. automodule:: adaptivetesting.math.item_selection
    :members:
    :undoc-members:
    :show-inheritance:
-
-probability_y1
-^^^^^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.estimators.probability_y1
-
-probability_y0
-^^^^^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.estimators.probability_y0
-
-maximize_likelihood_function
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.estimators.maximize_likelihood_function
-
-likelihood
-^^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.estimators.likelihood
-
-maximize_posterior
-^^^^^^^^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.estimators.maximize_posterior
-
-
-
-
-
-Item Selection
--------------------
-
-urrys_rule
-^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.item_selection.urrys_rule
-
-standard\_error
--------------------------------------------
-
-.. autofunction:: adaptivetesting.math.standard_error
-
-
-test\_information_function 
--------------------------------------------------
-
-.. autofunction:: adaptivetesting.math.test_information_function
-
-
-Utilities
-------------
-
-generate_response_pattern
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. autofunction:: adaptivetesting.math.generate_response_pattern
-
+   :imported-members:

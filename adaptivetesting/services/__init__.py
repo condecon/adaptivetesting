@@ -1,2 +1,3 @@
 from .__test_results_interface import ITestResults
 from .__estimator_interface import IEstimator
+from .__item_selection_protocol import ItemSelectionStrategy

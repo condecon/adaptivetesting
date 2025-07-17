@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
-import jax.numpy as np
+import numpy as np
 from ..models.__test_item import TestItem
 
 
@@ -37,5 +37,17 @@ class IEstimator(ABC):
 
         Returns:
             float: ability
+        """
+        pass
+
+    @abstractmethod
+    def get_standard_error(self, estimation: float) -> float:
+        """Calculates the standard error for the given estimated ability level.
+
+        Args:
+            estimation (float): currently estimated ability level
+
+        Returns:
+            float: standard error of the ability estimation
         """
         pass
