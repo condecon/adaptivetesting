@@ -35,24 +35,7 @@ For the latest development version:
 pip install git+https://github.com/condecon/adaptivetesting
 ```
 
-## Features
-- IRT-Models: 
-    - 4PL
-    - simplified derivates (e.g., 3PL, Rasch model)
-- Ability estimators: 
-    - Maximum Likelihood Estimation
-    - Bayes Modal
-    - Expected a Posteriori (EAP)
-- Item selection algorithm: 
-    - Urry’s rule
-    - Maximum Information Criterion
-- Stopping criteria: 
-    - test length
-    - ability estimation standard error
-- Test results output formats
-    - SQLITE
-    - Pickle
-- Functions and wrappers for CAT simulations and application implementations
+## Requirements
 
 - Python >= 3.10
 - NumPy >= 2.0.0
@@ -303,23 +286,139 @@ adaptive_test = TestAssembler(
 )
 ```
 
-### Custom testing procedures
-Custom testing procedures can be implemented by implementing
-the abstract class ``AdaptiveTest``.
-Any existing functionality can be overridden while still
-retaining full compatibility with the packages' functionality.
-For more information, please consult the documentation for the ``AdaptiveTest`` class.
+# general setup
+win = visual.Window([800, 600],
+                    monitor="testMonitor",
+                    units="deg",
+                    fullscr=False)
 
-## Package structure
-| submodule | description |
-|------------|-------------|
-| data | data management and processing of test results |
-| implementations | concrete implementations of the adaptive process, provides actual |
-| math | mathematical utilities and functions, such as estimators, item selection, test information |
-| models | data model definitions and structures used in the package |
-| services | interfaces that concrete implementations inherit from |
-| simulations | functions and classes used in CAT simulation |
-| tests | Unit test for the entire package |
+# init keyboard
+keyboard.Keyboard()
+
+
+# define function to get user input
+def get_response(item: TestItem) -> int:
+    # get index
+    item_difficulty: float = item.b
+    stimuli: str = [item for item in items if item["Difficulty"] == item_difficulty][0]["word"]
+
+    # create text box and display stimulus
+    text_box = visual.TextBox2(win=win,
+                               text=stimuli,
+                               alignment="center",
+                               size=24)
+    # draw text
+    text_box.draw()
+    # update window
+    win.flip()
+
+    # wait for pressed keys
+    while True:
+        keys = event.getKeys()
+        # if keys are not None
+        if keys:
+            # if the right arrow keys is pressed
+            # return 1
+            if keys[0] == "right":
+                return 1
+            # if the left arrow keys is pressed
+            # return 0
+            if keys[0] == "left":
+                return 0
+
+
+# override adaptive test default function
+adaptive_test.get_response = get_response
+
+# start adaptive test
+while True:
+    adaptive_test.run_test_once()
+
+    # check stopping criterion
+    if adaptive_test.standard_error <= 0.4:
+        break
+
+    # end test if all items have been shown
+    if len(adaptive_test.item_pool.test_items) == 0:
+        break
+
+# save test results
+data_context = CSVContext(
+    adaptive_test.simulation_id,
+    adaptive_test.participant_id
+)
+
+data_context.save(adaptive_test.test_results)
+```
+
+## Package Structure
+
+The package is organized into several key modules:
+
+- **`adaptivetesting.models`**: Core classes including `AdaptiveTest`, `ItemPool`, and `TestItem`
+- **`adaptivetesting.implementations`**: Ready-to-use test implementations like `TestAssembler`
+- **`adaptivetesting.math`**: Mathematical functions for IRT, ability estimation, and item selection
+- **`adaptivetesting.simulation`**: Simulation framework and result management
+- **`adaptivetesting.data`**: Data management utilities for CSV and pickle formats
+- **`adaptivetesting.services`**: Abstract interfaces and protocols
+
+## Advanced Features
+
+### Multiple Stopping Criteria
+
+```python
+simulation.simulate(
+    criterion=[StoppingCriterion.SE, StoppingCriterion.LENGTH],
+    value=[0.3, 20]  # Stop at SE ≤ 0.3 OR length ≥ 20 items
+)
+```
+
+### Pretest Phase
+
+```python
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="pretest_sim",
+    participant_id="participant_003",
+    ability_estimator=BayesModal,
+    estimator_args={"prior": NormalPrior(0, 1)},
+    pretest=True,
+    pretest_seed=42,
+    simulation=True
+)
+```
+
+### Custom Item Selection
+
+```python
+from adaptivetesting.math.item_selection import maximum_information_criterion
+
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="custom_selection",
+    participant_id="participant_004",
+    ability_estimator=BayesModal,
+    estimator_args={"prior": NormalPrior(0, 1)},
+    item_selector=maximum_information_criterion,
+    item_selector_args={"additional_param": "value"},
+    simulation=True
+)
+```
+
+### Custom Optimization Interval
+```python
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="pretest_sim",
+    participant_id="participant_003",
+    ability_estimator=BayesModal,
+    estimator_args={
+        "prior": NormalPrior(0, 1),
+        "optimization_interval": (-5, 5)},
+    pretest_seed=42,
+    simulation=True
+)
+```
 
 ## Documentation
 Extensive documentation is available in the source code,
