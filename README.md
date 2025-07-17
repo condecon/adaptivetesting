@@ -1,6 +1,6 @@
 # adaptivetesting
 
-<img src="/docs/source/_static/logo.svg" style="width: 100%">
+<img src="/docs_generation/source/_static/logo.svg" style="width: 100%">
 </img>
 
 **An open-source Python package for simplified, customizable Computerized Adaptive Testing (CAT) using Bayesian methods.**

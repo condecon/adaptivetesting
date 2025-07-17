@@ -104,7 +104,10 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
         # get responses
         for item in random_items:
-            response = self.item_pool.get_item_response(item)
+            if self.simulation == True:
+                response = self.item_pool.get_item_response(item)
+            else:
+                response = self.get_response(item)
             # add response to response pattern
             self.response_pattern.append(response)
             # add item to answered items list
@@ -142,3 +145,7 @@ class SemiAdaptiveImplementation(AdaptiveTest):
             true_ability_level=self.true_ability_level if self.true_ability_level is not None else float("NaN"),
         )
         self.test_results.append(intermediate_result)
+    
+    def run_test_once(self):
+        self.pre_test()
+        return super().run_test_once()

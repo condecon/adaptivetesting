@@ -3,6 +3,7 @@ from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ....models.__algorithm_exception import AlgorithmException
 
 
+
 def probability_y1(mu: np.ndarray,
                    a: np.ndarray,
                    b: np.ndarray,
@@ -117,12 +118,16 @@ def maximize_likelihood_function(a: np.ndarray,
     Raises:
         AlgorithmException: if the optimization fails or the response
         pattern consists of only one type of response.
+        AlgorithmException: if the optimization fails or the response
+        pattern consists of only one type of response.
 
     Returns:
         float: optimized ability value
     """
     # check if response pattern is valid
     if len(set(response_pattern.tolist())) == 1:
+        raise AlgorithmException(
+            "Response pattern is invalid. It consists of only one type of response.")
         raise AlgorithmException(
             "Response pattern is invalid. It consists of only one type of response.")
     
@@ -133,3 +138,4 @@ def maximize_likelihood_function(a: np.ndarray,
         raise AlgorithmException(f"Optimization failed: {result.message}")
     else:
         return result.x
+
