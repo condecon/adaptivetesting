@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from scipy.stats import norm, rv_continuous
 
 
-
 class Prior(ABC):
     def __init__(self):
         """Base class for prior distributions
