@@ -1,5 +1,5 @@
 from typing import List
-import jax.numpy as np
+import numpy as np
 from ..models.__test_item import TestItem
 import random
 

@@ -2,28 +2,8 @@ simulation Module
 ==================================
 
 
-ResultOutputFormat
------------------------------------------------
-
-.. autoclass:: adaptivetesting.simulation.ResultOutputFormat
+.. automodule:: adaptivetesting.simulation
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-StoppingCriterion
------------------------------------------------
-
-.. autoclass:: adaptivetesting.simulation.StoppingCriterion
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Simulation
------------------------------------------------
-
-.. autoclass:: adaptivetesting.simulation.Simulation
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :imported-members:

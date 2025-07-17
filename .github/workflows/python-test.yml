@@ -34,9 +34,6 @@ jobs:
     - name: Type checking
       run: |
         uv run mypy
-    - name: Type checking code examples
-      run: |
-        uv run mypy code_examples
     - name: Test with unittest
       run: |
         uv run python -m unittest

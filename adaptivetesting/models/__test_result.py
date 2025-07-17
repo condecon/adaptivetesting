@@ -8,7 +8,7 @@ class TestResult:
     test_id: str
     ability_estimation: float
     standard_error: float
-    showed_item: float
+    showed_item: dict
     response: int
     true_ability_level: float
 

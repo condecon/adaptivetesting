@@ -1,19 +1,18 @@
 from typing import List
-import pickle
+import csv
 import pathlib
 from ..models.__test_result import TestResult
 from ..services.__test_results_interface import ITestResults
 
 
-class PickleContext(ITestResults):
+class CSVContext(ITestResults):
     def __init__(self,
                  simulation_id: str,
                  participant_id: str):
         """Implementation of the ITestResults interface for
-        saving test results to the pickle format.
-        The resulting pickle file <simulation_id>.pickle
-        will be of the standard pickle format which depends
-        on the used python version.
+        saving test results to the CSV format.
+        The resulting CSV file <participant_id>.csv
+        will be a standard comma-separated values file.
 
         Args:
             simulation_id (str): folder name
@@ -23,8 +22,8 @@ class PickleContext(ITestResults):
         super().__init__(simulation_id, participant_id)
 
     def save(self, test_results: List[TestResult]) -> None:
-        """Saves a list of test results to a pickle binary file
-        (<participant_id>.pickle).
+        """Saves a list of test results to a CSV file
+        (<participant_id>.csv).
 
         Args:
             test_results (List[TestResult]): list of test results
@@ -34,18 +33,25 @@ class PickleContext(ITestResults):
         # create directory if it does not already exist
         path = pathlib.Path(f"data/{dir_name}")
         path.mkdir(parents=True, exist_ok=True)
-        # write results in file
-        with open(f"data/{dir_name}/{self.participant_id}.pickle", "wb") as file:
-            pickle.dump(test_results, file)
+
+        # Get field names from the first TestResult object
+        fieldnames = list(vars(test_results[0]).keys())
+
+        with open(f"data/{dir_name}/{self.participant_id}.csv", "w", newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            for result in test_results:
+                writer.writerow(vars(result))
+            
             file.close()
 
     def load(self) -> List[TestResult]:
         """Loads results from the database.
         The implementation of this method is required
-        by the interface. However, is does not have
+        by the interface. However, it does not have
         any implemented functionality and will throw an error
         if used.
 
         Returns: List[TestResult]
         """
-        raise NotImplementedError("This  function is not implemented.")
+        raise NotImplementedError("This function is not implemented.")

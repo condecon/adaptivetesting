@@ -1,76 +1,329 @@
 # adaptivetesting
-[![Unittests](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/python-test.yml)
-[![Deploy to PyPi](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml/badge.svg)](https://github.com/condecon/adaptivetesting/actions/workflows/publish.yml)
 
 <img src="/docs_generation/source/_static/logo.svg" style="width: 100%">
 </img>
 
-_adaptivetesting_ is a Python package for computerized adaptive 
-testing that can be used to simulate and implement custom adaptive tests 
-in real-world testing scenarios.
+**An open-source Python package for simplified, customizable Computerized Adaptive Testing (CAT) using Bayesian methods.**
 
-## Getting Started
 
-Required Python version: >= 3.11 (other versions may work, but they are not officially supported)
+## Key Features
 
-``
+- **Bayesian Methods**: Built-in support for Bayesian ability estimation with customizable priors
+- **Flexible Architecture**: Object-oriented design with abstract classes for easy extension
+- **Item Response Theory**: Full support for 1PL, 2PL, 3PL, and 4PL models
+- **Multiple Estimators**: 
+  - Maximum Likelihood Estimation (MLE)
+  - Bayesian Modal Estimation (BM)
+  - Expected A Posteriori (EAP)
+- **Item Selection Strategies**: Kaximum information criterion and Urry's rule
+- **Simulation Framework**: Comprehensive tools for CAT simulation and evaluation
+- **Real-world Application**: Direct transition from simulation to production testing
+- **Stopping Criteria**: Support for standard error and test length criteria
+- **Data Management**: Built-in support for CSV and pickle data formats
+
+## Installation
+
+Install from PyPI using pip:
+
+```bash
 pip install adaptivetesting
-``
+```
 
-If you want to install the current development version,
-you can do so by running the following command:
+For the latest development version:
 
-``
+```bash
 pip install git+https://github.com/condecon/adaptivetesting
-``
+```
 
-## Features
-- IRT-Models: 
-    - 4PL
-    - simplified derivates (e.g., 3PL, Rasch model)
-- Ability estimators: 
-    - Maximum Likelihood Estimation
-    - Bayes Modal
-- Item selection algorithm: 
-    - Urry’s rule
-- Stopping criteria: 
-    - test length
-    - ability estimation standard error
-- Test results output formats
-    - SQLITE
-    - Pickle
-- Functions and wrappers for CAT simulations and application implementations
+## Requirements
 
-__Any functionality can be modified and extended.__
+- Python >= 3.10
+- NumPy >= 2.0.0
+- Pandas >= 2.2.0
+- SciPy >= 1.15.0
+- tqdm >= 4.67.1
+
+## Quick Start
+
+### Basic Example: Setting Up an Adaptive Test
+
+```python
+from adaptivetesting.models import ItemPool, TestItem
+from adaptivetesting.implementations import TestAssembler
+from adaptivetesting.math.estimators import BayesModal, NormalPrior
+from adaptivetesting.simulation import Simulation, StoppingCriterion, ResultOutputFormat
+import pandas as pd
+
+# Create item pool from DataFrame
+items_data = pd.DataFrame({
+    "a": [1.32, 1.07, 0.84, 1.19, 0.95],  # discrimination
+    "b": [-0.63, 0.18, -0.84, 0.41, -0.25],  # difficulty
+    "c": [0.17, 0.10, 0.19, 0.15, 0.12],  # guessing
+    "d": [0.87, 0.93, 1.0, 0.89, 0.94]   # upper asymptote
+})
+item_pool = ItemPool.load_from_dataframe(items_data)
+
+# Set up adaptive test
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="sim_001",
+    participant_id="participant_001",
+    ability_estimator=BayesModal,
+    estimator_args={"prior": NormalPrior(mean=0, sd=1)},
+    true_ability_level=0.5,  # For simulation
+    simulation=True
+)
+
+# Run simulation
+simulation = Simulation(
+    test=adaptive_test,
+    test_result_output=ResultOutputFormat.CSV
+)
+
+simulation.simulate(
+    criterion=StoppingCriterion.SE,
+    value=0.3  # Stop when standard error <= 0.3
+)
+
+# Save results
+simulation.save_test_results()
+```
+
+### Custom Prior Example
+
+```python
+from adaptivetesting.math.estimators import CustomPrior
+from scipy.stats import t
+
+# Create custom t prior
+custom_prior = CustomPrior(t, 100)
+
+# Use in estimator
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="custom_prior_sim",
+    participant_id="participant_002",
+    ability_estimator=BayesModal,
+    estimator_args={"prior": custom_prior},
+    true_ability_level=0.0,
+    simulation=True
+)
+```
+
+### Real-world Testing (Non-simulation) with PsychoPy
+
+```python
+from psychopy import visual, event
+from psychopy.hardware import keyboard
+from adaptivetesting.implementations import TestAssembler
+from adaptivetesting.models import AdaptiveTest, ItemPool, TestItem
+from adaptivetesting.data import CSVContext
+from adaptivetesting.math.estimators import BayesModal, CustomPrior
+from adaptivetesting.math.item_selection import maximum_information_criterion
+from scipy.stats import t
 
 
-## Implementations
-The package comes with two CAT implementations that are ready to use.
-### Default implementation
+# Create item pool from DataFrame
+items_data = pd.DataFrame({
+    "a": [1.32, 1.07, 0.84, 1.19, 0.95],  # discrimination
+    "b": [-0.63, 0.18, -0.84, 0.41, -0.25],  # difficulty
+    "c": [0.17, 0.10, 0.19, 0.15, 0.12],  # guessing
+    "d": [0.87, 0.93, 1.0, 0.89, 0.94]   # upper asymptote
+})
+item_pool = ItemPool.load_from_dataframe(items_data)
 
-![Schematic overview of the Default implementation](/images/default.svg)
+# Create adaptive test
+adaptive_test: AdaptiveTest = TestAssembler(
+        item_pool=item_pool,
+        simulation_id="example",
+        participant_id="dummy",
+        ability_estimator=BayesModal,
+        estimator_args={
+            "prior": CustomPrior(t, 100),
+            "optimization_interval":(-10, 10)
+        },
+        item_selector=maximum_information_criterion,
+        simulation=False,
+        debug=False
+)
 
-### Semi-Adaptive implementation
-![Schematic overview of the Semi-Adaptive implementation](/images/semi-adaptive.svg)
+# ====================
+# Setup PsychoPy
+# ====================
 
-### Custom testing procedures
-Custom testing procedures can be implemented by implementing
-the abstract class ``AdaptiveTest``.
-Any existing functionality can be overridden while still
-retaining full compatibility with the packages' functionality.
-For more information, please consult the documentation for the ``AdaptiveTest`` class.
+# general setup
+win = visual.Window([800, 600],
+                    monitor="testMonitor",
+                    units="deg",
+                    fullscr=False)
 
-## Package structure
-| submodule | description |
-|------------|-------------|
-| data | data management and processing of test results |
-| implementations | concrete implementations of the adaptive process, provides actual |
-| math | mathematical utilities and functions, such as estimators, item selection, test information |
-| models | data model definitions and structures used in the package |
-| services | interfaces that concrete implementations inherit from |
-| simulations | functions and classes used in CAT simulation |
-| tests | Unit test for the entire package |
+# init keyboard
+keyboard.Keyboard()
+
+
+# define function to get user input
+def get_response(item: TestItem) -> int:
+    # get index
+    item_difficulty: float = item.b
+    stimuli: str = [item for item in items if item["Difficulty"] == item_difficulty][0]["word"]
+
+    # create text box and display stimulus
+    text_box = visual.TextBox2(win=win,
+                               text=stimuli,
+                               alignment="center",
+                               size=24)
+    # draw text
+    text_box.draw()
+    # update window
+    win.flip()
+
+    # wait for pressed keys
+    while True:
+        keys = event.getKeys()
+        # if keys are not None
+        if keys:
+            # if the right arrow keys is pressed
+            # return 1
+            if keys[0] == "right":
+                return 1
+            # if the left arrow keys is pressed
+            # return 0
+            if keys[0] == "left":
+                return 0
+
+
+# override adaptive test default function
+adaptive_test.get_response = get_response
+
+# start adaptive test
+while True:
+    adaptive_test.run_test_once()
+
+    # check stopping criterion
+    if adaptive_test.standard_error <= 0.4:
+        break
+
+    # end test if all items have been shown
+    if len(adaptive_test.item_pool.test_items) == 0:
+        break
+
+# save test results
+data_context = CSVContext(
+    adaptive_test.simulation_id,
+    adaptive_test.participant_id
+)
+
+data_context.save(adaptive_test.test_results)
+```
+
+## Package Structure
+
+The package is organized into several key modules:
+
+- **`adaptivetesting.models`**: Core classes including `AdaptiveTest`, `ItemPool`, and `TestItem`
+- **`adaptivetesting.implementations`**: Ready-to-use test implementations like `TestAssembler`
+- **`adaptivetesting.math`**: Mathematical functions for IRT, ability estimation, and item selection
+- **`adaptivetesting.simulation`**: Simulation framework and result management
+- **`adaptivetesting.data`**: Data management utilities for CSV and pickle formats
+- **`adaptivetesting.services`**: Abstract interfaces and protocols
+
+## Advanced Features
+
+### Multiple Stopping Criteria
+
+```python
+simulation.simulate(
+    criterion=[StoppingCriterion.SE, StoppingCriterion.LENGTH],
+    value=[0.3, 20]  # Stop at SE ≤ 0.3 OR length ≥ 20 items
+)
+```
+
+### Pretest Phase
+
+```python
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="pretest_sim",
+    participant_id="participant_003",
+    ability_estimator=BayesModal,
+    estimator_args={"prior": NormalPrior(0, 1)},
+    pretest=True,
+    pretest_seed=42,
+    simulation=True
+)
+```
+
+### Custom Item Selection
+
+```python
+from adaptivetesting.math.item_selection import maximum_information_criterion
+
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="custom_selection",
+    participant_id="participant_004",
+    ability_estimator=BayesModal,
+    estimator_args={"prior": NormalPrior(0, 1)},
+    item_selector=maximum_information_criterion,
+    item_selector_args={"additional_param": "value"},
+    simulation=True
+)
+```
+
+### Custom Optimization Interval
+```python
+adaptive_test = TestAssembler(
+    item_pool=item_pool,
+    simulation_id="pretest_sim",
+    participant_id="participant_003",
+    ability_estimator=BayesModal,
+    estimator_args={
+        "prior": NormalPrior(0, 1),
+        "optimization_interval": (-5, 5)},
+    pretest_seed=42,
+    simulation=True
+)
+```
 
 ## Documentation
 
-You can find extensiv documentation in the <a href="/docs/">`docs` directory</a>.
+Full documentation is available in the `docs/` directory:
+
+- [API Reference](docs/readme.md)
+- [Models Module](docs/adaptivetesting.models.md)
+- [Math Module](docs/adaptivetesting.math.md)
+- [Implementation Examples](docs/adaptivetesting.implementations.md)
+- [Simulation Guide](docs/adaptivetesting.simulation.md)
+
+## Testing
+
+The package includes comprehensive tests. Run them using:
+
+```bash
+python -m pytest adaptivetesting/tests/
+```
+
+## Contributing
+
+We welcome contributions! Please see our [GitHub repository](https://github.com/condecon/adaptivetesting) for:
+
+- Issue tracking
+- Feature requests  
+- Pull request guidelines
+- Development setup
+
+## Research and Applications
+
+This package is designed for researchers and practitioners in:
+
+- Educational assessment
+- Psychological testing
+- Cognitive ability measurement
+- Adaptive learning systems
+- Psychometric research
+
+The package facilitates the transition from research simulation to real-world testing applications without requiring major code modifications.
+
+## License
+
+This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
