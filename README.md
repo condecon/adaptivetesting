@@ -421,5 +421,44 @@ adaptive_test = TestAssembler(
 ```
 
 ## Documentation
-Extensive documentation is available in the source code,
-but it can also be compiled to a webpage using sphinx.
+
+Full documentation is available in the `docs/` directory:
+
+- [API Reference](docs/readme.md)
+- [Models Module](docs/adaptivetesting.models.md)
+- [Math Module](docs/adaptivetesting.math.md)
+- [Implementation Examples](docs/adaptivetesting.implementations.md)
+- [Simulation Guide](docs/adaptivetesting.simulation.md)
+
+## Testing
+
+The package includes comprehensive tests. Run them using:
+
+```bash
+python -m pytest adaptivetesting/tests/
+```
+
+## Contributing
+
+We welcome contributions! Please see our [GitHub repository](https://github.com/condecon/adaptivetesting) for:
+
+- Issue tracking
+- Feature requests  
+- Pull request guidelines
+- Development setup
+
+## Research and Applications
+
+This package is designed for researchers and practitioners in:
+
+- Educational assessment
+- Psychological testing
+- Cognitive ability measurement
+- Adaptive learning systems
+- Psychometric research
+
+The package facilitates the transition from research simulation to real-world testing applications without requiring major code modifications.
+
+## License
+
+This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
