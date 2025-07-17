@@ -7,7 +7,6 @@ from scipy.stats import beta, f
 import math
 
 
-
 class TestStandardError(unittest.TestCase):
     def test_dummy_items(self):
         items = [0.7, 0.9, 0.6]

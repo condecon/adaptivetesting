@@ -8,7 +8,6 @@ from adaptivetesting.math.estimators import CustomPriorException
 
 class TestBayesModal(unittest.TestCase):
     def __init__(self, methodName="runTest"):
-    def __init__(self, methodName="runTest"):
         super().__init__(methodName)
 
     def test_estimation_4pl(self):

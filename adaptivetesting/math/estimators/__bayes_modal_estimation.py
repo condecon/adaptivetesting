@@ -8,7 +8,6 @@ from .__prior import Prior, NormalPrior, CustomPrior, CustomPriorException
 from .__test_information import test_information_function
 
 
-
 class BayesModal(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,

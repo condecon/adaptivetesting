@@ -42,5 +42,6 @@ html_theme_options = {
 
 }
 
+
 def setup(app: Sphinx):
     app.add_css_file("main.css")

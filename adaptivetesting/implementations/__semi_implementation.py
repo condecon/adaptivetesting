@@ -104,7 +104,7 @@ class SemiAdaptiveImplementation(AdaptiveTest):
 
         # get responses
         for item in random_items:
-            if self.simulation == True:
+            if self.simulation is True:
                 response = self.item_pool.get_item_response(item)
             else:
                 response = self.get_response(item)
