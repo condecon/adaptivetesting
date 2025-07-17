@@ -327,11 +327,3 @@ The package facilitates the transition from research simulation to real-world te
 ## License
 
 This project is licensed under the terms specified in the [LICENSE](LICENSE) file.
-
-## Citation
-
-If you use this package in your research, please cite:
-
-```biblatex
-Coming Soon
-```
