@@ -51,7 +51,7 @@ keyboard.Keyboard()
 def get_response(item: TestItem) -> int:
     # get index
     item_difficulty: float = item.b
-    stimuli: str = [item for item in items if item["Difficulty"] == item_difficulty][0]["word"]
+    stimuli: str = [item for item in item_pool.test_items if item["Difficulty"] == item_difficulty][0]["word"]
 
     # create text box and display stimulus
     text_box = visual.TextBox2(win=win,
