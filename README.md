@@ -121,6 +121,7 @@ from adaptivetesting.data import CSVContext
 from adaptivetesting.math.estimators import BayesModal, CustomPrior
 from adaptivetesting.math.item_selection import maximum_information_criterion
 from scipy.stats import t
+import pandas as pd
 
 
 # Create item pool from DataFrame
