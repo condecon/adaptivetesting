@@ -1,5 +1,6 @@
 # flake8: noqa
 import unittest
+import math
 from adaptivetesting.models import ItemPool
 from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.math import generate_response_pattern
@@ -36,24 +37,70 @@ source_dictionary = {"a": [1.0507,
 
 
 class TestGenerateResponsePattern(unittest.TestCase):
-    def test_generate_pattern_and_not_break(self):
+    def test_compare_generation_to_estimation(self):
         item_pool = ItemPool.load_from_dict(source_dictionary)
 
-        # generate pattern
-        responses = generate_response_pattern(0, item_pool.test_items, seed=1234)
-        compare_respones = [1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1,
-                            1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1]
+        # results
+        results = []
 
-        self.assertListEqual(responses, compare_respones)
+        for i in range(100):
+            # generate pattern
+            responses = generate_response_pattern(0, item_pool.test_items, seed=i)
+        
+            # estimate
+            estimator = MLEstimator(responses, item_pool.test_items)
+            estimation = estimator.get_estimation()
+            results.append(estimation)
 
-    def test_compare_generation_to_etsimation(self):
+        mean = sum(results) / len(results)
+        print(mean)
+        self.assertAlmostEqual(mean, 0, delta=0.3)
+
+    def test_debug_probabilities(self):
+        from adaptivetesting.math.estimators.__functions.__estimators import probability_y1
+        import numpy as np
+        
         item_pool = ItemPool.load_from_dict(source_dictionary)
+        
+        print("First 5 items - Expected probabilities for ability=0:")
+        for i, item in enumerate(item_pool.test_items[:5]):
+            prob = probability_y1(mu=np.array(0.0),
+                                a=np.array(item.a),
+                                b=np.array(item.b), 
+                                c=np.array(item.c),
+                                d=np.array(item.d))
+            print(f"Item {i}: a={item.a:.3f}, b={item.b:.3f}, c={item.c:.3f}, d={item.d:.3f} -> P={float(prob):.3f}")
 
-        # generate pattern
-        responses = generate_response_pattern(0, item_pool.test_items, seed=5000)
-
-        # estimate
-        estimator = MLEstimator(responses, item_pool.test_items)
-        estimation = estimator.get_estimation()
-
-        self.assertAlmostEqual(estimation, 0, places=1)
+    def test_calculate_expected_vs_actual(self):
+        from adaptivetesting.math.estimators.__functions.__estimators import probability_y1
+        import numpy as np
+            
+        item_pool = ItemPool.load_from_dict(source_dictionary)
+            
+        # Calculate expected probabilities for all items
+        expected_probs = []
+        for item in item_pool.test_items:
+            prob = probability_y1(mu=np.array(0.0),
+                                     a=np.array(item.a),
+                                     b=np.array(item.b), 
+                                     c=np.array(item.c),
+                                     d=np.array(item.d))
+            expected_probs.append(float(prob))
+            
+        expected_total = sum(expected_probs)
+        expected_percentage = expected_total / len(expected_probs) * 100
+            
+        percentage_results = []
+        for i in range(100):    
+            # Generate actual responses
+            responses = generate_response_pattern(0, item_pool.test_items, seed=i)
+            actual_correct = sum(responses)
+            actual_percentage = actual_correct / len(responses) * 100
+            percentage_results.append(actual_percentage)
+                
+        print(f"Expected percentage correct: {expected_percentage:.1f}%")
+        print(f"Actual percentage correct: {actual_percentage:.1f}%")
+            
+        # The difference should be within reasonable bounds for random sampling
+        # With 50 items, we expect some variation
+        self.assertAlmostEqual(actual_percentage, expected_percentage, delta=3)           

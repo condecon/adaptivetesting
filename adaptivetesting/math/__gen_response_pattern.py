@@ -19,8 +19,10 @@ def generate_response_pattern(ability: float,
     """
     # Set seed once at the beginning if provided
     if seed is not None:
-        np.random.seed(seed)
-    
+        rng = np.random.RandomState(seed)
+    else:
+        rng = np.random.RandomState()
+
     responses: list[int] = []
 
     for item in items:
@@ -34,7 +36,8 @@ def generate_response_pattern(ability: float,
         prob_scalar = float(probability_of_success)
         
         # simulate response based on probability of success
-        response = int(np.random.binomial(n=1, p=prob_scalar))
+        random_val = rng.random_sample()
+        response = 1 if random_val < prob_scalar else 0
         responses.append(response)
 
     return responses
