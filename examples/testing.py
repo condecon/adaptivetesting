@@ -1,3 +1,4 @@
+# setup item pool
 import pandas as pd
 previc_item_pool = pd.read_csv("item_pool.csv")
 previc_item_pool.head()
@@ -7,7 +8,7 @@ item_pool = ItemPool.load_from_list(
     b=previc_item_pool["Difficulty"]
 )
 
-
+# import psychopy
 from psychopy import visual, event
 from psychopy.hardware import keyboard
 from adaptivetesting.implementations import TestAssembler
@@ -25,7 +26,7 @@ adaptive_test: AdaptiveTest = TestAssembler(
         participant_id="dummy",
         ability_estimator=ExpectedAPosteriori,
         estimator_args={
-            "prior": CustomPrior(t, 100),
+            "prior": CustomPrior(t, 3),
             "optimization_interval":(-10, 10)
         },
         item_selector=maximum_information_criterion,
@@ -51,6 +52,7 @@ keyboard.Keyboard()
 def get_response(item: TestItem) -> int:
     # get index
     item_difficulty: float = item.b
+    # select corresponding word from item pool data frame
     stimuli: str = previc_item_pool.loc[previc_item_pool["Difficulty"] == item_difficulty, "word"].values[0]
 
     # create text box and display stimulus

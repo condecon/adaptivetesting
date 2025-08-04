@@ -31,7 +31,8 @@ tests = [
         },
         item_selector=maximum_information_criterion,
         true_ability_level=theta,
-        simulation=True
+        simulation=True,
+        seed=index
     )
     for index, theta in enumerate(theta_samples)
 ]
@@ -68,7 +69,7 @@ import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
 ax.scatter(results_df["true_ability_level"],
            results_df["ability_estimation"],
-           label="MLE")
+           label="BM")
 ax.plot(results_df["ability_estimation"],
         results_df["ability_estimation"],
         color="black")
@@ -92,7 +93,8 @@ tests = [
         },
         item_selector=maximum_information_criterion,
         true_ability_level=theta,
-        simulation=True
+        simulation=True,
+        seed=index
     )
     for index, theta in enumerate(theta_samples)
 ]
