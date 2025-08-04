@@ -1,3 +1,4 @@
+# flake8: noqa
 # setup item pool
 import pandas as pd
 previc_item_pool = pd.read_csv("item_pool.csv")
