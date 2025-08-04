@@ -17,7 +17,10 @@ def generate_response_pattern(ability: float,
     Returns:
         list[int]: response pattern
     """
-    # check if items is list of items or ItemPool
+    # Set seed once at the beginning if provided
+    if seed is not None:
+        np.random.seed(seed)
+    
     responses: list[int] = []
 
     for item in items:
@@ -27,10 +30,11 @@ def generate_response_pattern(ability: float,
                                                 c=np.array(item.c),
                                                 d=np.array(item.d))
         
-        # simulate response based on probability of scucess
-        if seed is not None:
-            np.random.seed(seed)
-        response = int(np.random.binomial(n=1, p=probability_of_success)) # ensure that the result is not an array
+        # Ensure probability is a scalar value
+        prob_scalar = float(probability_of_success)
+        
+        # simulate response based on probability of success
+        response = int(np.random.binomial(n=1, p=prob_scalar))
         responses.append(response)
 
     return responses
