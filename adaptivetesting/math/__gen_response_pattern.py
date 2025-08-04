@@ -32,8 +32,15 @@ def generate_response_pattern(ability: float,
                                                 c=np.array(item.c),
                                                 d=np.array(item.d))
         
-        # Ensure probability is a scalar value
-        prob_scalar = float(probability_of_success)
+        # Handle numpy scalar/array return properly
+        if hasattr(probability_of_success, 'item'):
+            prob_scalar = probability_of_success.item()
+        else:
+            prob_scalar = float(probability_of_success)
+        
+        # Validate probability bounds
+        if not (0 <= prob_scalar <= 1):
+            raise ValueError(f"Invalid probability: {prob_scalar}. Must be between 0 and 1.")
         
         # simulate response based on probability of success
         random_val = rng.random_sample()
