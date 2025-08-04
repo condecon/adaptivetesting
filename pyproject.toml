@@ -37,6 +37,12 @@ dev = [
     "sphinx-markdown-builder>=0.6.8",
     "types-tqdm>=4.67.0.20250516",
 ]
+plot = [
+    "matplotlib>=3.10.5",
+]
+test = [
+    "psychopy>=2025.1.1",
+]
 
 [tool.uv.sources]
 adaptivetesting = { workspace = true }
