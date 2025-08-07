@@ -291,10 +291,10 @@ adaptive_test = TestAssembler(
 Full documentation is available in the `docs/` directory:
 
 - [API Reference](docs/readme.md)
-- [Models Module](docs/adaptivetesting.models.md)
-- [Math Module](docs/adaptivetesting.math.md)
-- [Implementation Examples](docs/adaptivetesting.implementations.md)
-- [Simulation Guide](docs/adaptivetesting.simulation.md)
+- [Models Module](docs/models.md)
+- [Math Module](docs/math.md)
+- [Implementation Examples](docs/implementations.md)
+- [Simulation Guide](docs/simulation.md)
 
 ## Testing
 
@@ -324,6 +324,22 @@ This package is designed for researchers and practitioners in:
 - Psychometric research
 
 The package facilitates the transition from research simulation to real-world testing applications without requiring major code modifications.
+
+## Citation
+If you use this package for your academic work, please provide the following reference:
+Engicht, J., Bee, R. M., & Koch, T. (2025). Customizable Bayesian Adaptive Testing with Python – The adaptivetesting Package. Open Science Framework. https://doi.org/10.31219/osf.io/d2xge_v1
+
+````
+@online{engichtCustomizableBayesianAdaptive2025,
+  title = {Customizable {{Bayesian Adaptive Testing}} with {{Python}} – {{The}} Adaptivetesting {{Package}}},
+  author = {Engicht, Jonas and Bee, R. Maximilian and Koch, Tobias},
+  date = {2025-08-06},
+  eprinttype = {Open Science Framework},
+  doi = {10.31219/osf.io/d2xge_v1},
+  url = {https://osf.io/d2xge_v1},
+  pubstate = {prepublished}
+}
+```
 
 ## License
 
