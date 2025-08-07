@@ -329,7 +329,7 @@ The package facilitates the transition from research simulation to real-world te
 If you use this package for your academic work, please provide the following reference:
 Engicht, J., Bee, R. M., & Koch, T. (2025). Customizable Bayesian Adaptive Testing with Python – The adaptivetesting Package. Open Science Framework. https://doi.org/10.31219/osf.io/d2xge_v1
 
-````
+```
 @online{engichtCustomizableBayesianAdaptive2025,
   title = {Customizable {{Bayesian Adaptive Testing}} with {{Python}} – {{The}} Adaptivetesting {{Package}}},
   author = {Engicht, Jonas and Bee, R. Maximilian and Koch, Tobias},
