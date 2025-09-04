@@ -37,7 +37,7 @@ class ItemPool:
             return selected_item, simulated_response
         else:
             return selected_item
-    
+
     def get_item_by_item(self, item: TestItem) -> Tuple[TestItem, int] | TestItem:
         """Returns item and if defined the simulated response.
 
@@ -94,24 +94,27 @@ class ItemPool:
             a: List[float] | None = None,
             c: List[float] | None = None,
             d: List[float] | None = None,
-            simulated_responses: List[int] | None = None) -> "ItemPool":
+            simulated_responses: List[int] | None = None,
+            ids: List[int] | None = None) -> "ItemPool":
         """
         Creates test items from a list of floats.
 
         Args:
             a (List[float]): discrimination parameter
-            
+
             b (List[float]): difficulty parameter
-            
+
             c (List[float]): guessing parameter
-            
+
             d (List[float]): slipping parameter
-            
+
             simulated_responses (List[int]): simulated responses
+
+            ids (List[int]): item IDs
 
         Returns:
             List[TestItem]: item pool
-        
+
         """
         items: List[TestItem] = []
 
@@ -126,18 +129,24 @@ class ItemPool:
                 raise ValueError("Length of a and b has to be the same.")
             for i, discrimination in enumerate(a):
                 items[i].a = discrimination
-        
+
         if c is not None:
             if len(c) != len(b):
                 raise ValueError("Length of c and b has to be the same.")
             for i, guessing in enumerate(c):
                 items[i].c = guessing
-        
+
         if d is not None:
             if len(d) != len(b):
                 raise ValueError("Length of d and b has to be the same.")
             for i, slipping in enumerate(d):
                 items[i].d = slipping
+
+        if ids is not None:
+            if len(ids) != len(b):
+                raise ValueError("Length of ids and b has to be the same.")
+            for i, id_ in enumerate(ids):
+                items[i].id = id_
 
         item_pool = ItemPool(items)
         item_pool.simulated_responses = simulated_responses
@@ -146,10 +155,11 @@ class ItemPool:
 
     @staticmethod
     def load_from_dict(source: dict[str, List[float]],
-                       simulated_responses: List[int] | None = None) -> "ItemPool":
+                       simulated_responses: List[int] | None = None,
+                       ids: List[int] | None = None) -> "ItemPool":
         """Creates test items from a dictionary.
         The dictionary has to have the following keys:
-            
+
             - a
             - b
             - c
@@ -158,6 +168,8 @@ class ItemPool:
 
         Args:
             source (dict[str, List[float]]): item pool dictionary
+            simulated_responses (List[int]): simulated responses
+            ids (List[int]): item IDs
 
         Returns:
             List[TestItem]: item pool
@@ -170,19 +182,23 @@ class ItemPool:
         # check none
         if a is None:
             raise ValueError("a cannot be None")
-        
+
         if b is None:
             raise ValueError("b cannot be None")
-        
+
         if c is None:
             raise ValueError("c cannot be None")
-        
+
         if d is None:
             raise ValueError("d cannot be None")
 
         # check if a, b, c, and d have the same length
         if not (len(a) == len(b) == len(c) == len(d)):
             raise ValueError("All lists in the source dictionary must have the same length")
+
+        if ids is not None:
+            if len(ids) != len(b):
+                raise ValueError("Length of ids and b has to be the same.")
 
         n_items = len(b)
         items: List[TestItem] = []
@@ -193,12 +209,15 @@ class ItemPool:
             item.c = c[i]
             item.d = d[i]
 
+            if ids is not None:
+                item.id = ids[i]
+
             items.append(item)
 
         item_pool = ItemPool(items, simulated_responses)
-        
+
         return item_pool
-    
+
     @staticmethod
     def load_from_dataframe(source: DataFrame) -> "ItemPool":
         """Creates item pool from a pandas DataFrame.
@@ -206,7 +225,7 @@ class ItemPool:
         Each column has to contain float values.
         A `simulated_responses` (int values) column can be added to
         the DataFrame to provide simulated responses.
-        
+
 
         Args:
             source (DataFrame): _description_
@@ -218,28 +237,33 @@ class ItemPool:
         # check if columns are present
         if "a" not in source.columns:
             raise ValueError("Column 'a' not found.")
-        
+
         if "b" not in source.columns:
             raise ValueError("Column 'b' not found.")
-        
+
         if "c" not in source.columns:
             raise ValueError("Column 'c' not found.")
-        
+
         if "d" not in source.columns:
             raise ValueError("Column 'd' not found.")
-        
+
         # get values
         a: List[float] = source["a"].values.tolist() # type: ignore
         b: List[float] = source["b"].values.tolist() # type: ignore
         c: List[float] = source["c"].values.tolist() # type: ignore
         d: List[float] = source["d"].values.tolist() # type: ignore
 
+        if "ids" in source.columns:
+            ids: List[int] = source["ids"].values.tolist() # type: ignore
+        else:
+            ids = None
+
         # create item pool
-        item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d)
-    
+        item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d, ids=ids)
+
         # check if simulated responses are present
         if "simulated_responses" in source.columns:
             simulated_responses: List[int] = source["simulated_responses"].values.tolist() # type: ignore
             item_pool.simulated_responses = simulated_responses
-        
+
         return item_pool
