@@ -36,13 +36,13 @@ html_css_files = [
 ]
 html_logo = "_static/logo.svg"
 html_theme_options = {
-    "navigation_depth": -1
+    "navigation_depth": -1,
+    "repository_url": "https://github.com/condecon/adaptivetesting",
+    "use_issues_button": True
 
 }
 
-repository_url = "https://github.com/condecon/adaptivetesting"
-use_issues_button = True
-home_page_in_toc = True
+
 
 
 def setup(app: Sphinx):
