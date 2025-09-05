@@ -47,15 +47,16 @@ dev = [
     { name = "flake8" },
     { name = "mypy" },
     { name = "pandas-stubs" },
-    { name = "pydata-sphinx-theme" },
     { name = "scipy-stubs", version = "1.15.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy-stubs", version = "1.16.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "snakeviz" },
+    { name = "types-tqdm" },
+]
+docs = [
     { name = "sphinx", version = "8.1.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "sphinx", version = "8.2.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "sphinx-book-theme" },
     { name = "sphinx-markdown-builder" },
-    { name = "types-tqdm" },
 ]
 plot = [
     { name = "matplotlib" },
@@ -78,13 +79,14 @@ dev = [
     { name = "flake8", specifier = ">=7.2.0" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pandas-stubs", specifier = ">=2.2.3.250308" },
-    { name = "pydata-sphinx-theme", specifier = ">=0.16.1" },
     { name = "scipy-stubs", specifier = ">=1.15.2.2" },
     { name = "snakeviz", specifier = ">=2.2.2" },
+    { name = "types-tqdm", specifier = ">=4.67.0.20250516" },
+]
+docs = [
     { name = "sphinx", specifier = ">=8.1.3" },
     { name = "sphinx-book-theme", specifier = ">=1.1.3" },
     { name = "sphinx-markdown-builder", specifier = ">=0.6.8" },
-    { name = "types-tqdm", specifier = ">=4.67.0.20250516" },
 ]
 plot = [{ name = "matplotlib", specifier = ">=3.10.5" }]
 test = [{ name = "psychopy", specifier = ">=2025.1.1" }]
