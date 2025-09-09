@@ -15,6 +15,18 @@ class TestLoadTestItems(TestCase):
         self.item2.a = 1.9
         self.item2.b = 3
         self.item2.c = 1.9
+
+        self.item1_with_id = TestItem()
+        self.item1_with_id.a = self.item1.a
+        self.item1_with_id.b = self.item1.b
+        self.item1_with_id.c = self.item1.c
+        self.item1_with_id.id = 1
+
+        self.item2_with_id = TestItem()
+        self.item2_with_id.a = self.item2.a
+        self.item2_with_id.b = self.item2.b
+        self.item2_with_id.c = self.item2.c
+        self.item2_with_id.id = 42
 # List
 
 # Dict
@@ -29,6 +41,20 @@ class TestLoadTestItems(TestCase):
         generated = ItemPool.load_from_dict(source_dictionary)
 
         self.assertEqual([self.item1.as_dict(), self.item2.as_dict()], [i.as_dict() for i in generated.test_items])
+
+    def test_load_test_items_from_dict_with_id_success(self):
+        source_dictionary: dict[str, list[float]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1],
+            "id": [1, 42]
+        }
+
+        generated = ItemPool.load_from_dict(source_dictionary)
+
+        self.assertEqual([self.item1_with_id.as_dict(), self.item2_with_id.as_dict()], [i.as_dict()
+                         for i in generated.test_items])
 
     def test_load_test_items_from_dict_error_none(self):
         source_dictionary: dict[str, list[float]] = {
@@ -86,7 +112,45 @@ class TestLoadTestItems(TestCase):
         )
 
         self.assertEqual([1, 0], generated.simulated_responses)
-        
+
+    def test_load_items_from_pandas_with_ids_success(self):
+        dictionary = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1],
+            "simulated_responses": [1, 0],
+            "ids": [101, 202]
+        }
+        df = pd.DataFrame(dictionary)
+
+        generated = ItemPool.load_from_dataframe(df)
+
+        # check that items are equal
+        self.assertEqual(
+            {
+                "a": 0.9,
+                "b": 5,
+                "c": 0.9,
+                "d": 1,
+                "id": 101
+            },
+            generated.test_items[0].as_dict(with_id=True)
+        )
+
+        self.assertEqual(
+            {
+                "a": 1.9,
+                "b": 3,
+                "c": 1.9,
+                "d": 1,
+                "id": 202
+            },
+            generated.test_items[1].as_dict(with_id=True)
+        )
+
+        self.assertEqual([1, 0], generated.simulated_responses)
+
     def test_load_items_pandas_error_missing_column(self):
         dictionary = {
             "a": [0.9, 1.9],

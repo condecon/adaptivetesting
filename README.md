@@ -11,7 +11,7 @@
 - **Bayesian Methods**: Built-in support for Bayesian ability estimation with customizable priors
 - **Flexible Architecture**: Object-oriented design with abstract classes for easy extension
 - **Item Response Theory**: Full support for 1PL, 2PL, 3PL, and 4PL models
-- **Multiple Estimators**: 
+- **Multiple Estimators**:
   - Maximum Likelihood Estimation (MLE)
   - Bayesian Modal Estimation (BM)
   - Expected A Posteriori (EAP)
@@ -113,25 +113,31 @@ adaptive_test = TestAssembler(
 ### Real-world Testing (Non-simulation) with PsychoPy
 
 ```python
+# setup item pool
+# the item pool is retrieved from the PREVIC
+# https://github.com/manuelbohn/previc/tree/main/saves
+import pandas as pd
+from adaptivetesting.models import ItemPool
 from psychopy import visual, event
 from psychopy.hardware import keyboard
 from adaptivetesting.implementations import TestAssembler
 from adaptivetesting.models import AdaptiveTest, ItemPool, TestItem
 from adaptivetesting.data import CSVContext
-from adaptivetesting.math.estimators import BayesModal, CustomPrior
+from adaptivetesting.math.estimators import ExpectedAPosteriori, CustomPrior
 from adaptivetesting.math.item_selection import maximum_information_criterion
 from scipy.stats import t
 import pandas as pd
 
+previc_item_pool = pd.read_csv("item_pool.csv")
+# add item column
+previc_item_pool["id"] = list(range(1, 90))
+previc_item_pool.head()
 
-# Create item pool from DataFrame
-items_data = pd.DataFrame({
-    "a": [1.32, 1.07, 0.84, 1.19, 0.95],  # discrimination
-    "b": [-0.63, 0.18, -0.84, 0.41, -0.25],  # difficulty
-    "c": [0.17, 0.10, 0.19, 0.15, 0.12],  # guessing
-    "d": [0.87, 0.93, 1.0, 0.89, 0.94]   # upper asymptote
-})
-item_pool = ItemPool.load_from_dataframe(items_data)
+
+item_pool = ItemPool.load_from_list(
+    b=previc_item_pool["Difficulty"],
+    ids=previc_item_pool["id"]
+)
 
 # Create adaptive test
 adaptive_test: AdaptiveTest = TestAssembler(
@@ -161,12 +167,12 @@ win = visual.Window([800, 600],
 # init keyboard
 keyboard.Keyboard()
 
+## FIX THIS
 
 # define function to get user input
 def get_response(item: TestItem) -> int:
-    # get index
-    item_difficulty: float = item.b
-    stimuli: str = [item for item in item_pool.test_items if item["Difficulty"] == item_difficulty][0]["word"]
+    # select corresponding word from item pool data frame
+    stimuli: str = previc_item_pool[previc_item_pool["id"] == item.id]["word"].values[0]
 
     # create text box and display stimulus
     text_box = visual.TextBox2(win=win,
@@ -301,7 +307,8 @@ Full documentation is available in the `docs/` directory:
 The package includes comprehensive tests. Run them using:
 
 ```bash
-python -m pytest adaptivetesting/tests/
+uv sync
+uv run python -m unittest
 ```
 
 ## Contributing
@@ -309,7 +316,7 @@ python -m pytest adaptivetesting/tests/
 We welcome contributions! Please see our [GitHub repository](https://github.com/condecon/adaptivetesting) for:
 
 - Issue tracking
-- Feature requests  
+- Feature requests
 - Pull request guidelines
 - Development setup
 
