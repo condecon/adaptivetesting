@@ -1,12 +1,17 @@
 # flake8: noqa
 # setup item pool
+# the item pool is retrieved from the PREVIC
+# https://github.com/manuelbohn/previc/tree/main/saves
 import pandas as pd
 previc_item_pool = pd.read_csv("item_pool.csv")
+# add item column
+previc_item_pool["id"] = list(range(1, 90))
 previc_item_pool.head()
 
 from adaptivetesting.models import ItemPool
 item_pool = ItemPool.load_from_list(
-    b=previc_item_pool["Difficulty"]
+    b=previc_item_pool["Difficulty"],
+    ids=previc_item_pool["id"]
 )
 
 # import psychopy
@@ -51,10 +56,8 @@ keyboard.Keyboard()
 
 # define function to get user input
 def get_response(item: TestItem) -> int:
-    # get index
-    item_difficulty: float = item.b
     # select corresponding word from item pool data frame
-    stimuli: str = previc_item_pool.loc[previc_item_pool["Difficulty"] == item_difficulty, "word"].values[0]
+    stimuli: str = previc_item_pool[previc_item_pool["id"] == item.id]["word"].values[0]
 
     # create text box and display stimulus
     text_box = visual.TextBox2(win=win,
