@@ -11,7 +11,7 @@ class DummyTestItem(TestItem):
     def __init__(self, id=0):
         self.id = id
     
-    def as_dict(self):
+    def as_dict(self, with_id: bool = True) -> dict[str, float | int | None]:
         return {"id": self.id}
 
 

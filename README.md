@@ -11,7 +11,7 @@
 - **Bayesian Methods**: Built-in support for Bayesian ability estimation with customizable priors
 - **Flexible Architecture**: Object-oriented design with abstract classes for easy extension
 - **Item Response Theory**: Full support for 1PL, 2PL, 3PL, and 4PL models
-- **Multiple Estimators**: 
+- **Multiple Estimators**:
   - Maximum Likelihood Estimation (MLE)
   - Bayesian Modal Estimation (BM)
   - Expected A Posteriori (EAP)
@@ -301,7 +301,8 @@ Full documentation is available in the `docs/` directory:
 The package includes comprehensive tests. Run them using:
 
 ```bash
-python -m pytest adaptivetesting/tests/
+uv sync
+uv run python -m unittest
 ```
 
 ## Contributing
@@ -309,7 +310,7 @@ python -m pytest adaptivetesting/tests/
 We welcome contributions! Please see our [GitHub repository](https://github.com/condecon/adaptivetesting) for:
 
 - Issue tracking
-- Feature requests  
+- Feature requests
 - Pull request guidelines
 - Development setup
 
