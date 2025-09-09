@@ -254,7 +254,7 @@ class ItemPool:
         d: List[float] = source["d"].values.tolist() # type: ignore
 
         if "ids" in source.columns:
-            ids: List[int] = source["ids"].values.tolist() # type: ignore
+            ids: List[int] | None = source["ids"].values.tolist() # type: ignore
         else:
             ids = None
 

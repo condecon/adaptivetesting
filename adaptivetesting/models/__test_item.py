@@ -17,10 +17,10 @@ class TestItem:
         self.c: float = 0
         self.d: float = 1
 
-    def as_dict(self, with_id: bool = False) -> dict[str, float]:
+    def as_dict(self, with_id: bool = False) -> dict[str, float | int | None]:
         """Returns the item as a dictionary"""
 
-        item_dict: dict[str, float] = {
+        item_dict: dict[str, float | int | None] = {
             "a": self.a,
             "b": self.b,
             "c": self.c,
