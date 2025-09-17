@@ -184,14 +184,14 @@ class TestLoadTestItems(TestCase):
         }
 
         item_pool = ItemPool.load_from_dict(source=source_dictionary,
-                                content_categories=[["math"], ["english"]])
+                                            content_categories=[["math"], ["english"]])
         items = item_pool.test_items
         assigned_groups = [item.additional_properties["category"] for item in items]
 
         self.assertListEqual(assigned_groups, [["math"], ["english"]])
 
     def test_load_list_content_balancing(self):
-        source_dictionary: dict[str, list[float | str]] = {
+        source_dictionary: dict[str, list[float] | list[int] | list[list[str]]] = {
             "a": [0.9, 1.9],
             "b": [5, 3],
             "c": [0.9, 1.9],
@@ -200,11 +200,11 @@ class TestLoadTestItems(TestCase):
         }
 
         item_pool = ItemPool.load_from_list(
-            a=source_dictionary["a"],
-            b=source_dictionary["b"],
-            c=source_dictionary["c"],
-            d=source_dictionary["d"],
-            content_categories=source_dictionary["group"]
+            a=source_dictionary["a"], # type: ignore
+            b=source_dictionary["b"], # type: ignore
+            c=source_dictionary["c"], # type: ignore
+            d=source_dictionary["d"], # type: ignore
+            content_categories=source_dictionary["group"] # type: ignore
         )
         items = item_pool.test_items
         assigned_groups = [item.additional_properties["category"] for item in items]
@@ -212,7 +212,7 @@ class TestLoadTestItems(TestCase):
         self.assertListEqual(assigned_groups, [["math"], ["english"]])
 
     def test_load_dataframe_content_balancing(self):
-        source_dictionary: dict[str, list[float | str]] = {
+        source_dictionary: dict[str, list[float] | list[int] | list[list[str]]] = {
             "a": [0.9, 1.9],
             "b": [5, 3],
             "c": [0.9, 1.9],

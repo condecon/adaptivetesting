@@ -23,7 +23,7 @@ class TestItem:
         self.d: float = 1
         self.additional_properties: dict = {}
 
-    def as_dict(self, with_id: bool = False) -> dict[str, float | int | None]:
+    def as_dict(self, with_id: bool = False) -> dict[str, float | int | dict | None]:
 
         item_dict: dict[str, float | int | dict | None] = {
             "a": self.a,
