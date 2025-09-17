@@ -174,3 +174,54 @@ class TestLoadTestItems(TestCase):
         generated = ItemPool.load_from_dataframe(df)
 
         self.assertIsNone(generated.simulated_responses)
+
+    def test_load_dict_content_balancing(self):
+        source_dictionary: dict[str, list[float]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1]
+        }
+
+        item_pool = ItemPool.load_from_dict(source=source_dictionary,
+                                content_categories=[["math"], ["english"]])
+        items = item_pool.test_items
+        assigned_groups = [item.additional_properties["category"] for item in items]
+
+        self.assertListEqual(assigned_groups, [["math"], ["english"]])
+
+    def test_load_list_content_balancing(self):
+        source_dictionary: dict[str, list[float | str]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1],
+            "group": [["math"], ["english"]]
+        }
+
+        item_pool = ItemPool.load_from_list(
+            a=source_dictionary["a"],
+            b=source_dictionary["b"],
+            c=source_dictionary["c"],
+            d=source_dictionary["d"],
+            content_categories=source_dictionary["group"]
+        )
+        items = item_pool.test_items
+        assigned_groups = [item.additional_properties["category"] for item in items]
+
+        self.assertListEqual(assigned_groups, [["math"], ["english"]])
+
+    def test_load_dataframe_content_balancing(self):
+        source_dictionary: dict[str, list[float | str]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1],
+            "content_categories": [["math"], ["english"]]
+        }
+
+        item_pool = ItemPool.load_from_dataframe(pd.DataFrame(source_dictionary))
+        items = item_pool.test_items
+        assigned_groups = [item.additional_properties["category"] for item in items]
+
+        self.assertListEqual(assigned_groups, [["math"], ["english"]])
