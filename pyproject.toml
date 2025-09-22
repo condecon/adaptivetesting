@@ -17,16 +17,18 @@ license-files=["LICENSE"]
 keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools", "Cython"]
+build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
     "adaptivetesting",
+    "cython>=3.1.4",
     "flake8>=7.2.0",
     "mypy>=1.15.0",
     "pandas-stubs>=2.2.3.250308",
     "scipy-stubs>=1.15.2.2",
+    "setuptools>=70.3.0",
     "snakeviz>=2.2.2",
     "types-tqdm>=4.67.0.20250516",
 ]
@@ -45,6 +47,10 @@ test = [
 
 [tool.uv.sources]
 adaptivetesting = { workspace = true }
+
+[tool.setuptools]
+packages=["adaptivetesting"]
+
 
 [project.urls]
 Homepage = "https://github.com/condecon/adaptivetesting"
