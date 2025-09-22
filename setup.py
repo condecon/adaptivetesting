@@ -5,7 +5,6 @@ import os
 
 # Recursively find all .pyx files
 pyx_files = glob.glob("adaptivetesting/**/*.pyx", recursive=True)
-
 # Convert each file into an Extension
 extensions = [
     Extension(

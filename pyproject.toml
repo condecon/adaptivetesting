@@ -13,12 +13,13 @@ dependencies = [
     "scipy>=1.15.0",
     "tqdm>=4.67.1",
 ]
-license-files=["LICENSE"]
+license-files = ["LICENSE"]
 keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"]
 
 [build-system]
 requires = ["setuptools", "Cython"]
 build-backend = "setuptools.build_meta"
+
 
 [dependency-groups]
 dev = [
@@ -48,9 +49,11 @@ test = [
 [tool.uv.sources]
 adaptivetesting = { workspace = true }
 
-[tool.setuptools]
-packages=["adaptivetesting"]
-
+[tool.uv.workspace]
+members = [
+    ".",
+    ".",
+]
 
 [project.urls]
 Homepage = "https://github.com/condecon/adaptivetesting"
