@@ -25,7 +25,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
         super().__init__(methodName)
 
     def test_basic_calculation(self):
-        adt.calculate_priority_index(
+        adt.compute_priority_index(
             item=self.available_items[0],
             group_weights={
                 "Math": 0.2,
@@ -37,13 +37,13 @@ class TestMaximumPriorityIndex(unittest.TestCase):
         )
 
     def test_quota_calculation(self):
-        result = adt.calculate_quota_left(10, 5)
+        result = adt.compute_quota_left(10, 5)
         self.assertAlmostEqual(result, 0.5)
     
     def test_exception_list(self):
         with self.assertRaises(adt.ItemSelectionException):
             self.available_items[0].additional_properties["category"] = 0
-            result = adt.calculate_priority_index(
+            result = adt.compute_priority_index(
                 item=self.available_items[0],
                 group_weights={
                     "Math": 0.2,
@@ -57,7 +57,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
     def test_exception_key(self):
         with self.assertRaises(adt.ItemSelectionException):
             self.available_items[0].additional_properties.pop("category")
-            result = adt.calculate_priority_index(
+            result = adt.compute_priority_index(
                 item=self.available_items[0],
                 group_weights={
                     "Math": 0.2,
