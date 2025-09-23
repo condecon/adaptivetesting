@@ -155,6 +155,12 @@ def compute_total_content_penalty_value_for_item(item: TestItem,
 
     total_penalty_value = 0.0
     for constraint in assigned_constraints:
+        # type checks
+        if constraint.lower is None:
+            raise ValueError("lower cannot be None here.")
+        if constraint.upper is None:
+            raise ValueError("upper cannot be None here.")
+        # calculation
         total_penalty_value = total_penalty_value + compute_penalty_value(
             prop=constraint.proportion,
             lower=constraint.lower,
