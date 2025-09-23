@@ -36,7 +36,7 @@ def compute_priority_index(item: TestItem,
     priority_index: float = 1.0
 
     for group in item_groups:
-        priority_index = priority_index * group_weights[group] * calculate_quota_left(required_items=required_items, shown_items=shown_item)
+        priority_index = priority_index * group_weights[group] * compute_quota_left(required_items=required_items, shown_items=shown_item)
     
     # weight fisher information
     priority_index = priority_index * float(item_information_function(
