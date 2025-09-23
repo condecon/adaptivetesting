@@ -24,6 +24,8 @@ from .math.estimators.__functions.__bayes import maximize_posterior
 from .math.estimators.__test_information import test_information_function, item_information_function, prior_information_function
 from .math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from .math.item_selection.__urrys_rule import urrys_rule
+from .math.content_balancing.__constraint import *
+from .math.content_balancing.__functions import *
 
 from .models.__adaptive_test import AdaptiveTest
 from .models.__algorithm_exception import AlgorithmException
