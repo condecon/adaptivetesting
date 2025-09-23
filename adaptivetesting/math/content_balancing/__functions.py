@@ -161,6 +161,8 @@ def compute_total_content_penalty_value_for_item(item: TestItem,
             upper=constraint.upper
         ) * constraint.weight
     
+    return total_penalty_value
+    
 def standardize_total_content_constraint_penalty_value(item_penality_value: float,
                                                min: float,
                                                max: float) -> float:
@@ -188,8 +190,8 @@ def standardize_item_information(item_information: float,
     Returns:
         float: standardized item information
     """
-    standardized_item_information = item_information / max
-    return standardize_item_information
+    standardized_item_information_value = item_information / max
+    return standardized_item_information_value
 
 def compute_information_penalty_value(standardized_item_information: float) -> float:
     """Compute information penalty value with respect to the information
