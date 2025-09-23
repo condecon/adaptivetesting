@@ -1,1 +1,1 @@
-from .__functions import calculate_priority_index, calculate_quota_left
+from .__functions import compute_priority_index, compute_quota_left
