@@ -5,6 +5,7 @@ from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
 
+
 def item_information_function(
         mu: np.ndarray,
         a: np.ndarray,
