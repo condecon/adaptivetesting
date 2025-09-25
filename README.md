@@ -15,7 +15,7 @@
   - Maximum Likelihood Estimation (MLE)
   - Bayesian Modal Estimation (BM)
   - Expected A Posteriori (EAP)
-- **Item Selection Strategies**: Kaximum information criterion and Urry's rule
+- **Item Selection Strategies**: Maximum information criterion and Urry's rule
 - **Simulation Framework**: Comprehensive tools for CAT simulation and evaluation
 - **Real-world Application**: Direct transition from simulation to production testing
 - **Stopping Criteria**: Support for standard error and test length criteria
