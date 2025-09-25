@@ -4,6 +4,6 @@ from dataclasses import dataclass
 class Constraint:
     name: str
     weight: float
-    proportion: float
+    prevalence: float
     lower: float | None = None
     upper: float | None = None

@@ -13,12 +13,13 @@ def compute_priority_index(item: TestItem,
     """Calculates the priority index of a given item.
 
     Args:
-        item (TestItem): Item for which to calcualte the priority index
+        item (TestItem): Item for which to calculate the priority index
         group_weights (dict[str, float]): Dictionary with the group names and their weights
             Example: `{"math": 1, "english": 1}`. These weight show how important a specific
             constraint is for the item selection process
         required_items (int): number of items required to be shown per constraint
         shown_item (int): number of items already shown per constraint
+        current_ability (float): currently estimated ability level
 
     Returns:
         float: priority index of an item
@@ -53,7 +54,7 @@ def compute_priority_index(item: TestItem,
 def compute_quota_left(required_items: int,
                          shown_items: int) -> float:
     """
-    Claculates the quota left (items left allowed to be shown) for a given constraint/group.
+    Calculates the quota left (items left allowed to be shown) for a given constraint/group.
 
     Args:
         required_items (int): number of required items per constraint
@@ -77,10 +78,10 @@ def compute_prop(n_administered: int,
     of items with a specific constraint
 
     Args:
-        n_administered (int): number of items constraint items administered
+        n_administered (int): number of constraint items administered
         prevalence (float): proportion of items in the pool with given constraint
         n_remaining (int): remaining items in pool with constraint 
-        test_length (int): lenght of the test
+        test_length (int): length of the test
 
     Returns:
         float: expected proportion
@@ -122,30 +123,35 @@ def compute_penalty_value(prop: float,
     if prop < lower:
         d = lower - mid
         k = 2
-        penalty_value = ((1 / k * d) * 
+        penalty_value = ((1 / (k * d)) * 
                          (compute_expected_difference(proportion=prop, constraint_target=mid) ** 2) + 
                          (d / k))
         
     if prop >= upper:
         a = upper - mid
         k = 2
-        penalty_value = ((1 / k * a) * 
+        penalty_value = ((1 / (k * a)) * 
                          (compute_expected_difference(proportion=prop, constraint_target=mid) ** 2) + 
-                         (d / a))
+                         (a / k))
         
-    if upper > prop and prop >= lower:
+    if upper > prop >= lower:
         penalty_value = compute_expected_difference(proportion=prop,
                                                     constraint_target=mid)
         
     return penalty_value
 
+
 def compute_total_content_penalty_value_for_item(item: TestItem,
-                                         constraints: list[Constraint]) -> float:
+                                                 shown_items: list[TestItem],
+                                                 available_items: list[TestItem],
+                                                 constraints: list[Constraint]) -> float:
     """Calculates the total content penalty value for a given item
 
     Args:
         item (TestItem): given test item
-        group_weights (dict[str, float]): dictionary of group key and weight
+        shown_items:
+        available_items:
+        constraints (list[Constraint]): YYYYYY
 
     Returns:
         float: total content penalty value
@@ -160,9 +166,23 @@ def compute_total_content_penalty_value_for_item(item: TestItem,
             raise ValueError("lower cannot be None here.")
         if constraint.upper is None:
             raise ValueError("upper cannot be None here.")
+        # find number of administered items within constraint
+        n_administered = len([
+            item for item in shown_items if constraint.name in item.additional_properties["category"]
+        ])
+        n_remaining = len(available_items)
+        test_length = len(shown_items)
+
         # calculation
+        proportion = compute_prop(
+            n_administered=n_administered,
+            prevalence=constraint.prevalence,
+            n_remaining=n_remaining,
+            test_length=test_length
+        )
+
         total_penalty_value = total_penalty_value + compute_penalty_value(
-            prop=constraint.proportion,
+            prop=proportion,
             lower=constraint.lower,
             upper=constraint.upper
         ) * constraint.weight
@@ -170,33 +190,33 @@ def compute_total_content_penalty_value_for_item(item: TestItem,
     return total_penalty_value
     
 def standardize_total_content_constraint_penalty_value(item_penality_value: float,
-                                               min: float,
-                                               max: float) -> float:
-    """Standardize total content contraint penalty values.
+                                               minimum: float,
+                                               maximum: float) -> float:
+    """Standardize total content constraint penalty values.
 
     Args:
         item_penality_value (float): unstandardized item penalty value
-        min (float): minimum of the item penalty values over all eligible items
-        max (float): maximum of the item penalty values over all eligible items
+        minimum (float): minimum of the item penalty values over all eligible items
+        maximum (float): maximum of the item penalty values over all eligible items
 
     Returns:
         float: standardized total content constraint penalty value
     """
-    standardized_value = (item_penality_value - min) / (max - min)
+    standardized_value = (item_penality_value - minimum) / (maximum - minimum)
     return standardized_value
 
 def standardize_item_information(item_information: float,
-                                 max: float) -> float:
+                                 maximum: float) -> float:
     """Standardize the item information
 
     Args:
         item_information (float): information of an item
-        max (float): maximum information value across all eligible items
+        maximum (float): maximum information value across all eligible items
 
     Returns:
         float: standardized item information
     """
-    standardized_item_information_value = item_information / max
+    standardized_item_information_value = item_information / maximum
     return standardized_item_information_value
 
 def compute_information_penalty_value(standardized_item_information: float) -> float:
