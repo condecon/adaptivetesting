@@ -12,22 +12,50 @@ def probability_y1(mu: np.ndarray,
 
     Args:
         mu (np.ndarray): latent ability level
-        
         a (np.ndarray): item discrimination parameter
-        
         b (np.ndarray): item difficulty parameter
-        
         c (np.ndarray): pseudo guessing parameter
-        
         d (np.ndarray): inattention parameter
 
     Returns:
         np.ndarray: probability of getting the item correct
     """
+    # Compute the exponent safely
+    z = a * (mu - b)
 
-    value = c + (d - c) * (np.exp(a * (mu - b))) / \
-        (1 + np.exp(a * (mu - b)))
-    
+    # Use log-sum-exp trick for numerical stability
+    # For large positive z: exp(z)/(1+exp(z)) ≈ 1
+    # For large negative z: exp(z)/(1+exp(z)) ≈ exp(z)
+
+    # Clip z to prevent overflow in exp()
+    z_clipped = np.clip(z, -500, 500)  # exp(-500) and exp(500) are safe
+
+    # Compute the logistic function safely
+    # Use different formulas based on the sign of z for stability
+    result = np.empty_like(z_clipped)
+
+    # For large positive values, use alternative formula to avoid overflow
+    mask_positive = z_clipped > 20  # exp(20) is large but manageable
+    mask_negative = z_clipped < -20  # exp(-20) is very small
+    mask_medium = ~(mask_positive | mask_negative)
+
+    # Large positive z: 1/(1+exp(-z)) is more stable
+    result[mask_positive] = 1.0 / (1.0 + np.exp(-z_clipped[mask_positive]))
+
+    # Large negative z: exp(z)/(1+exp(z)) is stable
+    exp_z_neg = np.exp(z_clipped[mask_negative])
+    result[mask_negative] = exp_z_neg / (1.0 + exp_z_neg)
+
+    # Medium values: use standard formula
+    exp_z_med = np.exp(z_clipped[mask_medium])
+    result[mask_medium] = exp_z_med / (1.0 + exp_z_med)
+
+    # Apply the 4PL transformation
+    value = c + (d - c) * result
+
+    # Ensure probabilities are within valid range [c, d]
+    value = np.clip(value, c, d)
+
     return np.squeeze(value)
 
 
@@ -40,13 +68,13 @@ def probability_y0(mu: np.ndarray,
 
     Args:
             mu (np.ndarray): latent ability level
-            
+
             a (np.ndarray): item discrimination parameter
-            
+
             b (np.ndarray): item difficulty parameter
-            
+
             c (np.ndarray): pseudo guessing parameter
-            
+
             d (np.ndarray): inattention parameter
 
     Returns:
@@ -68,13 +96,13 @@ def likelihood(mu: np.ndarray,
 
     Args:
         mu (np.ndarray): ability level
-        
+
         a (np.ndarray): item discrimination parameter
-        
+
         b (np.ndarray): item difficulty parameter
-        
+
         c (np.ndarray): pseudo guessing parameter
-        
+
         d (np.ndarray): inattention parameter
 
     Returns:
@@ -88,7 +116,7 @@ def likelihood(mu: np.ndarray,
 
     terms = (probability_y1(mu, a, b, c, d)**response_pattern) * \
         (probability_y0(mu, a, b, c, d) ** (1 - response_pattern))
-    
+
     return -np.prod(terms)
 
 
@@ -100,14 +128,14 @@ def maximize_likelihood_function(a: np.ndarray,
                                  border: tuple[float, float] = (-10, 10)) -> float:
     """Find the ability value that maximizes the likelihood function.
     This function uses the minimize_scalar function from scipy and the "bounded" method.
-    
+
     Args:
         a (np.ndarray): item discrimination parameter
-        
+
         b (np.ndarray): item difficulty parameter
-        
+
         c (np.ndarray): pseudo guessing parameter
-        
+
         d (np.ndarray): inattention parameter
 
         response_pattern (np.ndarray): response pattern of the item
@@ -129,7 +157,7 @@ def maximize_likelihood_function(a: np.ndarray,
             "Response pattern is invalid. It consists of only one type of response.")
         raise AlgorithmException(
             "Response pattern is invalid. It consists of only one type of response.")
-    
+
     result: OptimizeResult = minimize_scalar(likelihood, args=(a, b, c, d, response_pattern),
                                              bounds=border, method='bounded') # type: ignore
 
