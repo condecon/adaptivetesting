@@ -13,17 +13,27 @@ def item_information_function(
         c: np.ndarray,
         d: np.ndarray
 ) -> np.ndarray:
+    """Calculate the information of a test item given the currently
+    estimated ability `mu`.
+
+    Args:
+        mu (np.ndarray): currently estimated ability
+        a (np.ndarray): _description_
+        b (np.ndarray): _description_
+        c (np.ndarray): _description_
+        d (np.ndarray): _description_
+
+    Returns:
+        np.ndarray: _description_
+    """
     p_y1 = probability_y1(mu, a, b, c, d)
 
-    # Clip probabilities
-    p_y1_clipped = np.clip(p_y1, 1e-10, 1 - 1e-10)
-
     def p_y1_grad(x: np.ndarray) -> np.ndarray:
-        # Use a more robust finite difference scheme
-        h = np.maximum(1e-8, 1e-8 * np.abs(x))  # Adaptive step size
+        # Central finite difference for gradient
+        h = 1e-5
         return (probability_y1(x + h, a, b, c, d) - probability_y1(x - h, a, b, c, d)) / (2 * h)
-
-    product = (p_y1_grad(mu) ** 2) / (p_y1_clipped * (1 - p_y1_clipped))
+    
+    product = (p_y1_grad(mu) ** 2) / (p_y1 * (1 - p_y1))
     information = np.sum(product)
     return information
 
@@ -49,7 +59,7 @@ def prior_information_function(prior: Prior,
         (score_values ** 2) * prior.pdf(x_vals),
         x_vals
     )
-
+    
     return information
 
 
