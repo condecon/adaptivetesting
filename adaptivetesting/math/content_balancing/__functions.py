@@ -8,7 +8,7 @@ import numpy as np
 def compute_priority_index(item: TestItem,
                            group_weights: dict[str, float],
                            required_items: int,
-                           shown_item: int,
+                           shown_items: int,
                            current_ability: float) -> float:
     """Calculates the priority index of a given item.
 
@@ -18,7 +18,7 @@ def compute_priority_index(item: TestItem,
             Example: `{"math": 1, "english": 1}`. These weight show how important a specific
             constraint is for the item selection process
         required_items (int): number of items required to be shown per constraint
-        shown_item (int): number of items already shown per constraint
+        shown_items (int): number of items already shown per constraint
         current_ability (float): currently estimated ability level
 
     Returns:
@@ -38,7 +38,7 @@ def compute_priority_index(item: TestItem,
 
     for group in item_groups:
         priority_index = priority_index * group_weights[group] \
-            * compute_quota_left(required_items=required_items, shown_items=shown_item)
+            * compute_quota_left(required_items=required_items, shown_items=shown_items)
     
     # weight fisher information
     priority_index = priority_index * float(item_information_function(

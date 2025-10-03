@@ -1,4 +1,5 @@
 from typing import Callable, Any
+import random
 import numpy as np
 from ...models.__test_item import TestItem
 from ..estimators.__test_information import item_information_function
@@ -9,12 +10,13 @@ def radomesque_item_selection(
         ability_estimate: float,
         n_items: int,
         reverse: bool = True,
-        item_selection_function: Callable = item_information_function, # use item selection strategy
+        item_rating_function: Callable = item_information_function,
+        seed: int | None = None,
         **kwargs: Any
-) -> list[TestItem]:
+) -> TestItem:
     item_information_list: list[tuple[float, int]] = []
     for i, item in enumerate(items):
-        information = float(item_selection_function(
+        information = float(item_rating_function(
             a=np.array(item.a),
             b=np.array(item.b),
             c=np.array(item.c),
@@ -34,7 +36,11 @@ def radomesque_item_selection(
 
     # select first n items
     selected_items = item_information_list[0:n_items]
-    # return specific items
-    return_items = [items[item[1]] for item in selected_items]
-    return return_items
+    # select only items
+    sub_item_pool = [items[item[1]] for item in selected_items]
     
+    # randomly select items from sub item pool
+    if seed is not None:
+        random.seed(seed)
+    sampled_item = random.sample(sub_item_pool, k=1)[0]
+    return sampled_item
