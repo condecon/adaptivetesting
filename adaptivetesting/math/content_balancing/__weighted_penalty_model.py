@@ -4,8 +4,6 @@ from ..estimators.__test_information import item_information_function
 from ...models.__test_item import TestItem
 from .__functions import (
     compute_prop,
-    compute_expected_difference,
-    compute_penalty_value,
     compute_total_content_penalty_value_for_item,
     standardize_total_content_constraint_penalty_value,
     standardize_item_information,
@@ -20,7 +18,7 @@ ITEM_GROUP = Literal["green", "orange", "yellow", "red", None]
 
 
 class WeightedPenaltyModel:
-    def __int__(self,
+    def __init__(self,
                  items: list[TestItem],
                  shown_items: list[TestItem],
                  ability: float,
@@ -32,19 +30,18 @@ class WeightedPenaltyModel:
         self.ability = ability
         self.constraints = constraints
 
-
         # calculate weighted penality value for each eligible item in the pool
         eligible_items: list[tuple[TestItem, float, ITEM_GROUP]] = []
         # calculate item information for every item
         item_information_list = [
             float(item_information_function(
-            mu=np.array(ability),
-            a=np.array(item.a),
-            b=np.array(item.b),
-            c=np.array(item.c),
-            d=np.array(item.d)
-        ))
-         for item in self.items
+                mu=np.array(ability),
+                a=np.array(item.a),
+                b=np.array(item.b),
+                c=np.array(item.c),
+                d=np.array(item.d)
+            ))
+            for item in self.items
         ]
 
         max_item = max(item_information_list)
@@ -93,27 +90,61 @@ class WeightedPenaltyModel:
                 test_length=test_length,
             )
             # assign color group per proportion
-            if prop <= constraint.lower:
-                group_assignment.append((constraint, "A"))
-            if constraint.lower <= prop <= constraint.upper:
-                group_assignment.append((constraint, "B"))
-            if constraint.upper <= prop:
-                group_assignment.append((constraint, "C"))
+            if constraint.lower is not None and constraint.upper is not None:
+                if prop <= constraint.lower:
+                    group_assignment.append((constraint, "A"))
+                if constraint.lower <= prop <= constraint.upper:
+                    group_assignment.append((constraint, "B"))
+                if constraint.upper <= prop:
+                    group_assignment.append((constraint, "C"))
+            else:
+                raise ValueError("constraint.lower and constraint upper may not be None.")
 
         # form a list of candidate items
-        for i, item in enumerate(eligible_items):
+        for i, item_entry in enumerate(eligible_items):
+            item, weighted_penalty_value, _ = item_entry
             # find associated constraint
-           associated_constraints = [constraint_assignment
-               for constraint_assignment in group_assignment if constraint_assignment[0].name in item[0].additional_properties["category"]
-           ]
+            associated_constraints = [constraint_assignment
+                                      for constraint_assignment in group_assignment
+                                      if constraint_assignment[0].name in item.additional_properties["category"]
+                                      ]
 
             # if all associated constraints A or B -> green group
+            if all(group in ["A", "B"] for _, group in associated_constraints):
+                eligible_items[i] = (item, weighted_penalty_value, "green")
             # if all A, B, C, or A, C -> orange
+            if all(group in ["A", "B", "C"] or group in ["A", "C"] for _, group in associated_constraints):
+                eligible_items[i] = (item, weighted_penalty_value, "orange")
             # if all B -> yellow
+            if all(group in ["B"] for _, group in associated_constraints):
+                eligible_items[i] = (item, weighted_penalty_value, "yellow")
             # if all B, C -> red
+            if all(group in ["B", "C"] for _, group in associated_constraints):
+                eligible_items[i] = (item, weighted_penalty_value, "red")
+            else:
+                eligible_items[i] = (item, weighted_penalty_value, None)
 
-        # exposure control?
-        # select first item in the list to be administered
+        # order items
+        # between group ordering: green, orange, yellow, red
+        # within group ordering: ascending order of weighted penalty value
+        self.eligible_items = sorted(
+            eligible_items,
+            key=lambda x: (
+                {"green": 0, "orange": 1, "yellow": 2, "red": 3, None: 4}[x[2]],
+                x[1]
+            )
+        )
+
+    def select_item(self) -> TestItem | None:
+        """Select the next item to administer based on the weighted penalty model.
+
+        Returns:
+            TestItem | None: The selected TestItem or None if no eligible items are available.
+        """
+        if len(self.eligible_items) > 0:
+            return self.eligible_items[0][0]
+        else:
+            return None
 
     @staticmethod
     def __calculate_weighted_penalty(content_penalty: float,
@@ -153,4 +184,3 @@ class WeightedPenaltyModel:
             information_penalty_value=information_penalty_value,
         )
         return weighted_penalty_value
-

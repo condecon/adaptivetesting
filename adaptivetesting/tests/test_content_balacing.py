@@ -1,10 +1,10 @@
 import unittest
 import adaptivetesting as adt
 import pandas as pd
-import numpy as np
+
 
 class TestMaximumPriorityIndex(unittest.TestCase):
-    def __init__(self, methodName = "runTest"):
+    def __init__(self, methodName="runTest"):
 
         items = pd.DataFrame({
             "a": [1.32, 1.07, 0.84],
@@ -43,7 +43,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
     def test_exception_list(self):
         with self.assertRaises(adt.ItemSelectionException):
             self.available_items[0].additional_properties["category"] = 0
-            result = adt.compute_priority_index(
+            adt.compute_priority_index(
                 item=self.available_items[0],
                 group_weights={
                     "Math": 0.2,
@@ -57,7 +57,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
     def test_exception_key(self):
         with self.assertRaises(adt.ItemSelectionException):
             self.available_items[0].additional_properties.pop("category")
-            result = adt.compute_priority_index(
+            adt.compute_priority_index(
                 item=self.available_items[0],
                 group_weights={
                     "Math": 0.2,
