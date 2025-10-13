@@ -54,4 +54,7 @@ class CSVContext(ITestResults):
 
         Returns: List[TestResult]
         """
-        raise NotImplementedError("This function is not implemented.")
+        foldername = f"data/{self.simulation_id}"
+        
+        with open(f"{foldername}/{self.participant_id}.csv", "r", encoding="utf-8") as file:
+            
