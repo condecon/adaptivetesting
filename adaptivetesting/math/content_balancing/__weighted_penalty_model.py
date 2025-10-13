@@ -145,7 +145,7 @@ class WeightedPenaltyModel:
                 if constraint.upper <= prop:
                     group_assignment.append((constraint, "C"))
             else:
-                raise ValueError("constraint.lower and constraint upper may not be None.")
+                raise ValueError("constraint.lower and constraint.upper may not be None.")
 
         return group_assignment
 
