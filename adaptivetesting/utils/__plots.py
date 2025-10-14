@@ -4,6 +4,7 @@ from matplotlib.figure import Figure, SubFigure
 from ..models.__misc import ResultOutputFormat
 from ..models.__test_item import TestItem
 from ..math.estimators.__functions.__estimators import probability_y1
+from ..math.item_selection.__maximum_information_criterion import item_information_function
 from .__funcs import load_final_test_results
 import numpy as np
 
@@ -91,8 +92,39 @@ def plot_icc(item: TestItem,
     return fig, ax
   
 
-def plot_iif():
-    pass
+def plot_iif(item: TestItem, range: tuple[float, float] = (-10, 10), ax: Axes = None, **kwargs):
+    """
+    Plots the Item Information Function (IIF) for a given test item over a specified ability range.
+    Parameters:
+        item (TestItem): The test item for which to plot the information function.
+        range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
+        ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
+        **kwargs: Additional keyword arguments passed to matplotlib's plot function.
+    Returns:
+        tuple[Figure, Axes]: The matplotlib Figure and Axes objects containing the plot.
+    """
+    # calculate item information
+    thetas = np.linspace(range[0], range[1], 100)
+    information_array = item_information_function(
+        mu=np.array(thetas).T,
+        a=np.array(item.a),
+        b=np.array(item.b),
+        c=np.array(item.c),
+        d=np.array(item.d),
+    )
+
+    # setup figure
+    fig: Figure | SubFigure
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.figure
+
+    ax.plot(thetas, information_array, **kwargs)
+    ax.set_xlabel("Ability level")
+    ax.set_ylabel("Item information")
+    return fig, ax
+
 
 
 def plot_exposure_rate():
