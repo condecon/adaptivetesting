@@ -46,15 +46,22 @@ class CSVContext(ITestResults):
             file.close()
 
     def load(self) -> List[TestResult]:
-        """Loads results from the database.
-        The implementation of this method is required
-        by the interface. However, it does not have
-        any implemented functionality and will throw an error
-        if used.
-
-        Returns: List[TestResult]
+        """Loads test results from a CSV file for a specific participant and simulation.
+        Reads the CSV file located at `data/{simulation_id}/{participant_id}.csv`,
+        parses each row into a `TestResult` object,
+        and returns a list of these objects.
+        
+        Returns:
+            List[TestResult]: A list of `TestResult` objects loaded from the CSV file.
         """
         foldername = f"data/{self.simulation_id}"
         
+        fieldnames = list(vars(TestResult()).keys()) # type: ignore
+        test_results: list[TestResult] = []
         with open(f"{foldername}/{self.participant_id}.csv", "r", encoding="utf-8") as file:
-            
+            reader = csv.DictReader(file, fieldnames=fieldnames)
+            for row in reader:
+                test_result = TestResult.from_dict(row)
+                test_results.append(test_result)
+            file.close()
+        return test_results
