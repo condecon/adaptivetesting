@@ -110,7 +110,9 @@ class ItemPool:
 
             simulated_responses (List[int]): simulated responses
 
-            ids (List[int]): item IDs
+            ids (List[int]): item IDs. If the argument is set to `None`
+                all items are numbered in the order in which they are 
+                passed to the function.
 
         Returns:
             List[TestItem]: item pool
@@ -147,6 +149,9 @@ class ItemPool:
                 raise ValueError("Length of ids and b has to be the same.")
             for i, id_ in enumerate(ids):
                 items[i].id = id_
+        else:
+            for i in range(len(b)):
+                items[i].id = i
 
         item_pool = ItemPool(items)
         item_pool.simulated_responses = simulated_responses
@@ -169,7 +174,9 @@ class ItemPool:
         Args:
             source (dict[str, List[float]]): item pool dictionary
             simulated_responses (List[int]): simulated responses
-            ids (List[int]): item IDs
+            ids (List[int]): item IDs. If the argument is set to `None`
+                all items are numbered in the order in which they are 
+                passed to the function.
 
         Returns:
             List[TestItem]: item pool
@@ -211,6 +218,8 @@ class ItemPool:
 
             if ids is not None:
                 item.id = ids[i]
+            else:
+                item.id = i
 
             items.append(item)
 
@@ -223,6 +232,13 @@ class ItemPool:
         """Creates item pool from a pandas DataFrame.
         Required columns are: `a`, `b`, `c`, `d`.
         Each column has to contain float values.
+        
+        A `id` column can be added to assign
+        each test item a unique identifier.
+        If there is no `id` column
+        all items are numbered in the order in which they are 
+        passed to the function.
+
         A `simulated_responses` (int values) column can be added to
         the DataFrame to provide simulated responses.
 
