@@ -38,3 +38,5 @@ from .services.__test_results_interface import ITestResults
 from .services.__item_selection_protocol import ItemSelectionStrategy
 
 from .simulation.__simulation import Simulation, SimulationPool, setup_simulation_and_start
+
+from .utils.__descriptives import bias, average_absolute_deviation, rmse

@@ -3,6 +3,7 @@ import csv
 import pathlib
 from ..models.__test_result import TestResult
 from ..services.__test_results_interface import ITestResults
+from dataclasses import fields
 
 
 class CSVContext(ITestResults):
@@ -56,7 +57,7 @@ class CSVContext(ITestResults):
         """
         foldername = f"data/{self.simulation_id}"
         
-        fieldnames = list(vars(TestResult()).keys()) # type: ignore
+        fieldnames = list(fields(TestResult))
         test_results: list[TestResult] = []
         with open(f"{foldername}/{self.participant_id}.csv", "r", encoding="utf-8") as file:
             reader = csv.DictReader(file, fieldnames=fieldnames)
