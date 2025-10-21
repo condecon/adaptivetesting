@@ -2,6 +2,7 @@ from typing import List
 import abc
 import copy
 from .__test_item import TestItem
+from ..math.item_selection.__urrys_rule import urrys_rule
 from ..math.__gen_response_pattern import generate_response_pattern
 from .__test_result import TestResult
 from .__item_pool import ItemPool
@@ -113,6 +114,8 @@ class AdaptiveTest(abc.ABC):
             TestItem: selected item
         """
         raise NotImplementedError("This functionality is not implemented by default.")
+        item = urrys_rule(self.item_pool.test_items, self.ability_level)
+        return item
 
     @abc.abstractmethod
     def estimate_ability_level(self) -> tuple[float, float]:
