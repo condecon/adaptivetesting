@@ -46,7 +46,8 @@ def load_final_test_results(simulation_id: str,
 
     return final_test_results
 
-def load_test_results_single_participant(simulationd_id: str,
+
+def load_test_results_single_participant(simulation_id: str,
                                          participant_id: str,
                                          output_format: ResultOutputFormat) -> list[TestResult]:
     """
@@ -65,12 +66,12 @@ def load_test_results_single_participant(simulationd_id: str,
     context: ITestResults
 
     if output_format is ResultOutputFormat.CSV:
-        context = CSVContext(simulation_id=simulationd_id,
-                                participant_id=participant_id)
+        context = CSVContext(simulation_id=simulation_id,
+                             participant_id=participant_id)
         return context.load()
         
     if output_format is ResultOutputFormat.PICKLE:
-        context = PickleContext(simulation_id=simulationd_id,
+        context = PickleContext(simulation_id=simulation_id,
                                 participant_id=participant_id)
         return context.load()
     else:

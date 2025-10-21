@@ -111,7 +111,7 @@ class ItemPool:
             simulated_responses (List[int]): simulated responses
 
             ids (List[int]): item IDs. If the argument is set to `None`
-                all items are numbered in the order in which they are 
+                all items are numbered in the order in which they are
                 passed to the function.
 
         Returns:
@@ -175,7 +175,7 @@ class ItemPool:
             source (dict[str, List[float]]): item pool dictionary
             simulated_responses (List[int]): simulated responses
             ids (List[int]): item IDs. If the argument is set to `None`
-                all items are numbered in the order in which they are 
+                all items are numbered in the order in which they are
                 passed to the function.
 
         Returns:
@@ -236,7 +236,7 @@ class ItemPool:
         A `id` column can be added to assign
         each test item a unique identifier.
         If there is no `id` column
-        all items are numbered in the order in which they are 
+        all items are numbered in the order in which they are
         passed to the function.
 
         A `simulated_responses` (int values) column can be added to
