@@ -92,7 +92,10 @@ def plot_icc(item: TestItem,
     return fig, ax
   
 
-def plot_iif(item: TestItem, range: tuple[float, float] = (-10, 10), ax: Axes = None, **kwargs):
+def plot_iif(item: TestItem,
+             range: tuple[float, float] = (-10, 10),
+             ax: Axes | None = None,
+             **kwargs):
     """
     Plots the Item Information Function (IIF) for a given test item over a specified ability range.
     Parameters:
@@ -124,7 +127,6 @@ def plot_iif(item: TestItem, range: tuple[float, float] = (-10, 10), ax: Axes = 
     ax.set_xlabel("Ability level")
     ax.set_ylabel("Item information")
     return fig, ax
-
 
 
 def plot_exposure_rate(simulation_id: str,
@@ -197,7 +199,7 @@ def plot_test_information(
         items: list[TestItem],
         range: tuple[float, float] = (-10, 10),
         ax: Axes | None = None,
-        **kwargs) -> tuple[Figure, Axes]:
+        **kwargs):
     """
     Plots the Item Information Function (IIF) for a given test item over a specified ability range.
     Args:
@@ -233,7 +235,10 @@ def plot_test_information(
     return fig, ax
 
 
-def plot_theta_estimation_trace(simulation_id: str, participant_id: str, output_format: ResultOutputFormat) -> tuple[Figure, Axes]:
+def plot_theta_estimation_trace(simulation_id: str,
+                                participant_id: str,
+                                output_format: ResultOutputFormat,
+                                ax: Axes | None = None,):
     """
     Plot the time (step) trace of true ability levels and estimated abilities for a single participant.
     This function loads per-item test results for the given simulation and participant using
@@ -242,11 +247,13 @@ def plot_theta_estimation_trace(simulation_id: str, participant_id: str, output_
     ability evolves relative to the true ability across test steps.
     
     Args:
-    simulation_id (str): Identifier of the simulation run to load results from.
-    participant_id (str): Identifier of the participant whose results will be plotted.
-    output_format (ResultOutputFormat)
-        Format or storage hint forwarded to load_test_results_single_participant to control
-        how results are retrieved/returned.
+        simulation_id (str): Identifier of the simulation run to load results from.
+        participant_id (str): Identifier of the participant whose results will be plotted.
+        output_format (ResultOutputFormat)
+            Format or storage hint forwarded to load_test_results_single_participant to control
+            how results are retrieved/returned.
+        ax (Axes (optional)): matplotlib axis object. If None is passed to the function,
+            an Axes object is created internally.
     
     
     Returns:
@@ -257,7 +264,7 @@ def plot_theta_estimation_trace(simulation_id: str, participant_id: str, output_
         The x-axis corresponds to the sequential test step index.
     """
     test_results = load_test_results_single_participant(
-        simulationd_id=simulation_id,
+        simulation_id=simulation_id,
         participant_id=participant_id,
         output_format=output_format
     )
