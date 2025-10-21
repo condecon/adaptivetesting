@@ -107,14 +107,19 @@ def plot_iif(item: TestItem,
         tuple[Figure, Axes]: The matplotlib Figure and Axes objects containing the plot.
     """
     # calculate item information
-    thetas = np.linspace(range[0], range[1], 100)
-    information_array = item_information_function(
-        mu=np.array(thetas).T,
-        a=np.array(item.a),
-        b=np.array(item.b),
-        c=np.array(item.c),
-        d=np.array(item.d),
-    )
+    thetas: list[np.ndarray] = list(np.linspace(range[0], range[1], 100))
+
+    information_array = []
+    
+    for theta in thetas:
+        info = item_information_function(
+            mu=theta,
+            a=np.array(item.a),
+            b=np.array(item.b),
+            c=np.array(item.c),
+            d=np.array(item.d),
+        )
+        information_array.append(info)
 
     # setup figure
     fig: Figure | SubFigure
