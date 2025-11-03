@@ -96,7 +96,8 @@ class TestLoadTestItems(TestCase):
                 "a": 0.9,
                 "b": 5,
                 "c": 0.9,
-                "d": 1
+                "d": 1,
+                "additional_properties": {}
             },
             generated.test_items[0].as_dict()
         )
@@ -106,7 +107,8 @@ class TestLoadTestItems(TestCase):
                 "a": 1.9,
                 "b": 3,
                 "c": 1.9,
-                "d": 1
+                "d": 1,
+                "additional_properties": {}
             },
             generated.test_items[1].as_dict()
         )
@@ -133,7 +135,8 @@ class TestLoadTestItems(TestCase):
                 "b": 5,
                 "c": 0.9,
                 "d": 1,
-                "id": 101
+                "id": 101,
+                "additional_properties": {}
             },
             generated.test_items[0].as_dict(with_id=True)
         )
@@ -144,7 +147,8 @@ class TestLoadTestItems(TestCase):
                 "b": 3,
                 "c": 1.9,
                 "d": 1,
-                "id": 202
+                "id": 202,
+                "additional_properties": {}
             },
             generated.test_items[1].as_dict(with_id=True)
         )

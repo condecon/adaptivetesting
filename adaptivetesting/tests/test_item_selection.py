@@ -48,7 +48,7 @@ class TestMaximumInformationCriterion(unittest.TestCase):
             0
         )
         self.assertDictEqual(selected_item.as_dict(),
-                             {"a": 1.0975, "b": 0.1836, "c": 0.053, "d": 0.7533})
+                             {"a": 1.0975, "b": 0.1836, "c": 0.053, "d": 0.7533, "additional_properties": {}})
         
     def test_selection_when_minus_0_5(self):
         items = self.load_items()
@@ -57,4 +57,4 @@ class TestMaximumInformationCriterion(unittest.TestCase):
             -0.5
         )
         self.assertDictEqual(selected_item.as_dict(),
-                             {"a": 1.1477, "b": -0.8356, "c": 0.1629, "d": 0.8456})
+                             {"a": 1.1477, "b": -0.8356, "c": 0.1629, "d": 0.8456, "additional_properties": {}})
