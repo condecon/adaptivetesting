@@ -193,20 +193,20 @@ def compute_total_content_penalty_value_for_item(item: TestItem,
     return total_penalty_value
 
 
-def standardize_total_content_constraint_penalty_value(item_penality_value: float,
+def standardize_total_content_constraint_penalty_value(item_penalty_value: float,
                                                        minimum: float,
                                                        maximum: float) -> float:
     """Standardize total content constraint penalty values.
 
     Args:
-        item_penality_value (float): unstandardized item penalty value
+        item_penalty_value (float): unstandardized item penalty value
         minimum (float): minimum of the item penalty values over all eligible items
         maximum (float): maximum of the item penalty values over all eligible items
 
     Returns:
         float: standardized total content constraint penalty value
     """
-    standardized_value = (item_penality_value - minimum) / (maximum - minimum)
+    standardized_value = (item_penalty_value - minimum) / (maximum - minimum)
     return standardized_value
 
 
