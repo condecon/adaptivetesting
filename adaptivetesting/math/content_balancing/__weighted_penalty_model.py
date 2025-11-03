@@ -137,17 +137,24 @@ class WeightedPenaltyModel:
                 test_length=test_length,
             )
             # assign color group per proportion
-            if constraint.lower is not None and constraint.upper is not None:
-                if prop <= constraint.lower:
-                    group_assignment.append((constraint, "A"))
-                if constraint.lower <= prop <= constraint.upper:
-                    group_assignment.append((constraint, "B"))
-                if constraint.upper <= prop:
-                    group_assignment.append((constraint, "C"))
-            else:
-                raise ValueError("constraint.lower and constraint.upper may not be None.")
+            group_assignment.append(self.assign_color_group_per_proportion(
+                constraint, prop
+            ))
 
         return group_assignment
+    
+    @staticmethod
+    def assign_color_group_per_proportion(constraint: Constraint,
+                                          prop: float):
+        if constraint.lower is not None and constraint.upper is not None:
+            if prop <= constraint.lower:
+                return (constraint, "A")
+            if constraint.lower <= prop <= constraint.upper:
+                return (constraint, "B")
+            if constraint.upper <= prop:
+                return (constraint, "C")
+        else:
+            raise ValueError("constraint.lower and constraint.upper may not be None.")
 
     def form_list_of_candidate_items(self,
                                      group_assignment: list[tuple[Constraint, CONSTRAINT_GROUP]]) -> None:
@@ -158,21 +165,34 @@ class WeightedPenaltyModel:
                                       for constraint_assignment in group_assignment
                                       if constraint_assignment[0].name in item.additional_properties["category"]
                                       ]
+            self.eligible_items[i] = self.assign_items_to_item_group(
+                item,
+                associated_constraints,
+                weighted_penalty_value
+            )
 
-            # if all associated constraints A or B -> green group
-            if all(group in ["A", "B"] for _, group in associated_constraints):
-                self.eligible_items[i] = (item, weighted_penalty_value, "green")
-            # if all A, B, C, or A, C -> orange
-            if all(group in ["A", "B", "C"] or group in ["A", "C"] for _, group in associated_constraints):
-                self.eligible_items[i] = (item, weighted_penalty_value, "orange")
-            # if all B -> yellow
-            if all(group in ["B"] for _, group in associated_constraints):
-                self.eligible_items[i] = (item, weighted_penalty_value, "yellow")
-            # if all B, C -> red
-            if all(group in ["B", "C"] for _, group in associated_constraints):
-                self.eligible_items[i] = (item, weighted_penalty_value, "red")
-            else:
-                self.eligible_items[i] = (item, weighted_penalty_value, None)
+    @staticmethod
+    def assign_items_to_item_group(
+        item: TestItem,
+        associated_constraints: list[tuple[Constraint, Literal['A', 'B', 'C']]],
+        weighted_penalty_value: float
+    ):
+        group_set = set([group for _, group in associated_constraints])
+        
+        # if all associated constraints A or B -> green group
+        if group_set.issubset({"A", "B"}) and "A" in group_set:
+            return (item, weighted_penalty_value, "green")
+        # if all A, B, C, or A, C -> orange
+        elif group_set == {"A", "C"} or group_set == {"A", "B", "C"}:
+            return (item, weighted_penalty_value, "orange")
+        # if all B -> yellow
+        elif group_set == {"B"}:
+            return (item, weighted_penalty_value, "yellow")
+        # if all B, C -> red
+        elif group_set == {"B", "C"} or group_set == {"C"}:
+            return (item, weighted_penalty_value, "red")
+        else:
+            return (item, weighted_penalty_value, None)
 
     def order_candidate_items(self):
         # between group ordering: green, orange, yellow, red
