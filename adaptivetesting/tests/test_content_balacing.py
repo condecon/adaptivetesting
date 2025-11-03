@@ -32,7 +32,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                 "English": 0.8
             },
             required_items=10,
-            shown_item=0,
+            shown_items=0,
             current_ability=0
         )
 
@@ -50,7 +50,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                     "English": 0.8
                 },
                 required_items=10,
-                shown_item=0,
+                shown_items=0,
                 current_ability=0
             )
 
@@ -64,6 +64,6 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                     "English": 0.8
                 },
                 required_items=10,
-                shown_item=0,
+                shown_items=0,
                 current_ability=0
             )
