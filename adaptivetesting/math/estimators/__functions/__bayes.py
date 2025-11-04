@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
-from .__estimators import likelihood
 from ..__prior import Prior
 from ....models.__algorithm_exception import AlgorithmException
 from .__estimators import probability_y0, probability_y1
@@ -39,8 +38,8 @@ def maximize_posterior(
         p1 = probability_y1(mu, a, b, c, d)
         p0 = probability_y0(mu, a, b, c, d)
 
-        log_likelihood = np.sum((response_pattern * np.log(p1 + 1e-300)) + \
-                    ((1 - response_pattern) * np.log(p0 + 1e-300)))
+        log_likelihood = np.sum((response_pattern * np.log(p1 + 1e-300))
+                                + ((1 - response_pattern) * np.log(p0 + 1e-300))) # noqa: W503
         log_prior = np.log(prior.pdf(mu) + 1e-300)
     
         return log_likelihood + log_prior
