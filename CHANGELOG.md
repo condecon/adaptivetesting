@@ -1,3 +1,6 @@
+# Version 1.1.5
+- Bug Fix #46 (numerical stability issue concerning Bayesian ability estimation)
+
 # Version 1.1.4
 - Bug Fix #43 (optimization interval in `maximize_posterior` function)
 

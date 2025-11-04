@@ -3,6 +3,7 @@ from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from .__estimators import likelihood
 from ..__prior import Prior
 from ....models.__algorithm_exception import AlgorithmException
+from .__estimators import probability_y0, probability_y1
 
 
 def maximize_posterior(
@@ -34,10 +35,17 @@ def maximize_posterior(
     Returns:
         float: Bayes Modal estimator for the given parameters
     """
-    def posterior(mu) -> np.ndarray:
-        return likelihood(mu, a, b, c, d, response_pattern) * prior.pdf(mu)
+    def log_posterior(mu) -> np.ndarray:
+        p1 = probability_y1(mu, a, b, c, d)
+        p0 = probability_y0(mu, a, b, c, d)
+
+        log_likelihood = np.sum((response_pattern * np.log(p1 + 1e-300)) + \
+                    ((1 - response_pattern) * np.log(p0 + 1e-300)))
+        log_prior = np.log(prior.pdf(mu) + 1e-300)
     
-    result: OptimizeResult = minimize_scalar(lambda mu: posterior(mu),
+        return log_likelihood + log_prior
+    
+    result: OptimizeResult = minimize_scalar(lambda mu: -log_posterior(mu),
                                              bounds=optimization_interval,
                                              method="bounded") # type: ignore
     
