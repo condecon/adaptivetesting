@@ -11,14 +11,17 @@ from .__functions import (
     compute_weighted_penalty_value
 )
 from .__constraint import Constraint
+from .__content_balancing import ContentBalancing
+from ...models.__adaptive_test import AdaptiveTest
 
 
 CONSTRAINT_GROUP = Literal["A", "B", "C"]
 ITEM_GROUP = Literal["green", "orange", "yellow", "red", None]
 
 
-class WeightedPenaltyModel:
+class WeightedPenaltyModel(ContentBalancing):
     def __init__(self,
+                 adaptive_test: AdaptiveTest,
                  items: list[TestItem],
                  shown_items: list[TestItem],
                  ability: float,
@@ -26,11 +29,16 @@ class WeightedPenaltyModel:
                  constraint_weight: float,
                  information_weight: float
                  ):
-        self.items = items
-        self.ability = ability
+        super().__init__()
+        self.items = adaptive_test.item_pool.test_items
+        self.ability = adaptive_test.ability_level
+        self.shown_items = adaptive_test.answered_items
         self.constraints = constraints
+        
+        # setup
         self.eligible_items: list[tuple[TestItem, float, ITEM_GROUP]] = []
-        self.shown_items = shown_items
+
+        # only used internally
         self.constraint_weight = constraint_weight
         self.information_weight = information_weight
 
