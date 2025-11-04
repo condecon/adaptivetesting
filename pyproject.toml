@@ -6,12 +6,13 @@ readme = "README.md"
 authors = [
     { name = "Jonas Engicht", email = "dev@condecon.de" }
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.0.0",
     "pandas>=2.2.0",
-    "scipy>=1.15.0",
-    "tqdm>=4.67.1",
+    "scipy>=1.12.0",
+    "tqdm>=4.66.0",
+    "matplotlib>=3.9.0"
 ]
 license-files=["LICENSE"]
 keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"]
@@ -35,9 +36,6 @@ docs = [
     "sphinx>=8.1.3",
     "sphinx-book-theme>=1.1.3",
     "sphinx-markdown-builder>=0.6.8",
-]
-plot = [
-    "matplotlib>=3.10.5",
 ]
 test = [
     "psychopy>=2025.1.1",
