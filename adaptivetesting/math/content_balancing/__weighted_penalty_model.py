@@ -20,16 +20,35 @@ ITEM_GROUP = Literal["green", "orange", "yellow", "red", None]
 
 
 class WeightedPenaltyModel(ContentBalancing):
+    """This content balancing method follows Shin et al. (2009)
+    and allows to apply constraints to the item selection.
+    The users can define a custom weight for the item information and the constriant.
+
+    References
+    ------------
+        Shin, C. D., Chien, Y., Way, W. D., & Swanson, L. (2009). Weighted Penalty Model for Content Balancing in CATS.
+        Pearson.
+        https://www.pearsonassessments.com/content/dam/school/global/clinical/us/assets/testnav/weighted-penalty-model.pdf
+
+    """
     def __init__(self,
                  adaptive_test: AdaptiveTest,
-                 items: list[TestItem],
-                 shown_items: list[TestItem],
-                 ability: float,
                  constraints: list[Constraint],
                  constraint_weight: float,
                  information_weight: float
                  ):
-        super().__init__()
+        """
+        This content balancing method follows Shin et al. (2009)
+        and allows to apply constraints to the item selection.
+        The users can define a custom weight for the item information and the constriant.
+
+        Args:
+            adaptive_test (AdaptiveTest): instance of the adaptive test
+            constraints (list[Constraint]): constraints that are applied to the item selection
+            constraint_weight (float): weight of the constraints
+            information_weight (float): weight of the item information
+        """
+        super().__init__(adaptive_test, constraints)
         self.items = adaptive_test.item_pool.test_items
         self.ability = adaptive_test.ability_level
         self.shown_items = adaptive_test.answered_items
@@ -227,7 +246,7 @@ class WeightedPenaltyModel(ContentBalancing):
 
         # standardize total content constraint penalty value
         standardized_total_content_penalty_value = standardize_total_content_constraint_penalty_value(
-            item_penality_value=total_content_penalty_value,
+            item_penalty_value=total_content_penalty_value,
             minimum=minimum_total_content_penalty,
             maximum=maximum_total_content_penalty
         )

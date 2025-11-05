@@ -7,8 +7,8 @@ import numpy as np
 
 def compute_priority_index(item: TestItem,
                            group_weights: dict[str, float],
-                           required_items: int,
-                           shown_items: int,
+                           required_items: dict[str, float],
+                           shown_items: dict[str, float],
                            current_ability: float) -> float:
     """Calculates the priority index of a given item.
 
@@ -38,7 +38,7 @@ def compute_priority_index(item: TestItem,
 
     for group in item_groups:
         priority_index = priority_index * group_weights[group] \
-            * compute_quota_left(required_items=required_items, shown_items=shown_items)
+            * compute_quota_left(required_items=required_items[group], shown_items=shown_items[group])
     
     # weight fisher information
     priority_index = priority_index * float(item_information_function(
@@ -52,14 +52,14 @@ def compute_priority_index(item: TestItem,
     return priority_index
 
     
-def compute_quota_left(required_items: int,
-                       shown_items: int) -> float:
+def compute_quota_left(required_items: int | float,
+                       shown_items: int | float) -> float:
     """
     Calculates the quota left (items left allowed to be shown) for a given constraint/group.
 
     Args:
-        required_items (int): number of required items per constraint
-        shown_items (int): number of already shown items per constraint
+        required_items (int | float): number of required items per constraint
+        shown_items (int | float): number of already shown items per constraint
 
     Returns:
         float: calculated quota for the given constraint. Results in a float between 0 and 1.

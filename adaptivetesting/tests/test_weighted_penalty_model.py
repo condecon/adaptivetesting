@@ -1,8 +1,10 @@
+# type: ignore
 import unittest
 import pandas as pd
 import adaptivetesting as adt
 import copy
 from typing import Literal
+
 
 class MockItem(adt.TestItem):
     def __init__(self, category: list[str]):
@@ -22,12 +24,18 @@ class TestWeightedPenaltyModel(unittest.TestCase):
         # create two example items fitting a rasch model
         self.example_item1 = adt.TestItem()
         self.example_item1.id = 1
-        self.example_item1.a = 1; self.example_item1.b = 0.5; self.example_item1.c = 0; self.example_item1.d = 1
+        self.example_item1.a = 1
+        self.example_item1.b = 0.5
+        self.example_item1.c = 0
+        self.example_item1.d = 1
         self.example_item1.additional_properties["category"] = ["math"]
 
         self.example_item2 = adt.TestItem()
         self.example_item2.id = 2
-        self.example_item2.a = 1; self.example_item2.b = 0.5; self.example_item2.c = 0; self.example_item2.d = 1
+        self.example_item2.a = 1
+        self.example_item2.b = 0.5
+        self.example_item2.c = 0
+        self.example_item2.d = 1
         self.example_item2.additional_properties["category"] = ["english"]
 
     def test_content_penalty_calculation(self):
@@ -119,13 +127,6 @@ class TestWeightedPenaltyModel(unittest.TestCase):
     def test_constraint_group_assignment(self):
         """get_constraint_group_assignments"""
 
-        # create shown items for math and science
-        shown_items = [
-            MockItem(["math"]),
-            MockItem(["math"]),
-            MockItem(["science"])
-        ]
-
         # setup constraints
         constraints = [
             adt.Constraint(
@@ -163,7 +164,6 @@ class TestWeightedPenaltyModel(unittest.TestCase):
 
         self.assertListEqual(assignments, ["B", "A"])
 
-    
     def test_candidate_group_assignment(self):
         """form_list_of_candidate_items"""
         # create item

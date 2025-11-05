@@ -16,7 +16,7 @@ class TestMaximumPriorityIndex(unittest.TestCase):
 
         self.available_items = adt.ItemPool.load_from_dataframe(items).test_items
         self.content_categories = ["Math", "English", "Math"]
-        
+
         for i, _ in enumerate(self.available_items):
             self.available_items[i].additional_properties = {
                 "category": [self.content_categories[i]]
@@ -31,15 +31,21 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                 "Math": 0.2,
                 "English": 0.8
             },
-            required_items=10,
-            shown_items=0,
+            required_items={
+                "Math": 5,
+                "English": 10
+            },
+            shown_items={
+                "Math": 0,
+                "English": 10
+            },
             current_ability=0
         )
 
     def test_quota_calculation(self):
         result = adt.compute_quota_left(10, 5)
         self.assertAlmostEqual(result, 0.5)
-    
+
     def test_exception_list(self):
         with self.assertRaises(adt.ItemSelectionException):
             self.available_items[0].additional_properties["category"] = 0
@@ -49,8 +55,14 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                     "Math": 0.2,
                     "English": 0.8
                 },
-                required_items=10,
-                shown_items=0,
+                required_items={
+                    "Math": 5,
+                    "English": 10
+                },
+                shown_items={
+                    "Math": 0,
+                    "English": 10
+                },
                 current_ability=0
             )
 
@@ -63,7 +75,13 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                     "Math": 0.2,
                     "English": 0.8
                 },
-                required_items=10,
-                shown_items=0,
+                required_items={
+                    "Math": 5,
+                    "English": 10
+                },
+                shown_items={
+                    "Math": 0,
+                    "English": 10
+                },
                 current_ability=0
             )
