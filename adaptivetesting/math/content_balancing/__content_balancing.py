@@ -2,7 +2,11 @@ from abc import ABC, abstractmethod
 from ...models.__test_item import TestItem
 from ...models.__adaptive_test import AdaptiveTest
 from .__constraint import Constraint
+from typing import Literal
 
+
+type CONTENT_BALANCING = Literal["WeightedPenaltyModel", "MaximumPriorityIndex"]
+"""Default available content balancing methods."""
 
 class ContentBalancing(ABC):
     """Abstract base class for content balancing methods.

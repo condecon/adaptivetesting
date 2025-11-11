@@ -1,4 +1,5 @@
 from .__content_balancing import ContentBalancing
+from ... import TestItem
 from ...models.__adaptive_test import AdaptiveTest
 from .__constraint import Constraint
 from .__functions import compute_priority_index
@@ -27,10 +28,11 @@ class MaximumPriorityIndex(ContentBalancing):
             adaptive_test (AdaptiveTest): instance of the adaptive test
             constraints (list[Constraint]): constraints that are applied to the item selection
         """
+        super().__init__(adaptive_test, constraints)
         self.adaptive_test = adaptive_test
         self.constraints = constraints
 
-    def select_item(self):
+    def select_item(self) -> TestItem |None:
         """Select the next item to administer based on the maximum priority index method.
         Returns:
             TestItem: The selected test item.

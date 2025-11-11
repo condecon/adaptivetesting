@@ -1,49 +1,38 @@
+from .. import ItemSelectionException, Constraint
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from typing import Any, Type
+from typing import Any, Type, TypedDict, Protocol
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
 from ..models.__test_result import TestResult
 from ..services.__item_selection_protocol import ItemSelectionStrategy
+from ..math.content_balancing.__content_balancing import CONTENT_BALANCING
+from ..math.content_balancing.__weighted_penalty_model import WeightedPenaltyModel
+from ..math.content_balancing.__maximum_priority_index import MaximumPriorityIndex
+from ..math.estimators.__prior import Prior
+from copy import deepcopy
+import inspect
+
+
+class EstimatorArgs(TypedDict):
+    prior: Prior | None
+    optimization_interval: tuple[int, int]
+
+
+class ContentBalancingArgs(TypedDict):
+    constraints: list[Constraint] | None
+    constraint_weight: float | None
+    information_weight: float | None
+
+
 
 
 class TestAssembler(AdaptiveTest):
     """
     TestAssembler is a subclass of AdaptiveTest designed to assemble and administer adaptive tests,
     optionally including a pretest phase. It supports customizable ability estimation and item selection strategies.
-    Args:
-        
-        item_pool: The pool of test items available for selection.
-        
-        simulation_id: Identifier for the simulation run.
-        
-        participant_id: Identifier for the participant.
-        
-        ability_estimator (Type[IEstimator]): The estimator class used for ability estimation.
-        
-        estimator_args (dict[str, Any], optional):
-            Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
-        
-        item_selector (ItemSelectionStrategy, optional):
-            Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
-        
-        item_selector_args (dict[str, Any], optional): Arguments for the item selector. Defaults to {}.
-        
-        pretest (bool, optional): Whether to run a pretest phase before the main test. Defaults to False.
-        
-        pretest_seed (int | None, optional): Random seed for pretest item selection. Defaults to None.
-        
-        true_ability_level (optional): The true ability level of the participant (for simulation).
-        
-        initial_ability_level (optional): The initial ability estimate. Defaults to 0.
-        
-        simulation (bool, optional): Whether the test is run in simulation mode. Defaults to True.
-        
-        debug (bool, optional): Whether to enable debug output. Defaults to False.
-        
-        **kwargs: Additional keyword arguments passed to the AdaptiveTest superclass.
     
     Methods:
         estimate_ability_level():
@@ -75,12 +64,14 @@ class TestAssembler(AdaptiveTest):
                  simulation_id,
                  participant_id,
                  ability_estimator: Type[IEstimator],
-                 estimator_args: dict[str, Any] = {
+                 estimator_args: EstimatorArgs = {
                      "prior": None,
                      "optimization_interval": (-10, 10)
                  },
                  item_selector: ItemSelectionStrategy = maximum_information_criterion, # type: ignore
                  item_selector_args: dict[str, Any] = {},
+                 content_balancing: None | CONTENT_BALANCING = None,
+                 content_balancing_args: ContentBalancingArgs = None,
                  pretest: bool = False,
                  pretest_seed: int | None = None,
                  true_ability_level=None,
@@ -88,10 +79,48 @@ class TestAssembler(AdaptiveTest):
                  simulation=True,
                  debug=False,
                  **kwargs):
+        """
+        Args:
+
+            item_pool: The pool of test items available for selection.
+
+            simulation_id: Identifier for the simulation run.
+
+            participant_id: Identifier for the participant.
+
+            ability_estimator (Type[IEstimator]): The estimator class used for ability estimation.
+
+            estimator_args (EstimatorArgs, optional):
+                Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
+
+            item_selector (ItemSelectionStrategy, optional):
+                Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
+
+            item_selector_args (dict[str, Any], optional): Arguments for the item selector. Defaults to {}.
+
+            content_balancing (CONTENT_BALANCING, optional): Selected content balancing strategy. Defaults to None.
+                If a content balancing strategy is specified, the item selection strategy will be ignored.
+
+            pretest (bool, optional): Whether to run a pretest phase before the main test. Defaults to False.
+
+            pretest_seed (int | None, optional): Random seed for pretest item selection. Defaults to None.
+
+            true_ability_level (optional): The true ability level of the participant (for simulation).
+
+            initial_ability_level (optional): The initial ability estimate. Defaults to 0.
+
+            simulation (bool, optional): Whether the test is run in simulation mode. Defaults to True.
+
+            debug (bool, optional): Whether to enable debug output. Defaults to False.
+
+            **kwargs: Additional keyword arguments passed to the AdaptiveTest superclass.
+        """
         self.__ability_estimator = ability_estimator
         self.__estimator_args = estimator_args
         self.__item_selector = item_selector
         self.__item_selector_args = item_selector_args
+        self.content_balancing = content_balancing
+        self.content_balancing_args = content_balancing_args
         self.__pretest = pretest
         self.__pretest_seed = pretest_seed
             
@@ -120,10 +149,16 @@ class TestAssembler(AdaptiveTest):
         Raises:
             AlgorithmException: If estimation fails for reasons other than all responses being identical.
         """
+        # filter estimator args
+        sig = inspect.signature(self.__ability_estimator)
+        allowed = set(sig.parameters.keys())
+        filtered_estimator_args = {k: v for k, v in self.__estimator_args.items() if k in allowed}
+
+        # setup estimator
         estimator = self.__ability_estimator(
             self.response_pattern,
             self.answered_items,
-            **self.__estimator_args
+            **filtered_estimator_args
         )
 
         try:
@@ -147,6 +182,8 @@ class TestAssembler(AdaptiveTest):
     def get_next_item(self) -> TestItem:
         """
         Selects and returns the next test item based on the current ability level and item selector strategy.
+        If a content balancing strategy is specified, the item selection strategy will be ignored.
+        Instead, the item selected by the content balancing strategy will be returned.
 
         Returns:
             TestItem: The next item to be administered in the test, as determined by the item selector.
@@ -154,12 +191,45 @@ class TestAssembler(AdaptiveTest):
         Raises:
             Any exceptions raised by the item selector function.
         """
-        item = self.__item_selector(
-            self.item_pool.test_items,
-            self.ability_level,
-            **self.__item_selector_args
-        )
-        return item
+        if self.content_balancing is None:
+            # filter item selection args
+            sig = inspect.signature(self.__item_selector)
+            allowed = set(sig.parameters.keys())
+            filtered_item_selector_args = {k: v for k, v in self.__item_selector_args.items() if k in allowed}
+
+            item = self.__item_selector(
+                self.item_pool.test_items,
+                self.ability_level,
+                **filtered_item_selector_args
+            )
+            return item
+        else:
+            # which strategy has been selected
+            if self.content_balancing == "WeightedPenaltyModel":
+                # parse content balancing args
+
+                # setup wep
+                adaptive_test = deepcopy(self)
+                wep = WeightedPenaltyModel(adaptive_test,
+                                           constraints=self.content_balancing_args["constraints"],
+                                           constraint_weight=self.content_balancing_args["constraint_weight"],
+                                           information_weight=self.content_balancing_args["information_weight"],)
+                item = wep.select_item()
+                if item is None:
+                    raise ItemSelectionException(f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                else:
+                    return item
+            elif self.content_balancing == "MaximumPriorityIndex":
+                adaptive_test = deepcopy(self)
+                mpi = MaximumPriorityIndex(adaptive_test, constraints=self.content_balancing_args["constraints"])
+                item = mpi.select_item()
+
+                if item is None:
+                    raise ItemSelectionException(
+                        f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                else:
+                    return item
+        raise ValueError(f"Something went wrong when selecting an item using {self.content_balancing}.")
 
     def run_test_once(self):
         """
