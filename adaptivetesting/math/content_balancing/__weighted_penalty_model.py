@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Callable
 import numpy as np
 from ..estimators.__test_information import item_information_function
 from ...models.__test_item import TestItem
@@ -34,8 +34,8 @@ class WeightedPenaltyModel(ContentBalancing):
     def __init__(self,
                  adaptive_test: AdaptiveTest,
                  constraints: list[Constraint],
-                 constraint_weight: float,
-                 information_weight: float
+                 constraint_weight: float | Callable[[AdaptiveTest], float],
+                 information_weight: float | Callable[[AdaptiveTest], float]
                  ):
         """
         This content balancing method follows Shin et al. (2009)
@@ -45,8 +45,14 @@ class WeightedPenaltyModel(ContentBalancing):
         Args:
             adaptive_test (AdaptiveTest): instance of the adaptive test
             constraints (list[Constraint]): constraints that are applied to the item selection
-            constraint_weight (float): weight of the constraints
-            information_weight (float): weight of the item information
+            constraint_weight (float | Callable[[AdaptiveTest], float]): weight of the constraints
+                This can also be a function taking adaptive test as an input argument.
+                This allows the user to specify custom weight values depending 
+                on the specific states and progress of the test.
+            information_weight (float | Callable[[AdaptiveTest], float]): weight of the item information
+                This can also be a function taking adaptive test as an input argument.
+                This allows the user to specify custom weight values depending 
+                on the specific states and progress of the test.
         """
         super().__init__(adaptive_test, constraints)
         self.items = adaptive_test.item_pool.test_items
@@ -58,8 +64,16 @@ class WeightedPenaltyModel(ContentBalancing):
         self.eligible_items: list[tuple[TestItem, float, ITEM_GROUP]] = []
 
         # only used internally
-        self.constraint_weight = constraint_weight
-        self.information_weight = information_weight
+        if callable(constraint_weight):
+            self.constraint_weight = constraint_weight(adaptive_test)
+        else:
+            self.constraint_weight = constraint_weight
+        
+        if callable(information_weight):
+            self.information_weight = information_weight(adaptive_test)
+        else:
+            self.information_weight = information_weight
+
 
     def select_item(self) -> TestItem | None:
         """Select the next item to administer based on the weighted penalty model.

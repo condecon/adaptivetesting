@@ -2,7 +2,7 @@ from .. import ItemSelectionException, Constraint
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from typing import Any, Type, TypedDict, Protocol
+from typing import Any, Type, TypedDict, Callable
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
@@ -23,8 +23,17 @@ class EstimatorArgs(TypedDict):
 
 class ContentBalancingArgs(TypedDict):
     constraints: list[Constraint] | None
-    constraint_weight: float | None
-    information_weight: float | None
+    """constraints that are applied to the item selection"""
+    constraint_weight: float | Callable[[AdaptiveTest], float] | None
+    """weight of the constraints
+    This can also be a function taking adaptive test as an input argument.
+    This allows the user to specify custom weight values depending 
+    on the specific states and progress of the test."""
+    information_weight: float | Callable[[AdaptiveTest], float] | None
+    """weight of the item information
+    This can also be a function taking adaptive test as an input argument.
+    This allows the user to specify custom weight values depending 
+    on the specific states and progress of the test."""
 
 
 
@@ -71,7 +80,7 @@ class TestAssembler(AdaptiveTest):
                  item_selector: ItemSelectionStrategy = maximum_information_criterion, # type: ignore
                  item_selector_args: dict[str, Any] = {},
                  content_balancing: None | CONTENT_BALANCING = None,
-                 content_balancing_args: ContentBalancingArgs = None,
+                 content_balancing_args: ContentBalancingArgs | None = None,
                  pretest: bool = False,
                  pretest_seed: int | None = None,
                  true_ability_level=None,
