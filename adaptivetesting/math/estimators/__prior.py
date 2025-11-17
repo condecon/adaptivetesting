@@ -55,12 +55,12 @@ class CustomPrior(Prior):
                  scale: float = 1):
         """This class is for using a custom prior in the ability estimation
         in Bayes Modal or Expected a Posteriori.
-        Any continous, univariate random variable from the scipy.stats module can be used.
+        Any continuous, univariate random variable from the scipy.stats module can be used.
         However, you have to consult to the scipy documentation for the required parameters for
         the probability density function (pdf) of that particular random variable.
 
         Args:
-            random_variable (rv_continuous): Any continous, univariate random variable from the scipy.stats module.
+            random_variable (rv_continuous): Any continuous, univariate random variable from the scipy.stats module.
             
             *args (float): Custom parameters required to calculate the pdf of that specific random variable.
 
