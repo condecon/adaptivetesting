@@ -46,8 +46,12 @@ class Randomesque(ExposureControl):
         self.seed = seed
         self.reverse = reverse
 
-    def select_item(self) -> TestItem:
+    def select_item(self, **kwargs) -> TestItem:
         """Select an item based on the implemented selection rules
+
+        Args:
+            **kwargs: additional arguments for item selection function.
+                Not used here but implemented for compatibility.
 
         Returns:
             TestItem | None: selected test item

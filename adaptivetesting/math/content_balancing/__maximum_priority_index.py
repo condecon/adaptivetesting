@@ -1,5 +1,5 @@
 from .__content_balancing import ContentBalancing
-from ... import TestItem
+from ...models.__test_item import TestItem
 from ...models.__adaptive_test import AdaptiveTest
 from .__constraint import Constraint
 from .__functions import compute_priority_index

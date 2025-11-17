@@ -1,4 +1,5 @@
-from .. import ItemSelectionException, Constraint
+from ..models.__item_selection_exception import ItemSelectionException
+from ..math.content_balancing.__constraint import Constraint
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
@@ -18,7 +19,7 @@ import inspect
 
 class EstimatorArgs(TypedDict):
     prior: Prior | None
-    optimization_interval: tuple[int, int]
+    optimization_interval: tuple[float, float]
 
 
 class ContentBalancingArgs(TypedDict):
@@ -27,12 +28,12 @@ class ContentBalancingArgs(TypedDict):
     constraint_weight: float | Callable[[AdaptiveTest], float] | None
     """weight of the constraints
     This can also be a function taking adaptive test as an input argument.
-    This allows the user to specify custom weight values depending 
+    This allows the user to specify custom weight values depending
     on the specific states and progress of the test."""
     information_weight: float | Callable[[AdaptiveTest], float] | None
     """weight of the item information
     This can also be a function taking adaptive test as an input argument.
-    This allows the user to specify custom weight values depending 
+    This allows the user to specify custom weight values depending
     on the specific states and progress of the test."""
 
 
@@ -167,7 +168,7 @@ class TestAssembler(AdaptiveTest):
         estimator = self.__ability_estimator(
             self.response_pattern,
             self.answered_items,
-            **filtered_estimator_args
+            **filtered_estimator_args # type: ignore
         )
 
         try:
@@ -200,6 +201,7 @@ class TestAssembler(AdaptiveTest):
         Raises:
             Any exceptions raised by the item selector function.
         """
+        item: TestItem | None
         if self.content_balancing is None:
             # filter item selection args
             sig = inspect.signature(self.__item_selector)
@@ -213,31 +215,39 @@ class TestAssembler(AdaptiveTest):
             )
             return item
         else:
-            # which strategy has been selected
-            if self.content_balancing == "WeightedPenaltyModel":
-                # parse content balancing args
+            if self.content_balancing_args is not None:
+                # which strategy has been selected
+                if self.content_balancing == "WeightedPenaltyModel":
+                    # parse content balancing args
 
-                # setup wep
-                adaptive_test = deepcopy(self)
-                wep = WeightedPenaltyModel(adaptive_test,
-                                           constraints=self.content_balancing_args["constraints"],
-                                           constraint_weight=self.content_balancing_args["constraint_weight"],
-                                           information_weight=self.content_balancing_args["information_weight"],)
-                item = wep.select_item()
-                if item is None:
-                    raise ItemSelectionException(f"""Something went wrong when selecting an item using {self.content_balancing}""")
-                else:
-                    return item
-            elif self.content_balancing == "MaximumPriorityIndex":
-                adaptive_test = deepcopy(self)
-                mpi = MaximumPriorityIndex(adaptive_test, constraints=self.content_balancing_args["constraints"])
-                item = mpi.select_item()
+                    # setup wep
+                    adaptive_test = deepcopy(self)
+                    wep = WeightedPenaltyModel(adaptive_test,
+                                            constraints=self.check_args_are_not_none("constraints",
+                                                                                     self.content_balancing_args["constraints"]),
+                                            constraint_weight=self.check_args_are_not_none("constraint_weights",
+                                                                                           self.content_balancing_args["constraint_weight"]),
+                                            information_weight=self.check_args_are_not_none("information_weight",
+                                                                                            self.content_balancing_args["information_weight"])
+                                                                                            )
+                    item = wep.select_item()
+                    if item is None:
+                        raise ItemSelectionException(f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                    else:
+                        return item
+                elif self.content_balancing == "MaximumPriorityIndex":
+                    adaptive_test = deepcopy(self)
+                    mpi = MaximumPriorityIndex(adaptive_test, constraints=self.check_args_are_not_none("constraints",
+                                                                                                       self.content_balancing_args["constraints"]))
+                    item = mpi.select_item()
 
-                if item is None:
-                    raise ItemSelectionException(
-                        f"""Something went wrong when selecting an item using {self.content_balancing}""")
-                else:
-                    return item
+                    if item is None:
+                        raise ItemSelectionException(
+                            f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                    else:
+                        return item
+            else:
+                raise ValueError("content_balancing_args cannot be None when using content balancing.")
         raise ValueError(f"Something went wrong when selecting an item using {self.content_balancing}.")
 
     def run_test_once(self):
@@ -308,3 +318,22 @@ class TestAssembler(AdaptiveTest):
             self.test_results.append(intermediate_result)
 
         return super().run_test_once()
+    
+    def check_args_are_not_none(self, key: str, x: Any | None) -> Any:
+        """This functions checks if an object is none.
+        If not a ValueError is raised.
+
+        Args:
+            key (str): parameter name where the object is typically assigned
+            x (Any | None): object
+
+        Raises:
+            ValueError: raised if the object is None.
+
+        Returns:
+            Any: object
+        """        
+        if x is not None:
+            return x
+        else:
+            raise ValueError(f"{key} cannot be None.")
