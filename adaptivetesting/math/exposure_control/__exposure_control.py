@@ -6,6 +6,7 @@ from ...models.__adaptive_test import AdaptiveTest
 
 type EXPOSURECONTROL = Literal["Randomesque"]
 
+
 class ExposureControl(ABC):
     """
     Abstract base class for exposure control

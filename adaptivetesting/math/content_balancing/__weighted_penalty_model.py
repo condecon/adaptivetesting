@@ -47,11 +47,11 @@ class WeightedPenaltyModel(ContentBalancing):
             constraints (list[Constraint]): constraints that are applied to the item selection
             constraint_weight (float | Callable[[AdaptiveTest], float]): weight of the constraints
                 This can also be a function taking adaptive test as an input argument.
-                This allows the user to specify custom weight values depending 
+                This allows the user to specify custom weight values depending
                 on the specific states and progress of the test.
             information_weight (float | Callable[[AdaptiveTest], float]): weight of the item information
                 This can also be a function taking adaptive test as an input argument.
-                This allows the user to specify custom weight values depending 
+                This allows the user to specify custom weight values depending
                 on the specific states and progress of the test.
         """
         super().__init__(adaptive_test, constraints)
@@ -73,7 +73,6 @@ class WeightedPenaltyModel(ContentBalancing):
             self.information_weight = information_weight(adaptive_test)
         else:
             self.information_weight = information_weight
-
 
     def select_item(self) -> TestItem | None:
         """Select the next item to administer based on the weighted penalty model.

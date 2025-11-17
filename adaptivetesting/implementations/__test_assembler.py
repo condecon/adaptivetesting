@@ -37,38 +37,37 @@ class ContentBalancingArgs(TypedDict):
     on the specific states and progress of the test."""
 
 
-
-
 class TestAssembler(AdaptiveTest):
     """
     TestAssembler is a subclass of AdaptiveTest designed to assemble and administer adaptive tests,
     optionally including a pretest phase. It supports customizable ability estimation and item selection strategies.
-    
+
     Methods:
         estimate_ability_level():
             Estimates the current ability level using the specified estimator and handles exceptions
             for specific response patterns (all correct or all incorrect).
-        
+
         get_next_item() -> TestItem:
             Selects the next item to administer using the specified item selection strategy.
-        
+
         run_test_once():
             Runs a single iteration of the test, including an optional pretest phase. Handles item
             administration, response collection, ability estimation, and result recording.
-    
+
     Attributes:
         __ability_estimator: The estimator class for ability estimation.
-        
+
         __estimator_args: Arguments for the ability estimator.
-        
+
         __item_selector: The item selection strategy.
-        
+
         __item_selector_args: Arguments for the item selector.
-        
+
         __pretest: Whether to run a pretest phase.
-        
+
         __pretest_seed: Random seed for pretest item selection.
     """
+
     def __init__(self,
                  item_pool,
                  simulation_id,
@@ -133,7 +132,7 @@ class TestAssembler(AdaptiveTest):
         self.content_balancing_args = content_balancing_args
         self.__pretest = pretest
         self.__pretest_seed = pretest_seed
-            
+
         super().__init__(item_pool,
                          simulation_id,
                          participant_id,
@@ -142,7 +141,7 @@ class TestAssembler(AdaptiveTest):
                          simulation,
                          debug,
                          **kwargs)
-    
+
     def estimate_ability_level(self):
         """
         Estimates the ability level of a test-taker based on their response pattern and answered items.
@@ -152,10 +151,10 @@ class TestAssembler(AdaptiveTest):
         it assigns a default estimation value (-10 for all incorrect, 10 for all correct)
         and recalculates the standard error.
         Otherwise, it raises an AlgorithmException with additional context.
-        
+
         Returns:
             tuple[float, float]: A tuple containing the estimated ability level (float) and its standard error (float).
-        
+
         Raises:
             AlgorithmException: If estimation fails for reasons other than all responses being identical.
         """
@@ -188,7 +187,7 @@ class TestAssembler(AdaptiveTest):
                 when wrong when running {type(estimator)}""") from exception
 
         return estimation, standard_error
-    
+
     def get_next_item(self) -> TestItem:
         """
         Selects and returns the next test item based on the current ability level and item selector strategy.
@@ -222,23 +221,32 @@ class TestAssembler(AdaptiveTest):
 
                     # setup wep
                     adaptive_test = deepcopy(self)
-                    wep = WeightedPenaltyModel(adaptive_test,
-                                            constraints=self.check_args_are_not_none("constraints",
-                                                                                     self.content_balancing_args["constraints"]),
-                                            constraint_weight=self.check_args_are_not_none("constraint_weights",
-                                                                                           self.content_balancing_args["constraint_weight"]),
-                                            information_weight=self.check_args_are_not_none("information_weight",
-                                                                                            self.content_balancing_args["information_weight"])
-                                                                                            )
+                    wep = WeightedPenaltyModel(
+                        adaptive_test,
+                        constraints=self.check_args_are_not_none(
+                            "constraints",
+                            self.content_balancing_args["constraints"]),
+                        constraint_weight=self.check_args_are_not_none(
+                            "constraint_weights",
+                            self.content_balancing_args["constraint_weight"]),
+                        information_weight=self.check_args_are_not_none(
+                            "information_weight",
+                            self.content_balancing_args["information_weight"]))
+                    
                     item = wep.select_item()
                     if item is None:
-                        raise ItemSelectionException(f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                        raise ItemSelectionException(
+                            f"""Something went wrong when selecting an item using {self.content_balancing}""")
                     else:
                         return item
                 elif self.content_balancing == "MaximumPriorityIndex":
                     adaptive_test = deepcopy(self)
-                    mpi = MaximumPriorityIndex(adaptive_test, constraints=self.check_args_are_not_none("constraints",
-                                                                                                       self.content_balancing_args["constraints"]))
+                    mpi = MaximumPriorityIndex(
+                        adaptive_test,
+                        constraints=self.check_args_are_not_none(
+                            "constraints",
+                            self.content_balancing_args["constraints"]))
+
                     item = mpi.select_item()
 
                     if item is None:
@@ -261,7 +269,7 @@ class TestAssembler(AdaptiveTest):
                 - Removes the item from the item pool.
             - Estimates the ability level and standard error after pretest responses.
             - Records test results for each pretest item, with the final item including the first ability estimation.
-        
+
         Returns:
             The result of the superclass's run_test_once() method.
         """
@@ -318,7 +326,7 @@ class TestAssembler(AdaptiveTest):
             self.test_results.append(intermediate_result)
 
         return super().run_test_once()
-    
+
     def check_args_are_not_none(self, key: str, x: Any | None) -> Any:
         """This functions checks if an object is none.
         If not a ValueError is raised.
@@ -332,7 +340,7 @@ class TestAssembler(AdaptiveTest):
 
         Returns:
             Any: object
-        """        
+        """
         if x is not None:
             return x
         else:

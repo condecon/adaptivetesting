@@ -7,7 +7,6 @@ from ...models.__test_item import TestItem
 from ..estimators.__test_information import item_information_function
 
 
-
 class Randomesque(ExposureControl):
     def __init__(self,
                  adaptive_test: AdaptiveTest,
@@ -79,16 +78,15 @@ class Randomesque(ExposureControl):
         """
         return item_entry[0]
 
-
     @staticmethod
     def radomesque_item_selection(items: list[TestItem],
-            ability_estimate: float,
-            n_items: int,
-            reverse: bool = True,
-            item_rating_function: Callable = item_information_function,
-            seed: int | None = None,
-            **kwargs: Any
-    ) -> TestItem:
+                                  ability_estimate: float,
+                                  n_items: int,
+                                  reverse: bool = True,
+                                  item_rating_function: Callable = item_information_function,
+                                  seed: int | None = None,
+                                  **kwargs: Any
+                                  ) -> TestItem:
         item_information_list: list[tuple[float, int]] = []
         for i, item in enumerate(items):
             information = float(item_rating_function(

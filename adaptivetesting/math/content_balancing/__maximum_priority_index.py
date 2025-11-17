@@ -32,7 +32,7 @@ class MaximumPriorityIndex(ContentBalancing):
         self.adaptive_test = adaptive_test
         self.constraints = constraints
 
-    def select_item(self) -> TestItem |None:
+    def select_item(self) -> TestItem | None:
         """Select the next item to administer based on the maximum priority index method.
         Returns:
             TestItem: The selected test item.
