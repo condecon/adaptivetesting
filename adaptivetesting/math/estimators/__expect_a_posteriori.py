@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
 from ...models.__test_item import TestItem
-from .__functions.__bayes import likelihood
+from .__functions.__estimators import likelihood
 from .__prior import Prior
 from math import pow
 
