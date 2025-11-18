@@ -146,6 +146,7 @@ class EmpiricalPrior(Prior):
         super().__init__()
 
         self.kde = gaussian_kde(dataset)
+    
     def pdf(self, x):
         """Evaluate the estimated probability density at x. Accepts inputs compatible with
         scipy.stats.gaussian_kde.__call__: for univariate data x can be a float, 1-D array
