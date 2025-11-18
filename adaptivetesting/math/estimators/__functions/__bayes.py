@@ -34,7 +34,7 @@ def maximize_posterior(
     Returns:
         float: Bayes Modal estimator for the given parameters
     """
-    def log_posterior(mu) -> np.ndarray:
+    def log_posterior(mu):
         log_likelihood_res = log_likelihood(mu, a, b, c, d, response_pattern)
 
         if hasattr(prior, "logpdf"):
@@ -45,9 +45,9 @@ def maximize_posterior(
         log_post = log_likelihood_res + log_prior
 
         if not np.isfinite(log_post):
-            return np.array(-1e300)
+            return -1e300
         else:
-            return log_post
+            return float(log_post.ravel()[0])
     
     result: OptimizeResult = minimize_scalar(lambda mu: -log_posterior(mu),
                                              bounds=optimization_interval,
