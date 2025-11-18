@@ -14,7 +14,7 @@ def maximize_posterior(
     prior: Prior,
     optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
-    """_summary_
+    """Get the maximum of the posterior distribution
 
     Args:
         a (np.ndarray): item parameter a
@@ -40,7 +40,11 @@ def maximize_posterior(
 
         log_likelihood = np.sum((response_pattern * np.log(p1 + 1e-300))
                                 + ((1 - response_pattern) * np.log(p0 + 1e-300))) # noqa: W503
-        log_prior = np.log(prior.pdf(mu) + 1e-300)
+
+        if hasattr(prior, "logpdf"):
+           log_prior = prior.logpdf(mu)
+        else:
+            log_prior = np.log(prior.pdf(mu) + 1e-300)
     
         return log_likelihood + log_prior
     

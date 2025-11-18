@@ -46,6 +46,9 @@ class NormalPrior(Prior):
         """
         return norm.pdf(x, self.mean, self.sd) # type: ignore
     
+    def logpdf(self, x: float | np.ndarray):
+        return norm.logpdf(x, self.mean, self.sd)
+    
 
 class SkewNormalPrior(Prior):
     def __init__(self, skewness: float, loc: float, scale: float):
@@ -74,6 +77,11 @@ class SkewNormalPrior(Prior):
                             self.skewness,
                             loc=self.loc,
                             scale=self.scale)
+    
+    def logpdf(self, x: float | np.ndarray):
+        return skewnorm.logpdf(x, self.skewness,
+                               loc=self.loc,
+                               scale=self.scale)
 
 
 class CustomPrior(Prior):

@@ -37,67 +37,24 @@ class BayesModal(IEstimator):
 
     def get_estimation(self) -> float:
         """Estimate the current ability level using Bayes Modal.
-        If a `NormalPrior` is used, the `bounded` optimizer is used
+        The `bounded` optimizer is used
         to get the ability estimate.
-        For any other prior, it cannot be guaranteed that the optimizer will converge correctly.
-        Therefore, the full posterior distribution is calculated
-        and the maximum posterior value is selected.
-
-        Because this function uses a switch internally to determine
-        whether a optimizer is used for the estimate or not,
-        you have to create your custom priors from the correct base class (`CustomPrior`).
-        Otherwise, the estimate may not necessarily be correct!
-
+        
         Raises:
             AlgorithmException: Raised when maximum could not be found.
-            CustomPriorException: Raised when custom prior is not based on the `CustomPrior` class.
         
         Returns:
             float: ability estimation
         """
-        if type(self.prior) is NormalPrior:
-            # get estimate using a classical optimizers approach
-            return maximize_posterior(
-                self.a,
-                self.b,
-                self.c,
-                self.d,
-                self.response_pattern,
-                self.prior
-            )
-        # else, we have to calculate the full posterior distribution
-        # because the optimizers do not correctly identify the maximum of the function
-        else:
-            # check that the used prior is really inherited from
-            # the CustomPrior base class
-            if not isinstance(self.prior, CustomPrior):
-                raise CustomPriorException("It seems like you are using a non-normal prior but",
-                                           "did not use the CustomPrior base class!")
-            
-            mu = np.linspace(self.optimization_interval[0],
-                             self.optimization_interval[1],
-                             num=1000)
-            # calculate likelihood values for every mu
-            try:
-                lik_values = np.array([
-                    likelihood(
-                        i,
-                        self.a,
-                        self.b,
-                        self.c,
-                        self.d,
-                        self.response_pattern
-                    )
-                    for i in mu
-                ])
-
-                # add prior
-                unmarginalized_posterior = lik_values * self.prior.pdf(mu)
-                # find argmin and return mu
-                estimate_index = np.argmin(unmarginalized_posterior)
-                return float(mu[estimate_index].astype(float))
-            except Exception as e:
-                raise AlgorithmException(e)
+       
+        return maximize_posterior(
+            self.a,
+            self.b,
+            self.c,
+            self.d,
+            self.response_pattern,
+            self.prior
+        )
 
     def get_standard_error(self, estimation: float) -> float:
         """Calculates the standard error for the given estimated ability level.
