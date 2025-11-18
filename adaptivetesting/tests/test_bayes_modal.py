@@ -8,7 +8,6 @@ from adaptivetesting.math.estimators import (
     EmpiricalPrior)
 import pandas as pd
 from scipy.stats import beta
-from adaptivetesting.math.estimators import CustomPriorException
 import numpy as np
 
 

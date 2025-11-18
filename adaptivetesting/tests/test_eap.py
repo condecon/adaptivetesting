@@ -1,7 +1,6 @@
 import unittest
 import pandas as pd
 import numpy as np
-from scipy.stats import beta
 from adaptivetesting.models import ItemPool
 from adaptivetesting.math.estimators import (ExpectedAPosteriori,
                                              NormalPrior,

@@ -39,17 +39,18 @@ class ExpectedAPosteriori(BayesModal):
         x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
         
         if hasattr(self.prior, "logpdf"):
-           log_prior = self.prior.logpdf(x)
+            log_prior = self.prior.logpdf(x)
         else:
             log_prior = np.log(self.prior.pdf(x) + 1e-300)
         
-        
-        log_likelihood_vals = np.vectorize(lambda mu: log_likelihood(mu,
-                                                             self.a,
-                                                             self.b,
-                                                             self.c,
-                                                             self.d,
-                                                             self.response_pattern))(x)
+        log_likelihood_vals = np.vectorize(
+            lambda mu: log_likelihood(mu,
+                                      self.a,
+                                      self.b,
+                                      self.c,
+                                      self.d,
+                                      self.response_pattern)
+        )(x)
         
         log_posterior = log_likelihood_vals + log_prior
         # use log-sum-exp stabilization
@@ -61,7 +62,8 @@ class ExpectedAPosteriori(BayesModal):
         denominator = trapezoid(weights, x) + np.finfo(float).eps
 
         if denominator == 0 or not np.isfinite(denominator):
-            raise ValueError("Denominator (integral of posterior) is zero or non-finite — check interval/prior/likelihood.")
+            raise ValueError("Denominator (integral of posterior) is zero or "
+                             "non-finite — check interval/prior/likelihood.")
 
         estimation = numerator / denominator
         return estimation

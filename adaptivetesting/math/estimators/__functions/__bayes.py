@@ -38,14 +38,14 @@ def maximize_posterior(
         log_likelihood_res = log_likelihood(mu, a, b, c, d, response_pattern)
 
         if hasattr(prior, "logpdf"):
-           log_prior = prior.logpdf(mu)
+            log_prior = prior.logpdf(mu)
         else:
             log_prior = np.log(np.clip(prior.pdf(mu), 1e-300, None))
     
         log_post = log_likelihood_res + log_prior
 
         if not np.isfinite(log_post):
-            return -1e300
+            return np.array(-1e300)
         else:
             return log_post
     

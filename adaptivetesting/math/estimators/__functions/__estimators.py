@@ -121,15 +121,14 @@ def likelihood(mu: np.ndarray,
 
 
 def log_likelihood(mu: np.ndarray,
-               a: np.ndarray,
-               b: np.ndarray,
-               c: np.ndarray,
-               d: np.ndarray,
-               response_pattern: np.ndarray):
+                   a: np.ndarray,
+                   b: np.ndarray,
+                   c: np.ndarray,
+                   d: np.ndarray,
+                   response_pattern: np.ndarray):
     p1 = probability_y1(mu, a, b, c, d)
     p0 = probability_y0(mu, a, b, c, d)
-    result = np.sum((response_pattern * np.log(p1 + 1e-300))
-                                + ((1 - response_pattern) * np.log(p0 + 1e-300)))
+    result = np.sum((response_pattern * np.log(p1 + 1e-300)) + ((1 - response_pattern) * np.log(p0 + 1e-300)))
     
     return result
 

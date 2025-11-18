@@ -2,10 +2,8 @@ from typing import List, Tuple
 import numpy as np
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
-from ...models.__algorithm_exception import AlgorithmException
 from .__functions.__bayes import maximize_posterior
-from .__functions.__estimators import likelihood
-from .__prior import Prior, NormalPrior, CustomPrior, CustomPriorException
+from .__prior import Prior
 from .__test_information import test_information_function
 
 
