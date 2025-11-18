@@ -120,6 +120,20 @@ def likelihood(mu: np.ndarray,
     return -np.prod(terms)
 
 
+def log_likelihood(mu: np.ndarray,
+               a: np.ndarray,
+               b: np.ndarray,
+               c: np.ndarray,
+               d: np.ndarray,
+               response_pattern: np.ndarray):
+    p1 = probability_y1(mu, a, b, c, d)
+    p0 = probability_y0(mu, a, b, c, d)
+    result = np.sum((response_pattern * np.log(p1 + 1e-300))
+                                + ((1 - response_pattern) * np.log(p0 + 1e-300)))
+    
+    return result
+
+
 def maximize_likelihood_function(a: np.ndarray,
                                  b: np.ndarray,
                                  c: np.ndarray,
@@ -155,10 +169,8 @@ def maximize_likelihood_function(a: np.ndarray,
     if len(set(response_pattern.tolist())) == 1:
         raise AlgorithmException(
             "Response pattern is invalid. It consists of only one type of response.")
-        raise AlgorithmException(
-            "Response pattern is invalid. It consists of only one type of response.")
 
-    result: OptimizeResult = minimize_scalar(likelihood, args=(a, b, c, d, response_pattern),
+    result: OptimizeResult = minimize_scalar(lambda mu: -log_likelihood(mu, a, b, c, d, response_pattern),
                                              bounds=border, method='bounded') # type: ignore
 
     if not result.success:

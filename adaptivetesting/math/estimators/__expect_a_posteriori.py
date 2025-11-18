@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
 from ...models.__test_item import TestItem
-from .__functions.__estimators import likelihood
+from .__functions.__estimators import likelihood, log_likelihood
 from .__prior import Prior
 from math import pow
 
@@ -38,21 +38,32 @@ class ExpectedAPosteriori(BayesModal):
         """
         x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
         
-        prior_pdf = self.prior.pdf(x)
+        if hasattr(self.prior, "logpdf"):
+           log_prior = self.prior.logpdf(x)
+        else:
+            log_prior = np.log(self.prior.pdf(x) + 1e-300)
         
-        likelihood_vals = np.vectorize(lambda mu: likelihood(mu,
+        
+        log_likelihood_vals = np.vectorize(lambda mu: log_likelihood(mu,
                                                              self.a,
                                                              self.b,
                                                              self.c,
                                                              self.d,
                                                              self.response_pattern))(x)
         
-        numerator = trapezoid(x * likelihood_vals * prior_pdf, x)
+        log_posterior = log_likelihood_vals + log_prior
+        # use log-sum-exp stabilization
+        max_log = np.nanmax(log_posterior)
+        weights = np.exp(log_posterior - max_log)
+
+        numerator = trapezoid(x * weights, x)
         
-        denominator = trapezoid(likelihood_vals * prior_pdf, x)
-        
+        denominator = trapezoid(weights, x) + np.finfo(float).eps
+
+        if denominator == 0 or not np.isfinite(denominator):
+            raise ValueError("Denominator (integral of posterior) is zero or non-finite — check interval/prior/likelihood.")
+
         estimation = numerator / denominator
-        
         return estimation
 
     def get_standard_error(self, estimated_ability: float) -> float:
