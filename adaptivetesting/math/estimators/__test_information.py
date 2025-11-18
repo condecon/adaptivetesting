@@ -13,6 +13,19 @@ def item_information_function(
         c: np.ndarray,
         d: np.ndarray
 ) -> np.ndarray:
+    """
+    Calculates the item information for given parameters.
+
+    Args:
+        mu (np.ndarray): ability level
+        a (np.ndarray): discrimination parameter
+        b (np.ndarray): difficulty parameter
+        c (np.ndarray): guessing parameter
+        d (np.ndarray): slipping parameter
+
+    Returns:
+        np.ndarray: item information
+    """
     p_y1 = probability_y1(mu, a, b, c, d)
 
     # Clip probabilities
@@ -34,10 +47,12 @@ def prior_information_function(prior: Prior,
     of the specified prior
 
     Args:
-        prior (Prior): _description_
+        prior (Prior): prior distribution
+        optimization_interval (tuple[float, float], optional): interval used for numerical integration.
+            Defaults to (-10, 10).
 
     Returns:
-        np.ndarray: _description_
+        np.ndarray: calculated fisher information of the prior
     """
     def log_prior(x):
         epsilon = 1e-12  # Small value to avoid log(0)
@@ -75,11 +90,13 @@ def test_information_function(
         b (np.ndarray): difficulty parameter
         c (np.ndarray): guessing parameter
         d (np.ndarray): slipping parameter
+        prior (Prior | None, optional): prior distribution. Defaults to None.
+        optimization_interval (tuple[float, float], optional): interval used for numerical integration.
 
     Returns:
         float: test information
     """
-    # calcualte information for every item
+    # calculate information for every item
     item_information = np.vectorize(item_information_function)(
         mu, a, b, c, d
     )

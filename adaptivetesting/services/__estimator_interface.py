@@ -16,7 +16,6 @@ class IEstimator(ABC):
 
         Args:
             response_pattern (List[int]): list of responses (0: wrong, 1:right)
-            
             items (List[TestItem]): list of answered items
         """
         if type(response_pattern) is not np.ndarray:

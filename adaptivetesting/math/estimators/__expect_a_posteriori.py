@@ -76,11 +76,6 @@ class ExpectedAPosteriori(BayesModal):
         Args:
             estimated_ability (float): _description_
 
-        Raises:
-            NotImplementedError: Either an instance of NormalPrior or CustomPrior has to be used.
-                                 If you want to use another calculation method for the standard,
-                                 you have to specifically override this method.
-
         Returns:
             float: standard error of the ability estimation
         """

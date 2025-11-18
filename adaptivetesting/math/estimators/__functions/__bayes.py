@@ -18,17 +18,11 @@ def maximize_posterior(
 
     Args:
         a (np.ndarray): item parameter a
-    
         b (np.ndarray): item parameter b
-        
         c (np.ndarray): item parameter c
-        
         d (np.ndarray): item parameter d
-        
         response_pattern (np.ndarray): response pattern (simulated or user generated)
-        
         prior (Prior): prior distribution
-
         optimization_interval (Tuple[float, float]): interval used for the optimization function
 
     Returns:

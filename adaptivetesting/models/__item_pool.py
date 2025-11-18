@@ -101,15 +101,10 @@ class ItemPool:
 
         Args:
             a (List[float]): discrimination parameter
-
             b (List[float]): difficulty parameter
-
             c (List[float]): guessing parameter
-
             d (List[float]): slipping parameter
-
             simulated_responses (List[int]): simulated responses
-
             ids (List[int]): item IDs. If the argument is set to `None`
                 all items are numbered in the order in which they are
                 passed to the function.
@@ -244,10 +239,10 @@ class ItemPool:
 
 
         Args:
-            source (DataFrame): _description_
+            source (DataFrame): DataFrame containing item parameters.
 
         Returns:
-            ItemPool: _description_
+            ItemPool: item pool
         """
 
         # check if columns are present

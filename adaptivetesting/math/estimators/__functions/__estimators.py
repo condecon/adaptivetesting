@@ -68,13 +68,9 @@ def probability_y0(mu: np.ndarray,
 
     Args:
             mu (np.ndarray): latent ability level
-
             a (np.ndarray): item discrimination parameter
-
             b (np.ndarray): item difficulty parameter
-
             c (np.ndarray): pseudo guessing parameter
-
             d (np.ndarray): inattention parameter
 
     Returns:
@@ -96,14 +92,11 @@ def likelihood(mu: np.ndarray,
 
     Args:
         mu (np.ndarray): ability level
-
         a (np.ndarray): item discrimination parameter
-
         b (np.ndarray): item difficulty parameter
-
         c (np.ndarray): pseudo guessing parameter
-
         d (np.ndarray): inattention parameter
+        response_pattern (np.ndarray): response pattern of the answered items
 
     Returns:
         float: negative likelihood value of given ability value
@@ -126,6 +119,20 @@ def log_likelihood(mu: np.ndarray,
                    c: np.ndarray,
                    d: np.ndarray,
                    response_pattern: np.ndarray):
+    """Log-likelihood function of the 4-PL model.
+    For optimization purposes, the function returns the negative value of the likelihood function.
+
+    Args:
+        mu (np.ndarray): ability level
+        a (np.ndarray): item discrimination parameter
+        b (np.ndarray): item difficulty parameter
+        c (np.ndarray): pseudo guessing parameter
+        d (np.ndarray): inattention parameter
+        response_pattern (np.ndarray): response pattern of the answered items
+
+    Returns:
+        float: log-likelihood value of given ability value
+    """
     p1 = probability_y1(mu, a, b, c, d)
     p0 = probability_y0(mu, a, b, c, d)
     result = np.sum((response_pattern * np.log(p1 + 1e-300)) + ((1 - response_pattern) * np.log(p0 + 1e-300)))
@@ -144,22 +151,18 @@ def maximize_likelihood_function(a: np.ndarray,
 
     Args:
         a (np.ndarray): item discrimination parameter
-
         b (np.ndarray): item difficulty parameter
-
         c (np.ndarray): pseudo guessing parameter
-
         d (np.ndarray): inattention parameter
-
         response_pattern (np.ndarray): response pattern of the item
         border (tuple[float, float], optional): border of the optimization interval.
-        Defaults to (-10, 10).
+            Defaults to (-10, 10).
 
     Raises:
         AlgorithmException: if the optimization fails or the response
-        pattern consists of only one type of response.
+            pattern consists of only one type of response.
         AlgorithmException: if the optimization fails or the response
-        pattern consists of only one type of response.
+            pattern consists of only one type of response.
 
     Returns:
         float: optimized ability value
@@ -170,7 +173,8 @@ def maximize_likelihood_function(a: np.ndarray,
             "Response pattern is invalid. It consists of only one type of response.")
 
     result: OptimizeResult = minimize_scalar(lambda mu: -log_likelihood(mu, a, b, c, d, response_pattern),
-                                             bounds=border, method='bounded') # type: ignore
+                                             bounds=border,
+                                             method='bounded') # type: ignore
 
     if not result.success:
         raise AlgorithmException(f"Optimization failed: {result.message}")

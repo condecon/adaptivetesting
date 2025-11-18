@@ -13,9 +13,7 @@ class ItemSelectionStrategy(Protocol):
     Args:
         
         items (list[TestItem]): The list of available test items to select from.
-        
         ability (float): The current ability estimate of the test taker.
-        
         **kwargs: Additional keyword arguments that may be required by specific selection strategies.
 
     Returns:
