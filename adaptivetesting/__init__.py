@@ -18,7 +18,7 @@ from .math.__gen_response_pattern import generate_response_pattern
 from .math.estimators.__ml_estimation import MLEstimator
 from .math.estimators.__bayes_modal_estimation import BayesModal
 from .math.estimators.__expect_a_posteriori import ExpectedAPosteriori
-from .math.estimators.__prior import Prior, NormalPrior, CustomPrior, CustomPriorException
+from .math.estimators.__prior import Prior, NormalPrior, CustomPrior, CustomPriorException, SkewNormalPrior, EmpiricalPrior
 from .math.estimators.__functions.__estimators import probability_y0, probability_y1, maximize_likelihood_function, likelihood
 from .math.estimators.__functions.__bayes import maximize_posterior
 from .math.estimators.__test_information import test_information_function, item_information_function, prior_information_function
