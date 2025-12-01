@@ -16,6 +16,8 @@ from ..math.estimators.__prior import Prior
 from copy import deepcopy
 import inspect
 from ..math.exposure_control.__exposure_control import EXPOSURE_CONTROL
+from ..math.exposure_control.__randomesque import Randomesque
+from ..math.exposure_control.__mpi_exposure_control import MaximumPriorityIndexExposureControl
 
 
 class EstimatorArgs(TypedDict):
@@ -278,6 +280,19 @@ class TestAssembler(AdaptiveTest):
                 raise ValueError("content_balancing_args cannot be None when using content balancing.")
         # exposure control only
         elif self.content_balancing is None and self.exposure_control:
+            if self.exposure_control_args is None:
+                raise ValueError("exposure_control_args cannot be None when using exposure control.")
+            # which strategy has been selected
+            if self.exposure_control == "Randomesque":
+                # Randomesque
+                adaptive_test = deepcopy(self)
+                randomesque = Randomesque(
+                    adaptive_test=adaptive_test,
+                    n_items=self.exposure_control_args["n_items"],
+                    seed=self.exposure_control_args["seed"]
+                )
+            if self.exposure_control == "MaximumPriorityIndex":
+                
 
         raise ValueError(f"Something went wrong when selecting an item using {self.content_balancing}.")
 
