@@ -15,6 +15,7 @@ from ..math.content_balancing.__maximum_priority_index import MaximumPriorityInd
 from ..math.estimators.__prior import Prior
 from copy import deepcopy
 import inspect
+from ..math.exposure_control.__exposure_control import EXPOSURE_CONTROL
 
 
 class EstimatorArgs(TypedDict):
@@ -35,6 +36,15 @@ class ContentBalancingArgs(TypedDict):
     This can also be a function taking adaptive test as an input argument.
     This allows the user to specify custom weight values depending
     on the specific states and progress of the test."""
+
+
+class ExposureControlArgs(TypedDict):
+    constraints: list[Constraint] | None
+    """Constraints applied for Maximum Priority Index exposure control."""
+    n_items: int | None
+    """number of items to select for Randomesque items selection"""
+    seed: int | None
+    """random seed for the final item selection during Randomesque item selection"""
 
 
 class TestAssembler(AdaptiveTest):
@@ -81,6 +91,8 @@ class TestAssembler(AdaptiveTest):
                  item_selector_args: dict[str, Any] = {},
                  content_balancing: None | CONTENT_BALANCING = None,
                  content_balancing_args: ContentBalancingArgs | None = None,
+                 exposure_control: None | EXPOSURE_CONTROL = None,
+                 exposure_control_args: None | ExposureControlArgs = None,
                  pretest: bool = False,
                  pretest_seed: int | None = None,
                  true_ability_level=None,
@@ -130,6 +142,8 @@ class TestAssembler(AdaptiveTest):
         self.__item_selector_args = item_selector_args
         self.content_balancing = content_balancing
         self.content_balancing_args = content_balancing_args
+        self.exposure_control = exposure_control
+        self.exposure_control_args = exposure_control_args
         self.__pretest = pretest
         self.__pretest_seed = pretest_seed
 
@@ -193,6 +207,8 @@ class TestAssembler(AdaptiveTest):
         Selects and returns the next test item based on the current ability level and item selector strategy.
         If a content balancing strategy is specified, the item selection strategy will be ignored.
         Instead, the item selected by the content balancing strategy will be returned.
+        This also applies to exposure control.
+        However, content balancing and exposure control cannot be specified at the same time
 
         Returns:
             TestItem: The next item to be administered in the test, as determined by the item selector.
@@ -201,7 +217,8 @@ class TestAssembler(AdaptiveTest):
             Any exceptions raised by the item selector function.
         """
         item: TestItem | None
-        if self.content_balancing is None:
+        if self.content_balancing is None and self.exposure_control_args is None:
+            # content balancing an exposure control are not specified
             # filter item selection args
             sig = inspect.signature(self.__item_selector)
             allowed = set(sig.parameters.keys())
@@ -213,7 +230,10 @@ class TestAssembler(AdaptiveTest):
                 **filtered_item_selector_args
             )
             return item
-        else:
+        elif self.content_balancing and self.exposure_control:
+            raise ValueError("Content balancing and exposure cannot be specified at the same time!")
+        # content balancing only
+        elif self.content_balancing and self.exposure_control is None:
             if self.content_balancing_args is not None:
                 # which strategy has been selected
                 if self.content_balancing == "WeightedPenaltyModel":
@@ -256,6 +276,9 @@ class TestAssembler(AdaptiveTest):
                         return item
             else:
                 raise ValueError("content_balancing_args cannot be None when using content balancing.")
+        # exposure control only
+        elif self.content_balancing is None and self.exposure_control:
+
         raise ValueError(f"Something went wrong when selecting an item using {self.content_balancing}.")
 
     def run_test_once(self):

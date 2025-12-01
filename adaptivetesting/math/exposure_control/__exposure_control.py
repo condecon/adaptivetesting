@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Literal
+from typing import Literal, TypedDict
 from ... import TestItem
 from ...models.__adaptive_test import AdaptiveTest
 
 
-type EXPOSURECONTROL = Literal["Randomesque"]
+type EXPOSURE_CONTROL = Literal["Randomesque", "MaximumPriorityIndex"]
 
 
 class ExposureControl(ABC):
