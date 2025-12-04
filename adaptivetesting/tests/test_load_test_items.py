@@ -229,3 +229,36 @@ class TestLoadTestItems(TestCase):
         assigned_groups = [item.additional_properties["category"] for item in items]
 
         self.assertListEqual(assigned_groups, [["math"], ["english"]])
+
+
+class TestTestItemRoundTrip(TestCase):
+    def test_roundtrip_preserves_fields(self):
+        # create and populate original item
+        original = TestItem()
+        original.id = 42
+        original.a = 1.2
+        original.b = -0.5
+        original.c = 0.25
+        original.d = 0.95
+        original.additional_properties = {
+            "category": ["Math", "Science"],
+            "meta": {"difficulty": "hard", "tags": ["algebra", "geometry"]},
+        }
+
+        # serialize including id
+        data_with_id = original.as_dict(with_id=True)
+
+        # deserialize
+        restored = TestItem.from_dict(data_with_id)
+
+        # verify fields preserved
+        self.assertEqual(restored.id, original.id)
+        self.assertEqual(restored.a, original.a)
+        self.assertEqual(restored.b, original.b)
+        self.assertEqual(restored.c, original.c)
+        self.assertEqual(restored.d, original.d)
+        self.assertEqual(restored.additional_properties, original.additional_properties)
+
+        # verify as_dict omits id when with_id is False
+        data_no_id = original.as_dict(with_id=False)
+        self.assertNotIn("id", data_no_id)

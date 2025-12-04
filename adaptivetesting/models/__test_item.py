@@ -37,3 +37,22 @@ class TestItem:
             item_dict["id"] = self.id
 
         return item_dict
+    
+    @staticmethod
+    def from_dict(source: dict) -> "TestItem":
+        item = TestItem()
+        # copy known fields, preserving defaults if keys are missing
+        if "a" in source and source["a"] is not None:
+            item.a = source["a"]
+        if "b" in source and source["b"] is not None:
+            item.b = source["b"]
+        if "c" in source and source["c"] is not None:
+            item.c = source["c"]
+        if "d" in source and source["d"] is not None:
+            item.d = source["d"]
+        if "additional_properties" in source and source["additional_properties"] is not None:
+            item.additional_properties = source["additional_properties"]
+        if "id" in source and source["id"] is not None:
+            item.id = source["id"]
+        return item
+        

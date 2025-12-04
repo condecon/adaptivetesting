@@ -8,6 +8,7 @@ from ..math.item_selection.__maximum_information_criterion import maximum_inform
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
 from ..models.__test_result import TestResult
+from ..models.__misc import ResultOutputFormat
 from ..services.__item_selection_protocol import ItemSelectionStrategy
 from ..math.content_balancing.__content_balancing import CONTENT_BALANCING
 from ..math.content_balancing.__weighted_penalty_model import WeightedPenaltyModel
@@ -43,6 +44,12 @@ class ContentBalancingArgs(TypedDict):
 class ExposureControlArgs(TypedDict):
     constraints: list[Constraint] | None
     """Constraints applied for Maximum Priority Index exposure control."""
+    participant_ids: list[str] | None
+    """Participant ids to read the previously administered test in order to
+    perform exposure control (MPI only).
+    """
+    output_format: ResultOutputFormat | None
+    """Format in which the previous tests have been saved (MPI only)."""
     n_items: int | None
     """number of items to select for Randomesque items selection"""
     seed: int | None
@@ -286,14 +293,33 @@ class TestAssembler(AdaptiveTest):
             if self.exposure_control == "Randomesque":
                 # Randomesque
                 adaptive_test = deepcopy(self)
+                if self.exposure_control_args["seed"] is None or self.exposure_control_args["n_items"] is None:
+                    raise ValueError("exposure_control_args are not correctly specified")
                 randomesque = Randomesque(
                     adaptive_test=adaptive_test,
                     n_items=self.exposure_control_args["n_items"],
                     seed=self.exposure_control_args["seed"]
                 )
-            if self.exposure_control == "MaximumPriorityIndex":
-                
 
+                return randomesque.select_item()
+            
+            if self.exposure_control == "MaximumPriorityIndex":
+                if (self.exposure_control_args["participant_ids"]
+                   is None or self.exposure_control_args["output_format"] is None):
+                    raise ValueError("exposure_control_args are not correctly specified")
+                mpi = MaximumPriorityIndexExposureControl(
+                    adaptive_test,
+                    constraints=self.exposure_control_args["constraints"],
+                    participant_ids=self.exposure_control_args["participant_ids"],
+                    format=self.exposure_control_args["output_format"]
+                )
+
+                selected_item = mpi.select_item()
+                if selected_item is None:
+                    raise ItemSelectionException("Fatal! Not appropriated item was "
+                                                 "selected using MPI for exposure control")
+                else:
+                    return selected_item
         raise ValueError(f"Something went wrong when selecting an item using {self.content_balancing}.")
 
     def run_test_once(self):

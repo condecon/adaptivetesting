@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Literal, TypedDict
-from ... import TestItem
+from typing import Literal
+from ...models.__test_item import TestItem
 from ...models.__adaptive_test import AdaptiveTest
 
 
@@ -23,7 +23,7 @@ class ExposureControl(ABC):
         self.adaptive_test = adaptive_test
 
     @abstractmethod
-    def select_item(self, **kwargs) -> TestItem:
+    def select_item(self, **kwargs) -> TestItem | None:
         """Select an item based on the implemented selection rules
 
                 Returns:
