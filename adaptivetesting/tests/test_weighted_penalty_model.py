@@ -212,3 +212,62 @@ class TestWeightedPenaltyModel(unittest.TestCase):
             weighted_penalty_value
         )
         self.assertEqual(assigned_group, "red")
+
+    def test_select_item_with_no_shown_items(self):
+        """Test that select_item returns the highest information item when no previous items have been shown"""
+        # Create a mock AdaptiveTest with no shown items
+        class MockAdaptiveTest:
+            def __init__(self, item_pool, ability_level):
+                self.item_pool = item_pool
+                self.ability_level = ability_level
+                self.answered_items = []  # No items shown
+        
+        # Create item pool with example items
+        item_pool_obj = adt.ItemPool([self.example_item1, self.example_item2])
+        
+        # Create mock adaptive test with empty answered_items
+        mock_test = MockAdaptiveTest(item_pool_obj, 0)
+        
+        # Create constraints
+        constraints = [
+            adt.Constraint(
+                name="math",
+                prevalence=0.5,
+                lower=0,
+                upper=1,
+                weight=1
+            ),
+            adt.Constraint(
+                name="english",
+                prevalence=0.5,
+                lower=0,
+                upper=1,
+                weight=1
+            )
+        ]
+        
+        # Create WeightedPenaltyModel
+        model = adt.WeightedPenaltyModel(
+            adaptive_test=mock_test,
+            constraints=constraints,
+            constraint_weight=1.0,
+            information_weight=1.0
+        )
+        
+        # Select item
+        selected_item = model.select_item()
+
+        # select item using maximum fisher information
+        information_selected_item: adt.TestItem = adt.maximum_information_criterion(
+            items=item_pool_obj.test_items,
+            0
+        )
+        
+        # Verify an item is returned
+        self.assertIsNotNone(selected_item)
+        self.assertIsInstance(selected_item, adt.TestItem)
+
+        self.assertDictEqual(
+            selected_item.as_dict(),
+            information_selected_item.as_dict()
+        )

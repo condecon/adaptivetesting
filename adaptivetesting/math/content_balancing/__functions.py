@@ -87,8 +87,11 @@ def compute_prop(n_administered: int,
     Returns:
         float: expected proportion
     """
-    expected_proportion = (n_administered + prevalence * n_remaining) / test_length
-    return expected_proportion
+    if test_length != 0:
+        expected_proportion = (n_administered + prevalence * n_remaining) / test_length
+        return expected_proportion
+    else:
+        return 0.0
 
 
 def compute_expected_difference(proportion: float,

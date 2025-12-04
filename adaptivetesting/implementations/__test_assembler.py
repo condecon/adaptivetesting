@@ -14,11 +14,10 @@ from ..math.content_balancing.__content_balancing import CONTENT_BALANCING
 from ..math.content_balancing.__weighted_penalty_model import WeightedPenaltyModel
 from ..math.content_balancing.__maximum_priority_index import MaximumPriorityIndex
 from ..math.estimators.__prior import Prior
-from copy import deepcopy
-import inspect
 from ..math.exposure_control.__exposure_control import EXPOSURE_CONTROL
 from ..math.exposure_control.__randomesque import Randomesque
 from ..math.exposure_control.__mpi_exposure_control import MaximumPriorityIndexExposureControl
+import inspect
 
 
 class EstimatorArgs(TypedDict):
@@ -249,7 +248,7 @@ class TestAssembler(AdaptiveTest):
                     # parse content balancing args
 
                     # setup wep
-                    adaptive_test = deepcopy(self)
+                    adaptive_test = self
                     wep = WeightedPenaltyModel(
                         adaptive_test,
                         constraints=self.check_args_are_not_none(
@@ -269,7 +268,7 @@ class TestAssembler(AdaptiveTest):
                     else:
                         return item
                 elif self.content_balancing == "MaximumPriorityIndex":
-                    adaptive_test = deepcopy(self)
+                    adaptive_test = self
                     mpi = MaximumPriorityIndex(
                         adaptive_test,
                         constraints=self.check_args_are_not_none(
@@ -292,7 +291,7 @@ class TestAssembler(AdaptiveTest):
             # which strategy has been selected
             if self.exposure_control == "Randomesque":
                 # Randomesque
-                adaptive_test = deepcopy(self)
+                adaptive_test = self
                 if self.exposure_control_args["seed"] is None or self.exposure_control_args["n_items"] is None:
                     raise ValueError("exposure_control_args are not correctly specified")
                 randomesque = Randomesque(
@@ -308,7 +307,7 @@ class TestAssembler(AdaptiveTest):
                    is None or self.exposure_control_args["output_format"] is None):
                     raise ValueError("exposure_control_args are not correctly specified")
                 mpi = MaximumPriorityIndexExposureControl(
-                    adaptive_test,
+                    self,
                     constraints=self.exposure_control_args["constraints"],
                     participant_ids=self.exposure_control_args["participant_ids"],
                     format=self.exposure_control_args["output_format"]
