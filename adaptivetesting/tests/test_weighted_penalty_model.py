@@ -260,7 +260,7 @@ class TestWeightedPenaltyModel(unittest.TestCase):
         # select item using maximum fisher information
         information_selected_item: adt.TestItem = adt.maximum_information_criterion(
             items=item_pool_obj.test_items,
-            0
+            ability=0
         )
         
         # Verify an item is returned

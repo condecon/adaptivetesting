@@ -209,8 +209,12 @@ def standardize_total_content_constraint_penalty_value(item_penalty_value: float
     Returns:
         float: standardized total content constraint penalty value
     """
-    standardized_value = (item_penalty_value - minimum) / (maximum - minimum)
-    return standardized_value
+    # TODO: ok?
+    try:
+        standardized_value = (item_penalty_value - minimum) / (maximum - minimum)
+        return standardized_value
+    except ZeroDivisionError:
+        return 0
 
 
 def standardize_item_information(item_information: float,

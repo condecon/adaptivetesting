@@ -84,7 +84,8 @@ class TestContentBalancing(unittest.TestCase):
                 ],
                 "constraint_weight": 0.5,
                 "information_weight": 0.5
-            }
+            },
+            debug=True
         )
 
         sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
