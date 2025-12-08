@@ -292,7 +292,8 @@ class TestAssembler(AdaptiveTest):
             if self.exposure_control == "Randomesque":
                 # Randomesque
                 adaptive_test = self
-                if self.exposure_control_args["seed"] is None or self.exposure_control_args["n_items"] is None:
+                dict_keys = list(self.exposure_control_args.keys())
+                if "seed" not in dict_keys  or "n_items" not in dict_keys:
                     raise ValueError("exposure_control_args are not correctly specified")
                 randomesque = Randomesque(
                     adaptive_test=adaptive_test,

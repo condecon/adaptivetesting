@@ -60,8 +60,7 @@ class Randomesque(ExposureControl):
             self.ability_estimate,
             self.n_items,
             self.reverse,
-            self.sort_by_information,
-            self.seed
+            seed=self.seed
         )
         return selected_items
 

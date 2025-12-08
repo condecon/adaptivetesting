@@ -90,3 +90,44 @@ class TestContentBalancing(unittest.TestCase):
 
         sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
         sim.simulate()
+
+class TestExposureControl(unittest.TestCase):
+    def __init__(self, methodName = "runTest"):
+        super().__init__(methodName)
+
+        items = pd.DataFrame({
+            "a": [1.32, 1.07, 0.84],
+            "b": [-0.63, 0.18, -0.84],
+            "c": [0.17, 0.10, 0.19],
+            "d": [0.87, 0.93, 1],
+            "id": [1, 2, 3]
+        })
+
+        self.available_items = adt.ItemPool.load_from_dataframe(items).test_items
+        self.content_categories = ["Math", "English", "Math"]
+
+        for i, _ in enumerate(self.available_items):
+            self.available_items[i].additional_properties = {
+                "category": [self.content_categories[i]]
+            }
+
+    def test_randomesque(self):
+        item_pool = adt.ItemPool(self.available_items, 
+                                 [0, 1, 0])
+        
+
+        adaptive_test = adt.TestAssembler(
+            item_pool=item_pool,
+            simulation_id="1",
+            participant_id="12",
+            ability_estimator=adt.MLEstimator,
+            exposure_control="Randomesque",
+            exposure_control_args={
+                "n_items": 2,
+                "seed": None
+            },
+            debug=True
+        )
+
+        sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
+        sim.simulate()
