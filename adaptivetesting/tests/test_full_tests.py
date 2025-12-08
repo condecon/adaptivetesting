@@ -4,12 +4,11 @@ import unittest
 import adaptivetesting as adt
 import pandas as pd
 import shutil
-import os
 import pathlib
 
 
 class TestContentBalancing(unittest.TestCase):
-    def __init__(self, methodName = "runTest"):
+    def __init__(self, methodName="runTest"):
         super().__init__(methodName)
 
         items = pd.DataFrame({
@@ -29,9 +28,8 @@ class TestContentBalancing(unittest.TestCase):
             }
         
     def test_maximum_priority_index(self):
-        item_pool = adt.ItemPool(self.available_items, 
+        item_pool = adt.ItemPool(self.available_items,
                                  [0, 1, 0])
-        
 
         adaptive_test = adt.TestAssembler(
             item_pool=item_pool,
@@ -39,7 +37,7 @@ class TestContentBalancing(unittest.TestCase):
             participant_id="12",
             ability_estimator=adt.MLEstimator,
             content_balancing="MaximumPriorityIndex",
-            content_balancing_args={
+            content_balancing_args={ # type: ignore
                 "constraints": [
                     adt.Constraint(
                         "Math",
@@ -59,10 +57,9 @@ class TestContentBalancing(unittest.TestCase):
         sim.simulate()
 
     def test_weighted_penalty_model(self):
-        item_pool = adt.ItemPool(self.available_items, 
+        item_pool = adt.ItemPool(self.available_items,
                                  [0, 1, 0])
         
-
         adaptive_test = adt.TestAssembler(
             item_pool=item_pool,
             simulation_id="1",
@@ -95,8 +92,9 @@ class TestContentBalancing(unittest.TestCase):
         sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
         sim.simulate()
 
+
 class TestExposureControl(unittest.TestCase):
-    def __init__(self, methodName = "runTest"):
+    def __init__(self, methodName="runTest"):
         super().__init__(methodName)
 
         items = pd.DataFrame({
@@ -123,19 +121,17 @@ class TestExposureControl(unittest.TestCase):
         
         self.addCleanup(clean_up_sim)
         
-
     def test_randomesque(self):
-        item_pool = adt.ItemPool(self.available_items, 
+        item_pool = adt.ItemPool(self.available_items,
                                  [0, 1, 0])
         
-
         adaptive_test = adt.TestAssembler(
             item_pool=item_pool,
             simulation_id="1",
             participant_id="12",
             ability_estimator=adt.MLEstimator,
             exposure_control="Randomesque",
-            exposure_control_args={
+            exposure_control_args={ # type: ignore
                 "n_items": 2,
                 "seed": None
             },
@@ -145,12 +141,11 @@ class TestExposureControl(unittest.TestCase):
         sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
         sim.simulate()
 
-
     def test_MPI_exposure_control(self):
-        item_pool = adt.ItemPool(self.available_items, 
+        item_pool = adt.ItemPool(self.available_items,
                                  [0, 1, 0])
         
-        ex_args: adt.ExposureControlArgs = {
+        ex_args: adt.ExposureControlArgs = { # type: ignore
             "constraints": [
                 adt.Constraint("Math", 0.5, 0.5),
                 adt.Constraint("English", 0.5, 0.5)
@@ -158,18 +153,14 @@ class TestExposureControl(unittest.TestCase):
             "participant_ids": ["1"],
             "output_format": adt.ResultOutputFormat.CSV
         }
+        
         def run_previous_tests(sim_id: str, par_id: str):
             adaptive_test = adt.TestAssembler(
-            item_pool=item_pool,
-            simulation_id=sim_id,
-            participant_id=par_id,
-            ability_estimator=adt.MLEstimator,
-            #exposure_control="MaximumPriorityIndex",
-            #exposure_control_args={
-            #    "n_items": 2,
-            #    "seed": None
-            #},
-            debug=False
+                item_pool=item_pool,
+                simulation_id=sim_id,
+                participant_id=par_id,
+                ability_estimator=adt.MLEstimator,
+                debug=False
             )
 
             sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
@@ -192,10 +183,10 @@ class TestExposureControl(unittest.TestCase):
         sim.save_test_results()
 
     def test_MPI_exposure_control_pickle(self):
-        item_pool = adt.ItemPool(self.available_items, 
+        item_pool = adt.ItemPool(self.available_items,
                                  [0, 1, 0])
         
-        ex_args: adt.ExposureControlArgs = {
+        ex_args: adt.ExposureControlArgs = { # type: ignore
             "constraints": [
                 adt.Constraint("Math", 0.5, 0.5),
                 adt.Constraint("English", 0.5, 0.5)
@@ -203,13 +194,14 @@ class TestExposureControl(unittest.TestCase):
             "participant_ids": ["1"],
             "output_format": adt.ResultOutputFormat.PICKLE
         }
+
         def run_previous_tests(sim_id: str, par_id: str):
             adaptive_test = adt.TestAssembler(
-            item_pool=item_pool,
-            simulation_id=sim_id,
-            participant_id=par_id,
-            ability_estimator=adt.MLEstimator,
-            debug=False
+                item_pool=item_pool,
+                simulation_id=sim_id,
+                participant_id=par_id,
+                ability_estimator=adt.MLEstimator,
+                debug=False
             )
 
             sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.PICKLE)

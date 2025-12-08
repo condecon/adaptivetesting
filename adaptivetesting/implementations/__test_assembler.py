@@ -260,7 +260,7 @@ class TestAssembler(AdaptiveTest):
                         information_weight=self.check_args_are_not_none(
                             "information_weight",
                             self.content_balancing_args["information_weight"]))
-                    
+
                     item = wep.select_item()
                     if item is None:
                         raise ItemSelectionException(
@@ -293,16 +293,19 @@ class TestAssembler(AdaptiveTest):
                 # Randomesque
                 adaptive_test = self
                 dict_keys = list(self.exposure_control_args.keys())
-                if "seed" not in dict_keys  or "n_items" not in dict_keys:
+                if "seed" not in dict_keys or "n_items" not in dict_keys:
                     raise ValueError("exposure_control_args are not correctly specified")
-                randomesque = Randomesque(
-                    adaptive_test=adaptive_test,
-                    n_items=self.exposure_control_args["n_items"],
-                    seed=self.exposure_control_args["seed"]
-                )
-
-                return randomesque.select_item()
-            
+                
+                if self.exposure_control_args["n_items"] is not None:
+                    randomesque = Randomesque(
+                        adaptive_test=adaptive_test,
+                        n_items=self.exposure_control_args["n_items"],
+                        seed=self.exposure_control_args["seed"]
+                    )
+                    return randomesque.select_item()
+                else:
+                    raise ValueError("n_items cannot be None.")
+                
             if self.exposure_control == "MaximumPriorityIndex":
                 if (self.exposure_control_args["participant_ids"]
                    is None or self.exposure_control_args["output_format"] is None):
