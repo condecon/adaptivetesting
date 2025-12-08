@@ -48,4 +48,9 @@ class PickleContext(ITestResults):
 
         Returns: List[TestResult]
         """
-        raise NotImplementedError("This  function is not implemented.")
+        foldername = f"data/{self.simulation_id}"
+
+        with open(f"{foldername}/{self.participant_id}.pickle", "rb") as file:
+            test_results: list[TestResult] = pickle.load(file)
+            file.close()
+        return test_results

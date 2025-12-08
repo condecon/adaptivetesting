@@ -4,6 +4,7 @@ import pathlib
 from ..models.__test_result import TestResult
 from ..services.__test_results_interface import ITestResults
 from dataclasses import fields
+import json
 
 
 class CSVContext(ITestResults):
@@ -60,9 +61,14 @@ class CSVContext(ITestResults):
         fieldnames = list(fields(TestResult))
         test_results: list[TestResult] = []
         with open(f"{foldername}/{self.participant_id}.csv", "r", encoding="utf-8") as file:
-            reader = csv.DictReader(file, fieldnames=fieldnames)
+            reader = csv.DictReader(file)
+            next(reader, None) # skip header row
             for row in reader:
                 test_result = TestResult.from_dict(row)
+                # showed_item is read as a json string
+                # this has to be manually converted into a dictionary
+                json_string = str(test_result.showed_item).replace("'", '"')
+                test_result.showed_item = json.loads(json_string)
                 test_results.append(test_result)
             file.close()
         return test_results
