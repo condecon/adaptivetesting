@@ -209,11 +209,6 @@ class TestExposureControl(unittest.TestCase):
             simulation_id=sim_id,
             participant_id=par_id,
             ability_estimator=adt.MLEstimator,
-            #exposure_control="MaximumPriorityIndex",
-            #exposure_control_args={
-            #    "n_items": 2,
-            #    "seed": None
-            #},
             debug=False
             )
 
