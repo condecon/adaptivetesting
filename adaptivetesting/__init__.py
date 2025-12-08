@@ -12,7 +12,7 @@ from .data.__pickle_context import PickleContext
 from .implementations.__default_implementation import DefaultImplementation
 from .implementations.__pre_test import PreTest
 from .implementations.__semi_implementation import SemiAdaptiveImplementation
-from .implementations.__test_assembler import TestAssembler
+from .implementations.__test_assembler import TestAssembler, ContentBalancingArgs, ExposureControlArgs
 
 from .math.__gen_response_pattern import generate_response_pattern
 from .math.estimators.__ml_estimation import MLEstimator

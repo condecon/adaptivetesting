@@ -3,6 +3,10 @@
 import unittest
 import adaptivetesting as adt
 import pandas as pd
+import shutil
+import os
+import pathlib
+
 
 class TestContentBalancing(unittest.TestCase):
     def __init__(self, methodName = "runTest"):
@@ -111,6 +115,15 @@ class TestExposureControl(unittest.TestCase):
                 "category": [self.content_categories[i]]
             }
 
+    def setUp(self):
+        def clean_up_sim():
+            path = pathlib.Path("./data/1")
+            if path.exists():
+                shutil.rmtree(path)
+        
+        self.addCleanup(clean_up_sim)
+        
+
     def test_randomesque(self):
         item_pool = adt.ItemPool(self.available_items, 
                                  [0, 1, 0])
@@ -131,3 +144,49 @@ class TestExposureControl(unittest.TestCase):
 
         sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
         sim.simulate()
+
+
+    def test_MPI_exposure_control(self):
+        item_pool = adt.ItemPool(self.available_items, 
+                                 [0, 1, 0])
+        
+        ex_args: adt.ExposureControlArgs = {
+            "constraints": [
+                adt.Constraint("Math", 0.5, 0.5),
+                adt.Constraint("English", 0.5, 0.5)
+            ],
+            "participant_ids": ["1"],
+            "output_format": adt.ResultOutputFormat.CSV
+        }
+        def run_previous_tests(sim_id: str, par_id: str):
+            adaptive_test = adt.TestAssembler(
+            item_pool=item_pool,
+            simulation_id=sim_id,
+            participant_id=par_id,
+            ability_estimator=adt.MLEstimator,
+            #exposure_control="MaximumPriorityIndex",
+            #exposure_control_args={
+            #    "n_items": 2,
+            #    "seed": None
+            #},
+            debug=False
+            )
+
+            sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
+            sim.simulate()
+            sim.save_test_results()
+        run_previous_tests("1", "1")
+
+        # acutal test
+        adaptive_test = adt.TestAssembler(
+            item_pool=item_pool,
+            simulation_id="1",
+            participant_id="2",
+            ability_estimator=adt.MLEstimator,
+            exposure_control="MaximumPriorityIndex",
+            exposure_control_args=ex_args,
+            debug=False
+        )
+        sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
+        sim.simulate()
+        sim.save_test_results()
