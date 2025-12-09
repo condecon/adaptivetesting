@@ -11,7 +11,7 @@ class DummyTestItem(TestItem):
     def __init__(self, id=0):
         self.id = id
     
-    def as_dict(self, with_id: bool = True) -> dict[str, float | int | None]:
+    def as_dict(self, with_id: bool = True):
         return {"id": self.id}
 
 
@@ -57,7 +57,7 @@ class TestTestAssembler(unittest.TestCase):
             simulation_id="sim1",
             participant_id="p1",
             ability_estimator=DummyEstimator,
-            estimator_args={},
+            estimator_args={}, # type: ignore
             item_selector=dummy_item_selector,
             item_selector_args={},
             pretest=False,
@@ -71,7 +71,7 @@ class TestTestAssembler(unittest.TestCase):
             simulation_id="sim1",
             participant_id="p1",
             ability_estimator=DummyEstimator,
-            estimator_args={"foo": "bar"},
+            estimator_args={"foo": "bar"}, # type: ignore
             item_selector=dummy_item_selector,
             item_selector_args={"baz": 1},
             pretest=True,
@@ -99,7 +99,7 @@ class TestTestAssembler(unittest.TestCase):
             simulation_id="sim1",
             participant_id="p1",
             ability_estimator=DummyEstimator,
-            estimator_args={},
+            estimator_args={}, # type: ignore
             item_selector=dummy_item_selector,
             item_selector_args={},
             pretest=False,
@@ -120,7 +120,7 @@ class TestTestAssembler(unittest.TestCase):
             simulation_id="sim1",
             participant_id="p1",
             ability_estimator=DummyEstimator,
-            estimator_args={},
+            estimator_args={},  # type: ignore
             item_selector=dummy_item_selector,
             item_selector_args={},
             pretest=False,
@@ -141,7 +141,7 @@ class TestTestAssembler(unittest.TestCase):
             simulation_id="sim1",
             participant_id="p1",
             ability_estimator=DummyEstimator,
-            estimator_args={},
+            estimator_args={}, # type: ignore
             item_selector=dummy_item_selector,
             item_selector_args={},
             pretest=False,
@@ -168,7 +168,7 @@ class TestTestAssembler(unittest.TestCase):
             simulation_id="sim1",
             participant_id="p1",
             ability_estimator=DummyEstimator,
-            estimator_args={},
+            estimator_args={},  # type: ignore
             item_selector=dummy_item_selector,
             item_selector_args={},
             pretest=True,

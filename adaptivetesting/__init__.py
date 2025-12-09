@@ -12,7 +12,7 @@ from .data.__pickle_context import PickleContext
 from .implementations.__default_implementation import DefaultImplementation
 from .implementations.__pre_test import PreTest
 from .implementations.__semi_implementation import SemiAdaptiveImplementation
-from .implementations.__test_assembler import TestAssembler
+from .implementations.__test_assembler import TestAssembler, ContentBalancingArgs, ExposureControlArgs
 
 from .math.__gen_response_pattern import generate_response_pattern
 from .math.estimators.__ml_estimation import MLEstimator
@@ -24,6 +24,9 @@ from .math.estimators.__functions.__bayes import maximize_posterior
 from .math.estimators.__test_information import test_information_function, item_information_function, prior_information_function
 from .math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from .math.item_selection.__urrys_rule import urrys_rule
+from .math.content_balancing.__weighted_penalty_model import WeightedPenaltyModel
+from .math.content_balancing.__constraint import *
+from .math.content_balancing.__functions import *
 
 from .models.__adaptive_test import AdaptiveTest
 from .models.__algorithm_exception import AlgorithmException

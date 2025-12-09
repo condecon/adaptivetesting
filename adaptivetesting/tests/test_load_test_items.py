@@ -96,7 +96,8 @@ class TestLoadTestItems(TestCase):
                 "a": 0.9,
                 "b": 5,
                 "c": 0.9,
-                "d": 1
+                "d": 1,
+                "additional_properties": {}
             },
             generated.test_items[0].as_dict()
         )
@@ -106,7 +107,8 @@ class TestLoadTestItems(TestCase):
                 "a": 1.9,
                 "b": 3,
                 "c": 1.9,
-                "d": 1
+                "d": 1,
+                "additional_properties": {}
             },
             generated.test_items[1].as_dict()
         )
@@ -133,7 +135,8 @@ class TestLoadTestItems(TestCase):
                 "b": 5,
                 "c": 0.9,
                 "d": 1,
-                "id": 101
+                "id": 101,
+                "additional_properties": {}
             },
             generated.test_items[0].as_dict(with_id=True)
         )
@@ -144,7 +147,8 @@ class TestLoadTestItems(TestCase):
                 "b": 3,
                 "c": 1.9,
                 "d": 1,
-                "id": 202
+                "id": 202,
+                "additional_properties": {}
             },
             generated.test_items[1].as_dict(with_id=True)
         )
@@ -174,3 +178,87 @@ class TestLoadTestItems(TestCase):
         generated = ItemPool.load_from_dataframe(df)
 
         self.assertIsNone(generated.simulated_responses)
+
+    def test_load_dict_content_balancing(self):
+        source_dictionary: dict[str, list[float]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1]
+        }
+
+        item_pool = ItemPool.load_from_dict(source=source_dictionary,
+                                            content_categories=[["math"], ["english"]])
+        items = item_pool.test_items
+        assigned_groups = [item.additional_properties["category"] for item in items]
+
+        self.assertListEqual(assigned_groups, [["math"], ["english"]])
+
+    def test_load_list_content_balancing(self):
+        source_dictionary: dict[str, list[float] | list[int] | list[list[str]]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1],
+            "group": [["math"], ["english"]]
+        }
+
+        item_pool = ItemPool.load_from_list(
+            a=source_dictionary["a"], # type: ignore
+            b=source_dictionary["b"], # type: ignore
+            c=source_dictionary["c"], # type: ignore
+            d=source_dictionary["d"], # type: ignore
+            content_categories=source_dictionary["group"] # type: ignore
+        )
+        items = item_pool.test_items
+        assigned_groups = [item.additional_properties["category"] for item in items]
+
+        self.assertListEqual(assigned_groups, [["math"], ["english"]])
+
+    def test_load_dataframe_content_balancing(self):
+        source_dictionary: dict[str, list[float] | list[int] | list[list[str]]] = {
+            "a": [0.9, 1.9],
+            "b": [5, 3],
+            "c": [0.9, 1.9],
+            "d": [1, 1],
+            "content_categories": [["math"], ["english"]]
+        }
+
+        item_pool = ItemPool.load_from_dataframe(pd.DataFrame(source_dictionary))
+        items = item_pool.test_items
+        assigned_groups = [item.additional_properties["category"] for item in items]
+
+        self.assertListEqual(assigned_groups, [["math"], ["english"]])
+
+
+class TestTestItemRoundTrip(TestCase):
+    def test_roundtrip_preserves_fields(self):
+        # create and populate original item
+        original = TestItem()
+        original.id = 42
+        original.a = 1.2
+        original.b = -0.5
+        original.c = 0.25
+        original.d = 0.95
+        original.additional_properties = {
+            "category": ["Math", "Science"],
+            "meta": {"difficulty": "hard", "tags": ["algebra", "geometry"]},
+        }
+
+        # serialize including id
+        data_with_id = original.as_dict(with_id=True)
+
+        # deserialize
+        restored = TestItem.from_dict(data_with_id)
+
+        # verify fields preserved
+        self.assertEqual(restored.id, original.id)
+        self.assertEqual(restored.a, original.a)
+        self.assertEqual(restored.b, original.b)
+        self.assertEqual(restored.c, original.c)
+        self.assertEqual(restored.d, original.d)
+        self.assertEqual(restored.additional_properties, original.additional_properties)
+
+        # verify as_dict omits id when with_id is False
+        data_no_id = original.as_dict(with_id=False)
+        self.assertNotIn("id", data_no_id)

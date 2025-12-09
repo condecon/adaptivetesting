@@ -95,7 +95,8 @@ class ItemPool:
             c: List[float] | None = None,
             d: List[float] | None = None,
             simulated_responses: List[int] | None = None,
-            ids: List[int] | None = None) -> "ItemPool":
+            ids: List[int] | None = None,
+            content_categories: list[list[str]] | None = None) -> "ItemPool":
         """
         Creates test items from a list of floats.
 
@@ -105,9 +106,9 @@ class ItemPool:
             c (List[float]): guessing parameter
             d (List[float]): slipping parameter
             simulated_responses (List[int]): simulated responses
-            ids (List[int]): item IDs. If the argument is set to `None`
-                all items are numbered in the order in which they are
-                passed to the function.
+            ids (List[int]): item IDs
+            content_categories (list[list[str]], optional): List of categories for each item.
+                This list is used for content balancing.
 
         Returns:
             List[TestItem]: item pool
@@ -144,9 +145,12 @@ class ItemPool:
                 raise ValueError("Length of ids and b has to be the same.")
             for i, id_ in enumerate(ids):
                 items[i].id = id_
-        else:
-            for i in range(len(b)):
-                items[i].id = i
+
+        if content_categories is not None:
+            if len(content_categories) != len(b):
+                raise ValueError("Length of content_categories and b has to be the same.")
+            for i, groups in enumerate(content_categories):
+                items[i].additional_properties["category"] = groups
 
         item_pool = ItemPool(items)
         item_pool.simulated_responses = simulated_responses
@@ -156,7 +160,8 @@ class ItemPool:
     @staticmethod
     def load_from_dict(source: dict[str, List[float]],
                        simulated_responses: List[int] | None = None,
-                       ids: List[int] | None = None) -> "ItemPool":
+                       ids: List[int] | None = None,
+                       content_categories: list[list[str]] | None = None) -> "ItemPool":
         """Creates test items from a dictionary.
         The dictionary has to have the following keys:
 
@@ -169,9 +174,9 @@ class ItemPool:
         Args:
             source (dict[str, List[float]]): item pool dictionary
             simulated_responses (List[int]): simulated responses
-            ids (List[int]): item IDs. If the argument is set to `None`
-                all items are numbered in the order in which they are
-                passed to the function.
+            ids (List[int], optional): item IDs. Default `None`.
+            content_categories (list[list[str]], optional): List of categories for each item.
+                This list is used for content balancing.
 
         Returns:
             List[TestItem]: item pool
@@ -202,6 +207,10 @@ class ItemPool:
             if len(ids) != len(b):
                 raise ValueError("Length of ids and b has to be the same.")
 
+        if content_categories is not None:
+            if len(content_categories) != len(b):
+                raise ValueError("Length of content_categories and b has to be the same.")
+
         n_items = len(b)
         items: List[TestItem] = []
         for i in range(n_items):
@@ -213,8 +222,9 @@ class ItemPool:
 
             if ids is not None:
                 item.id = ids[i]
-            else:
-                item.id = i
+
+            if content_categories is not None:
+                item.additional_properties["category"] = content_categories[i]
 
             items.append(item)
 
@@ -227,22 +237,14 @@ class ItemPool:
         """Creates item pool from a pandas DataFrame.
         Required columns are: `a`, `b`, `c`, `d`.
         Each column has to contain float values.
-        
-        A `id` column can be added to assign
-        each test item a unique identifier.
-        If there is no `id` column
-        all items are numbered in the order in which they are
-        passed to the function.
-
         A `simulated_responses` (int values) column can be added to
         the DataFrame to provide simulated responses.
 
-
         Args:
-            source (DataFrame): DataFrame containing item parameters.
+            source (DataFrame): source data frame
 
         Returns:
-            ItemPool: item pool
+            ItemPool: parsed item pool
         """
 
         # check if columns are present
@@ -269,8 +271,13 @@ class ItemPool:
         else:
             ids = None
 
+        if "content_categories" in source.columns:
+            groups: list[list[str]] | None = source["content_categories"].values.tolist()
+        else:
+            groups = None
+
         # create item pool
-        item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d, ids=ids)
+        item_pool = ItemPool.load_from_list(a=a, b=b, c=c, d=d, ids=ids, content_categories=groups)
 
         # check if simulated responses are present
         if "simulated_responses" in source.columns:

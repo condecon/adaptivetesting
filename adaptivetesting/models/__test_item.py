@@ -9,6 +9,11 @@ class TestItem:
             - b (float): difficulty parameter
             - c (float): guessing parameter
             - d (float): slipping parameter / upper asymptote
+            - additional_properties (dict): addtional properties can be set if required.
+                This functionality is used for content balancing.
+                To use content balancing, set set `category` key of the class instance
+                to a list of string which indicate the corresponding constraint classes.
+                Example: `item.additional_properties["category"] = ["Math"]`
 
         """
         self.id: int | None = None
@@ -16,18 +21,38 @@ class TestItem:
         self.b: float = float("nan")
         self.c: float = 0
         self.d: float = 1
+        self.additional_properties: dict = {}
 
-    def as_dict(self, with_id: bool = False) -> dict[str, float | int | None]:
-        """Returns the item as a dictionary"""
+    def as_dict(self, with_id: bool = False) -> dict[str, float | int | dict | None]:
 
-        item_dict: dict[str, float | int | None] = {
+        item_dict: dict[str, float | int | dict | None] = {
             "a": self.a,
             "b": self.b,
             "c": self.c,
-            "d": self.d
+            "d": self.d,
+            "additional_properties": self.additional_properties
         }
 
         if with_id and self.id is not None:
             item_dict["id"] = self.id
 
         return item_dict
+    
+    @staticmethod
+    def from_dict(source: dict) -> "TestItem":
+        item = TestItem()
+        # copy known fields, preserving defaults if keys are missing
+        if "a" in source and source["a"] is not None:
+            item.a = source["a"]
+        if "b" in source and source["b"] is not None:
+            item.b = source["b"]
+        if "c" in source and source["c"] is not None:
+            item.c = source["c"]
+        if "d" in source and source["d"] is not None:
+            item.d = source["d"]
+        if "additional_properties" in source and source["additional_properties"] is not None:
+            item.additional_properties = source["additional_properties"]
+        if "id" in source and source["id"] is not None:
+            item.id = source["id"]
+        return item
+        
