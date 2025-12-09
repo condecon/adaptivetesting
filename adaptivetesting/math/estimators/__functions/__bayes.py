@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
-from .__estimators import likelihood
 from ..__prior import Prior
 from ....models.__algorithm_exception import AlgorithmException
+from .__estimators import log_likelihood
 
 
 def maximize_posterior(
@@ -11,31 +11,40 @@ def maximize_posterior(
     c: np.ndarray,
     d: np.ndarray,
     response_pattern: np.ndarray,
-    prior: Prior
+    prior: Prior,
+    optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
-    """_summary_
+    """Get the maximum of the posterior distribution
 
     Args:
-        a (np.ndarray): _description_
-        
-        b (np.ndarray): _description_
-        
-        c (np.ndarray): _description_
-        
-        d (np.ndarray): _description_
-        
-        response_pattern (np.ndarray): _description_
-        
-        prior (Prior): _description_
+        a (np.ndarray): item parameter a
+        b (np.ndarray): item parameter b
+        c (np.ndarray): item parameter c
+        d (np.ndarray): item parameter d
+        response_pattern (np.ndarray): response pattern (simulated or user generated)
+        prior (Prior): prior distribution
+        optimization_interval (Tuple[float, float]): interval used for the optimization function
 
     Returns:
         float: Bayes Modal estimator for the given parameters
     """
-    def posterior(mu) -> np.ndarray:
-        return likelihood(mu, a, b, c, d, response_pattern) * prior.pdf(mu)
+    def log_posterior(mu):
+        log_likelihood_res = log_likelihood(mu, a, b, c, d, response_pattern)
+
+        if hasattr(prior, "logpdf"):
+            log_prior = prior.logpdf(mu)
+        else:
+            log_prior = np.log(np.clip(prior.pdf(mu), 1e-300, None))
     
-    result: OptimizeResult = minimize_scalar(lambda mu: posterior(mu),
-                                             bounds=(-10, 10),
+        log_post = log_likelihood_res + log_prior
+
+        if not np.isfinite(log_post):
+            return -1e300
+        else:
+            return float(log_post.ravel()[0])
+    
+    result: OptimizeResult = minimize_scalar(lambda mu: -log_posterior(mu),
+                                             bounds=optimization_interval,
                                              method="bounded") # type: ignore
     
     if not result.success:

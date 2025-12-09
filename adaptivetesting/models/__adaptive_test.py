@@ -2,7 +2,6 @@ from typing import List
 import abc
 import copy
 from .__test_item import TestItem
-from ..math.item_selection.__urrys_rule import urrys_rule
 from ..math.__gen_response_pattern import generate_response_pattern
 from .__test_result import TestResult
 from .__item_pool import ItemPool
@@ -26,15 +25,10 @@ class AdaptiveTest(abc.ABC):
 
         Args:
             item_pool (ItemPool): item pool used for the test
-
             simulation_id (str): simulation id
-
             participant_id (str): participant id
-
             true_ability_level (float): true ability level (must always be set)
-
             initial_ability_level (float): initially assumed ability level
-
             simulation (bool): will the test be simulated.
                 If it is simulated and a response pattern is not yet set in the item pool,
                 it will be generated for the given true ability level.
@@ -64,7 +58,7 @@ class AdaptiveTest(abc.ABC):
         # if simulation is True
         # generate a response pattern if
         # it is not yet set in the item pool
-        if simulation is True:
+        if simulation:
             if self.item_pool.simulated_responses is None:
                 if self.true_ability_level is not None:
                     self.item_pool.simulated_responses = generate_response_pattern(
@@ -94,18 +88,6 @@ class AdaptiveTest(abc.ABC):
         """
         return self.answered_items
 
-    # def get_ability_se(self) -> float:
-    #     """
-    #     Calculate the current standard error
-    #     of the ability estimation.
-
-    #     Returns:
-    #         float: standard error of the ability estimation
-
-    #     """
-    #     answered_items = self.get_answered_items()
-    #     return standard_error(answered_items, self.ability_level)
-
     @abc.abstractmethod
     def get_next_item(self) -> TestItem:
         """Select next item.
@@ -114,8 +96,6 @@ class AdaptiveTest(abc.ABC):
             TestItem: selected item
         """
         raise NotImplementedError("This functionality is not implemented by default.")
-        item = urrys_rule(self.item_pool.test_items, self.ability_level)
-        return item
 
     @abc.abstractmethod
     def estimate_ability_level(self) -> tuple[float, float]:
@@ -154,7 +134,7 @@ class AdaptiveTest(abc.ABC):
 
         # check if simulation is running
         response = None
-        if self.simulation is True:
+        if self.simulation:
             response = self.item_pool.get_item_response(item)
         else:
             # not simulation

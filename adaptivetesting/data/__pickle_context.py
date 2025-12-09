@@ -40,13 +40,14 @@ class PickleContext(ITestResults):
             file.close()
 
     def load(self) -> List[TestResult]:
-        """Loads results from the database.
-        The implementation of this method is required
-        by the interface. However, is does not have
-        any implemented functionality and will throw an error
-        if used.
-
-        Returns: List[TestResult]
+        """Loads and returns a list of TestResult objects for a specific participant and simulation.
+        The method reads a pickle file located at 'data/{simulation_id}/{participant_id}.pickle'
+        and deserializes its contents into a list of TestResult instances.
+        Returns:
+            List[TestResult]: The list of test results loaded from the pickle file.
+        Raises:
+            FileNotFoundError: If the specified pickle file does not exist.
+            pickle.UnpicklingError: If the file cannot be unpickled.
         """
         foldername = f"data/{self.simulation_id}"
 
