@@ -12,7 +12,8 @@ dependencies = [
     "pandas>=2.2.0",
     "scipy>=1.12.0",
     "tqdm>=4.66.0",
-    "matplotlib>=3.9.0"
+    "matplotlib>=3.9.0",
+    "numdifftools>=0.9.42",
 ]
 license-files = ["LICENSE"]
 keywords=["statistics", "psychology", "item-response-theory", "computerized-adaptive-testing"]
