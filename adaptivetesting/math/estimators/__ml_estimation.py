@@ -1,15 +1,16 @@
 from typing import List, Tuple
 import numpy as np
-from ...models.__test_item import TestItem
+from ...models.__test_item import TestItem, BaseItem, PolyItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
 from .__test_information import test_information_function
 
 
+# TODO: introduce switch for estimation depending on the item type
 class MLEstimator(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
-                 items: List[TestItem],
+                 items: List[BaseItem],
                  optimization_interval: Tuple[float, float] = (-10, 10), **kwargs):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
@@ -19,7 +20,7 @@ class MLEstimator(IEstimator):
         Args:
             response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
 
-            items (List[TestItem]): list of answered items
+            items (List[BaseItem]): list of answered items
         """
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
 
