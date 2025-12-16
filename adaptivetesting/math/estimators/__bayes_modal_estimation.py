@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Sequence
 import numpy as np
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
@@ -10,7 +10,7 @@ from .__test_information import test_information_function
 class BayesModal(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
-                 items: List[TestItem],
+                 items: Sequence[TestItem],
                  prior: Prior,
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
@@ -23,7 +23,7 @@ class BayesModal(IEstimator):
             Args:
                 response_pattern (List[int] | np.ndarray ): list of response patterns (0: wrong, 1:right)
 
-                items (List[TestItem]): list of answered items
+                items (Sequence[TestItem]): list of answered items
             
                 prior (Prior): prior distribution
 

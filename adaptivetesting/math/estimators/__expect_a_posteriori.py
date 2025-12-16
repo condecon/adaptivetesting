@@ -5,12 +5,13 @@ from ...models.__test_item import TestItem
 from .__functions.__estimators import log_likelihood
 from .__prior import Prior
 from math import pow
+from typing import Sequence
 
 
 class ExpectedAPosteriori(BayesModal):
     def __init__(self,
                  response_pattern: list[int] | np.ndarray,
-                 items: list[TestItem],
+                 items: Sequence[TestItem],
                  prior: Prior,
                  optimization_interval: tuple[float, float] = (-10, 10)):
         """This class can be used to estimate the current ability level
@@ -22,7 +23,7 @@ class ExpectedAPosteriori(BayesModal):
             Args:
                 response_pattern (List[int] | np.ndarray): list of response patterns (0: wrong, 1:right)
 
-                items (List[TestItem]): list of answered items
+                items (Sequence[TestItem]): list of answered items
             
                 prior (Prior): prior distribution
 

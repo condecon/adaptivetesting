@@ -7,7 +7,7 @@ from ..models.__test_item import TestItem, BaseItem, PolyItem
 class IEstimator(ABC):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
-                 items: List[BaseItem],
+                 items: Sequence[BaseItem],
                  optimization_interval: Tuple[float, float] = (-10, 10)):
         """This is the interface required for every possible
         estimator.
@@ -16,7 +16,7 @@ class IEstimator(ABC):
 
         Args:
             response_pattern (List[int]): list of responses (0: wrong, 1:right)
-            items (List[BaseItem]): list of answered items
+            items (Sequence[BaseItem]): list of answered items
         """
         if type(response_pattern) is not np.ndarray:
             self.response_pattern = np.array(response_pattern)
