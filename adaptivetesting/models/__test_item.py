@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+
 class BaseItem:
     def __init__(self):
         self.id: int | None
@@ -14,6 +15,7 @@ class BaseItem:
     @abstractmethod
     def from_dict(source: dict) -> "BaseItem":
         pass
+
 
 class TestItem(BaseItem):
     def __init__(self):
@@ -82,7 +84,7 @@ class PolyItem(BaseItem):
         self.additional_properties: dict = {}
         self.num_categories: int = 2
 
-    def as_dict(self, with_id = False):
+    def as_dict(self, with_id=False):
         item_dict: dict[str, float | int | list | dict | None] = {
             "a": self.a,
             "b": self.b,
@@ -106,7 +108,7 @@ class PolyItem(BaseItem):
             item.num_categories = source["num_categories"]
         if "additional_properties" in source and source["additional_properties"] is not None:
             if not isinstance(source["additional_properties"], dict):
-                raise TypeError("additional_properties is not dict")       
+                raise TypeError("additional_properties is not dict")
             item.additional_properties = source["additional_properties"]
         if "id" in source and source["id"] is not None:
             item.id = source["id"]

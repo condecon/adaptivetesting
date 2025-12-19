@@ -2,6 +2,8 @@ from ..models.__adaptive_test import AdaptiveTest
 from typing import Type, Any
 from ..services.__estimator_interface import IEstimator
 from .__test_assembler import EstimatorArgs
+from ..services.__item_selection_protocol import ItemSelectionStrategy
+from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 
 
 class PolyTestAssembler(AdaptiveTest):

@@ -139,6 +139,7 @@ def log_likelihood(mu: np.ndarray,
     
     return result
 
+
 def maximize_likelihood_function(a: np.ndarray,
                                  b: np.ndarray,
                                  c: np.ndarray,

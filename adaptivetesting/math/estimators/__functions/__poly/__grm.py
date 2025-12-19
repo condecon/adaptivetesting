@@ -1,6 +1,5 @@
 import numpy as np
 from math import log
-from scipy.integrate import quad
 import numdifftools as nd
 from .__poly_math import PolyModelFunctions
 
@@ -15,7 +14,7 @@ class GRM(PolyModelFunctions):
         if k == 0:
             p_ge_k = 1.0
         elif k > 0 and k <= num_thresholds:
-            p_ge_k = 1 / (1 + np.exp(-a * (theta - thresholds[k-1])))
+            p_ge_k = 1 / (1 + np.exp(-a * (theta - thresholds[k - 1])))
         else:
             # Invalid category index k or k > num_categories (num_thresholds + 1)
             # For likelihood calculation, return a very small positive number to avoid log(0)
@@ -36,7 +35,10 @@ class GRM(PolyModelFunctions):
         return np.maximum(prob_k, 1e-10) # Use np.maximum for element-wise comparison with arrays
     
     @staticmethod
-    def log_likelihood(theta: float, a_params: list[float], thresholds_list: list[list[float]], response_pattern: list[int]):
+    def log_likelihood(theta: float,
+                       a_params: list[float],
+                       thresholds_list: list[list[float]],
+                       response_pattern: list[int]):
         log_lik = 0.0
         # Iterate over item indices
         for item_idx in range(len(a_params)):
