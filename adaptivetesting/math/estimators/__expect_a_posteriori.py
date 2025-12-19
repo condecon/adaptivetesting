@@ -1,19 +1,22 @@
 import numpy as np
 from scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
-from ...models.__test_item import TestItem
+from ...models.__test_item import BaseItem, PolyItem
 from .__functions.__estimators import log_likelihood
 from .__prior import Prior
 from math import pow
-from typing import Sequence
+from typing import Sequence, Literal, cast
+from .__functions.__poly.__gpcm import GPCM
+from .__functions.__poly.__grm import GRM
 
 
 class ExpectedAPosteriori(BayesModal):
     def __init__(self,
                  response_pattern: list[int] | np.ndarray,
-                 items: Sequence[TestItem],
+                 items: Sequence[BaseItem],
                  prior: Prior,
-                 optimization_interval: tuple[float, float] = (-10, 10)):
+                 optimization_interval: tuple[float, float] = (-10, 10),
+                 model: Literal["GRM", "GPCM"] | None = None,):
         """This class can be used to estimate the current ability level
             of a respondent given the response pattern and the corresponding
             item difficulties.
@@ -23,7 +26,7 @@ class ExpectedAPosteriori(BayesModal):
             Args:
                 response_pattern (List[int] | np.ndarray): list of response patterns (0: wrong, 1:right)
 
-                items (Sequence[TestItem]): list of answered items
+                items (Sequence[BaseItem]): list of answered items
             
                 prior (Prior): prior distribution
 
@@ -31,12 +34,45 @@ class ExpectedAPosteriori(BayesModal):
         """
         super().__init__(response_pattern, items, prior, optimization_interval)
 
+        # decide type of model used
+        if isinstance(items, PolyItem):
+            self.type: Literal["poly", "dich"] = "poly"
+            self.model = model
+        else:
+            self.type = "dich"
+
     def get_estimation(self) -> float:
         """Estimate the current ability level using EAP.
 
         Returns:
             float: ability estimation
         """
+        if self.type == "dich":
+            return self.get_estimation_4pl()
+        
+        if self.type == "poly":
+            if self.model == "GRM":
+                grm = GRM()
+                return grm.posterior_mean(
+                    self.a_params,
+                    self.thresholds_list,
+                    cast(list[int], self.response_pattern.tolist()),
+                    self.prior,
+                    self.optimization_interval
+                )
+            
+            if self.model == "GPCM":
+                gpcm = GPCM()
+                return gpcm.posterior_mean(
+                    self.a_params,
+                    self.thresholds_list,
+                    cast(list[int], self.response_pattern.tolist()),
+                    self.prior,
+                    self.optimization_interval
+                )
+        raise ValueError("model and/or type have not been correctly specified")
+        
+    def get_estimation_4pl(self) -> float:
         x = np.linspace(self.optimization_interval[0], self.optimization_interval[1], 1000)
         
         if hasattr(self.prior, "logpdf"):

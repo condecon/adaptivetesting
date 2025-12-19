@@ -59,7 +59,8 @@ class MLEstimator(IEstimator):
                 return grm.maximize_likelihood_function(
                     self.a_params,
                     self.thresholds_list,
-                    cast(list[int], self.response_pattern.tolist())
+                    cast(list[int], self.response_pattern.tolist()),
+                    self.optimization_interval
                 )
             
             if self.model == "GPCM":
@@ -67,10 +68,12 @@ class MLEstimator(IEstimator):
                 return gpcm.maximize_likelihood_function(
                     self.a_params,
                     self.thresholds_list,
-                    cast(list[int], self.response_pattern.tolist())
+                    cast(list[int], self.response_pattern.tolist()),
+                    self.optimization_interval
                 )
         raise ValueError("model and/or type have not been correctly specified")
-    
+
+# TODO: Standard error POLY
     def get_standard_error(self, estimation) -> float:
         """Calculates the standard error for the given estimated ability level.
 
