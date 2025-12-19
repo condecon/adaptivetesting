@@ -1,10 +1,12 @@
-from typing import List, Tuple, Literal
+from typing import List, Tuple, Literal, cast
 import numpy as np
 from ...models.__test_item import TestItem, BaseItem, PolyItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
 from .__test_information import test_information_function
 from typing import Sequence
+from .__functions.__poly.__gpcm import GPCM
+from .__functions.__poly.__grm import GRM
 
 
 # TODO: introduce switch for estimation depending on the item type
@@ -54,7 +56,21 @@ class MLEstimator(IEstimator):
                                             border=self.optimization_interval)
         if self.type == "poly":
             if self.model == "GRM":
-                
+                grm = GRM()
+                return grm.maximize_likelihood_function(
+                    self.a_params,
+                    self.thresholds_list,
+                    cast(list[int], self.response_pattern.tolist())
+                )
+            
+            if self.model == "GPCM":
+                gpcm = GPCM()
+                return gpcm.maximize_likelihood_function(
+                    self.a_params,
+                    self.thresholds_list,
+                    cast(list[int], self.response_pattern.tolist())
+                )
+        raise ValueError("model and/or type have not been correctly specified")
     
     def get_standard_error(self, estimation) -> float:
         """Calculates the standard error for the given estimated ability level.
