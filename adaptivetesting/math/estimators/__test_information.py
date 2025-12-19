@@ -4,6 +4,9 @@ from .__prior import Prior
 from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
+from typing import Literal
+from .__functions.__poly.__gpcm import GPCM
+from .__functions.__poly.__grm import GRM
 
 
 def item_information_function(
@@ -106,3 +109,19 @@ def test_information_function(
         return float(item_information.sum() + prior_information)
     else:
         return float(item_information.sum())
+
+def poly_test_information_function(
+        mu: float,
+        a_params: list[float],
+        thresholds_list: list[list[float]],
+        prior: Prior,
+        model_type: Literal["GRM", "GPCM"],
+        optimization_interval: tuple[float, float] = (-10, 10),
+    ) -> float:
+    # calculate information for every test item
+    if model_type == "GRM":
+        GRM.fisher_information()
+
+    item_information = 
+
+    ############## CONTINUE HERE!
