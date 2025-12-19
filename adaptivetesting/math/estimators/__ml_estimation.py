@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Literal
 import numpy as np
 from ...models.__test_item import TestItem, BaseItem, PolyItem
 from ...services.__estimator_interface import IEstimator
@@ -12,7 +12,9 @@ class MLEstimator(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
                  items: Sequence[BaseItem],
-                 optimization_interval: Tuple[float, float] = (-10, 10), **kwargs):
+                 optimization_interval: Tuple[float, float] = (-10, 10),
+                 model: Literal["GRM", "GPCM"] | None = None,
+                 **kwargs):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
         item parameters.
@@ -25,6 +27,13 @@ class MLEstimator(IEstimator):
         """
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
 
+        # decide type of model used
+        if isinstance(items, PolyItem):
+            self.type: Literal["poly", "dich"] = "poly"
+            self.model = model
+        else:
+            self.type = "dich"
+
         # ignore additional kwargs
         del kwargs
 
@@ -36,13 +45,16 @@ class MLEstimator(IEstimator):
         Returns:
             float: ability estimation
         """
-        
-        return maximize_likelihood_function(a=self.a,
+        if self.type == "dich":  
+            return maximize_likelihood_function(a=self.a,
                                             b=self.b,
                                             c=self.c,
                                             d=self.d,
                                             response_pattern=self.response_pattern,
                                             border=self.optimization_interval)
+        if self.type == "poly":
+            if self.model == "GRM":
+                
     
     def get_standard_error(self, estimation) -> float:
         """Calculates the standard error for the given estimated ability level.
