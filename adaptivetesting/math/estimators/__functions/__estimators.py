@@ -139,7 +139,7 @@ def log_likelihood(mu: np.ndarray,
     
     return result
 
-
+# TODO: pass function to this for poly model compatability
 def maximize_likelihood_function(a: np.ndarray,
                                  b: np.ndarray,
                                  c: np.ndarray,
