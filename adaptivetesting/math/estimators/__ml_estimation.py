@@ -3,7 +3,7 @@ import numpy as np
 from ...models.__test_item import BaseItem, PolyItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
-from .__test_information import test_information_function
+from .__test_information import test_information_function, poly_test_information_function
 from typing import Sequence
 from .__functions.__poly.__gpcm import GPCM
 from .__functions.__poly.__grm import GRM
@@ -62,7 +62,7 @@ class MLEstimator(IEstimator):
                     cast(list[int], self.response_pattern.tolist()),
                     self.optimization_interval
                 )
-            
+
             if self.model == "GPCM":
                 gpcm = GPCM()
                 return gpcm.maximize_likelihood_function(
@@ -73,7 +73,6 @@ class MLEstimator(IEstimator):
                 )
         raise ValueError("model and/or type have not been correctly specified")
 
-# TODO: Standard error POLY
     def get_standard_error(self, estimation) -> float:
         """Calculates the standard error for the given estimated ability level.
 
@@ -83,15 +82,30 @@ class MLEstimator(IEstimator):
         Returns:
             float: standard error of the ability estimation
         """
-        test_information = test_information_function(
-            np.array(estimation, dtype=float),
-            a=self.a,
-            b=self.b,
-            c=self.c,
-            d=self.d,
-            prior=None,
-            optimization_interval=self.optimization_interval
-        )
+        if self.type == "dich":
+            test_information = test_information_function(
+                np.array(estimation, dtype=float),
+                a=self.a,
+                b=self.b,
+                c=self.c,
+                d=self.d,
+                prior=None,
+                optimization_interval=self.optimization_interval
+            )
+
+        else:
+            if self.model is None:
+                raise ValueError("model cannot be None")
+            else:
+                test_information = poly_test_information_function(
+                    mu=estimation,
+                    a_params=self.a_params,
+                    thresholds_list=self.thresholds_list,
+                    response_pattern=self.response_pattern.tolist(),
+                    model_type=self.model,
+                    optimization_interval=self.optimization_interval,
+                    prior=None
+                )
 
         sd_error = 1 / np.sqrt(test_information)
         return float(sd_error)

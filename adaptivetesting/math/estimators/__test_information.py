@@ -110,18 +110,46 @@ def test_information_function(
     else:
         return float(item_information.sum())
 
+
 def poly_test_information_function(
-        mu: float,
-        a_params: list[float],
-        thresholds_list: list[list[float]],
-        prior: Prior,
-        model_type: Literal["GRM", "GPCM"],
-        optimization_interval: tuple[float, float] = (-10, 10),
-    ) -> float:
+    mu: float,
+    a_params: list[float],
+    thresholds_list: list[list[float]],
+    response_pattern: list[int],
+    prior: Prior | None,
+    model_type: Literal["GRM", "GPCM"],
+    optimization_interval: tuple[float, float] = (-10, 10),
+) -> float:
     # calculate information for every test item
+    item_information = 0.0
     if model_type == "GRM":
-        GRM.fisher_information()
+        for i, _ in enumerate(a_params):
+            inf_item_i = GRM.fisher_information(
+                mu,
+                a_params[i],
+                thresholds_list[i],
+                response_pattern[i]
+            )
+            item_information = item_information + inf_item_i
+    elif model_type == "GPCM":
+        for i, _ in enumerate(a_params):
+            inf_item_i = GPCM.fisher_information(
+                mu,
+                a_params[i],
+                thresholds_list[i],
+                response_pattern[i]
+            )
+            item_information = item_information + inf_item_i
+    else:
+        raise ValueError("model_type must be GRM or GPCM")
+    
+    test_information = item_information
+    # add prior information
+    if prior:
+        prior_information = prior_information_function(
+            prior=prior,
+            optimization_interval=optimization_interval
+        )
+        test_information = test_information + float(prior_information)
 
-    item_information = 
-
-    ############## CONTINUE HERE!
+    return test_information

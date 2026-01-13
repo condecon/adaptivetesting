@@ -4,7 +4,7 @@ from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import BaseItem, PolyItem
 from .__functions.__bayes import maximize_posterior
 from .__prior import Prior
-from .__test_information import test_information_function
+from .__test_information import test_information_function, poly_test_information_function
 from .__functions.__poly.__gpcm import GPCM
 from .__functions.__poly.__grm import GRM
 
@@ -84,7 +84,6 @@ class BayesModal(IEstimator):
                 )
         raise ValueError("model and/or type have not been correctly specified")
 
-    # TODO: Standard error POLY
     def get_standard_error(self, estimation: float) -> float:
         """Calculates the standard error for the given estimated ability level.
 
@@ -94,15 +93,30 @@ class BayesModal(IEstimator):
         Returns:
             float: standard error of the ability estimation
         """
-        test_information = test_information_function(
-            np.array(estimation, dtype=float),
-            a=self.a,
-            b=self.b,
-            c=self.c,
-            d=self.d,
-            prior=self.prior,
-            optimization_interval=self.optimization_interval
-        )
+        if self.type == "dich":
+            test_information = test_information_function(
+                np.array(estimation, dtype=float),
+                a=self.a,
+                b=self.b,
+                c=self.c,
+                d=self.d,
+                prior=self.prior,
+                optimization_interval=self.optimization_interval
+            )
+
+        else:
+            if self.model is None:
+                raise ValueError("model cannot be None")
+            else:
+                test_information = poly_test_information_function(
+                    mu=estimation,
+                    a_params=self.a_params,
+                    thresholds_list=self.thresholds_list,
+                    response_pattern=self.response_pattern.tolist(),
+                    model_type=self.model,
+                    optimization_interval=self.optimization_interval,
+                    prior=self.prior
+                )
 
         sd_error = 1 / np.sqrt(test_information)
         return float(sd_error)

@@ -111,7 +111,7 @@ class ExpectedAPosteriori(BayesModal):
         The currently estimated ability level is required as parameter.
 
         Args:
-            estimated_ability (float): _description_
+            estimated_ability (float): estimated ability level
 
         Returns:
             float: standard error of the ability estimation
@@ -124,12 +124,33 @@ class ExpectedAPosteriori(BayesModal):
         else:
             log_prior = np.log(self.prior.pdf(x) + 1e-300)
         
-        log_likelihood_vals = np.vectorize(lambda mu: log_likelihood(mu,
-                                                                     self.a,
-                                                                     self.b,
-                                                                     self.c,
-                                                                     self.d,
-                                                                     self.response_pattern))(x)
+        log_likelihood_vals: np.ndarray
+        
+        if self.type == "dich":
+            log_likelihood_vals = np.vectorize(lambda mu: log_likelihood(mu,
+                                                                         self.a,
+                                                                         self.b,
+                                                                         self.c,
+                                                                         self.d,
+                                                                         self.response_pattern))(x)
+        if self.type == "poly":
+            if self.model == "GPCM":
+                log_likelihood_vec = np.vectorize(
+                    lambda mu: GPCM.log_likelihood(mu,
+                                                   self.a_params,
+                                                   self.thresholds_list,
+                                                   cast(list[int], self.response_pattern.tolist()))
+                )
+                log_likelihood_vals = log_likelihood_vec(x)
+            if self.model == "GRM":
+                log_likelihood_vec = np.vectorize(
+                    lambda mu: GRM.log_likelihood(mu,
+                                                  self.a_params,
+                                                  self.thresholds_list,
+                                                  cast(list[int], self.response_pattern.tolist()))
+                )
+                log_likelihood_vals = log_likelihood_vec(x)
+
         log_posterior = log_likelihood_vals + log_prior
         max_log = np.nanmax(log_posterior)
         weights = np.exp(log_posterior - max_log)

@@ -58,7 +58,7 @@ class GRM(PolyModelFunctions):
     def fisher_information(theta: float,
                            a: float,
                            thresholds: list[float],
-                           response: int):
+                           response: int) -> float:
         """Embretson, S. E., & Reise, S. P. (2000). Item Response Theory for Psychologists."""
         def log_prob(x):
             p = GRM.category_prob(x, a, thresholds, response)
