@@ -1,7 +1,6 @@
 import numpy as np
 import numdifftools as nd
 from .__poly_math import PolyModelFunctions
-from math import log
 
 
 class GPCM(PolyModelFunctions):

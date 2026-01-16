@@ -1,5 +1,4 @@
 import numpy as np
-from math import log
 import numdifftools as nd
 from .__poly_math import PolyModelFunctions
 

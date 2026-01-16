@@ -112,7 +112,6 @@ class BayesModal(IEstimator):
                     mu=estimation,
                     a_params=self.a_params,
                     thresholds_list=self.thresholds_list,
-                    response_pattern=self.response_pattern.tolist(),
                     model_type=self.model,
                     optimization_interval=self.optimization_interval,
                     prior=self.prior

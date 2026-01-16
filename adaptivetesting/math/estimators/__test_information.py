@@ -115,7 +115,6 @@ def poly_test_information_function(
     mu: float,
     a_params: list[float],
     thresholds_list: list[list[float]],
-    response_pattern: list[int],
     prior: Prior | None,
     model_type: Literal["GRM", "GPCM"],
     optimization_interval: tuple[float, float] = (-10, 10),
@@ -127,8 +126,7 @@ def poly_test_information_function(
             inf_item_i = GRM.fisher_information(
                 mu,
                 a_params[i],
-                thresholds_list[i],
-                response_pattern[i]
+                thresholds_list[i]
             )
             item_information = item_information + inf_item_i
     elif model_type == "GPCM":
@@ -136,8 +134,7 @@ def poly_test_information_function(
             inf_item_i = GPCM.fisher_information(
                 mu,
                 a_params[i],
-                thresholds_list[i],
-                response_pattern[i]
+                thresholds_list[i]
             )
             item_information = item_information + inf_item_i
     else:
