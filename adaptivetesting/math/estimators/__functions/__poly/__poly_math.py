@@ -28,8 +28,7 @@ class PolyModelFunctions(ABC):
     @staticmethod
     def fisher_information(theta: float,
                            a: float,
-                           thresholds: list[float],
-                           response: int):
+                           thresholds: list[float]):
         pass
     
     def maximize_likelihood_function(self,

@@ -49,15 +49,25 @@ class GPCM(PolyModelFunctions):
         return -log_lik # Return negative log-likelihood for minimization
     
     @staticmethod
-    def fisher_information(theta,
-                           a,
-                           thresholds,
-                           response) -> float:
-        """Embretson, S. E., & Reise, S. P. (2000). Item Response Theory for Psychologists."""
-        def log_prob(x):
-            p = GPCM.category_prob(x, a, thresholds, response)
+    def fisher_information(theta: float,
+                           a: float,
+                           thresholds: list[float]):
+        """Embretson, S. E., & Reise, S. P. (2000). Item Response Theory for Psychologists.
+        p. 185
+        primary citation Dodd, DeAyala & Koch 1995
+        """
+        def prob(x: float, category: int):
+            p = GPCM.category_prob(x, a, thresholds, category)
             p = max(p, 1e-12)
-            return log(p)
+            return p
+        prob_d1 = nd.Derivative(prob, order=1)
         
-        log_prob_d2 = nd.Derivative(log_prob, order=2)
-        return -log_prob_d2(theta)
+        def category_information(x: float, category: int):
+            cat_inf = (prob_d1(x, category) ** 2) / prob(x, category)
+            return cat_inf
+        
+        item_inf = 0
+        for cat in range(len(thresholds) + 1):
+            item_inf = item_inf + category_information(theta, cat)
+
+        return item_inf
