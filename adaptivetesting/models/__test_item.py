@@ -1,5 +1,4 @@
-from abc import abstractmethod
-
+from typing import TypedDict
 
 class TestItem:
     def __init__(self):
@@ -26,18 +25,31 @@ class TestItem:
         self.d: float = 1
         self.additional_properties: dict = {}
 
-    def as_dict(self, with_id: bool = False) -> dict[str, float | int | dict | None]:
+    def as_dict(self, with_id = True):
+        """Convert test item to a dictionary.
 
-        item_dict: dict[str, float | int | dict | None] = {
+        Args:
+            with_id (bool, optional): Deprecated. This argument will be ignored. 
+                Defaults to True.
+
+        """
+        ItemDict = TypedDict("ItemDict", {
+            "id": int | None,
+            "a": float,
+            "b": float | list[float],
+            "c": float,
+            "d": float,
+            "additional_properties": dict
+        })
+        
+        item_dict: ItemDict = {
+            "id": self.id,
             "a": self.a,
             "b": self.b,
             "c": self.c,
             "d": self.d,
             "additional_properties": self.additional_properties
         }
-
-        if with_id and self.id is not None:
-            item_dict["id"] = self.id
 
         return item_dict
     
