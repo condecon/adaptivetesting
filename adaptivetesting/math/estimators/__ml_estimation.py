@@ -1,10 +1,9 @@
 from typing import List, Tuple, Literal, cast
 import numpy as np
-from ...models.__test_item import BaseItem, PolyItem
+from ...models.__test_item import TestItem
 from ...services.__estimator_interface import IEstimator
 from .__functions.__estimators import maximize_likelihood_function
 from .__test_information import test_information_function, poly_test_information_function
-from typing import Sequence
 from .__functions.__poly.__gpcm import GPCM
 from .__functions.__poly.__grm import GRM
 
@@ -12,7 +11,7 @@ from .__functions.__poly.__grm import GRM
 class MLEstimator(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
-                 items: Sequence[BaseItem],
+                 items: list[TestItem],
                  optimization_interval: Tuple[float, float] = (-10, 10),
                  model: Literal["GRM", "GPCM"] | None = None,
                  **kwargs):
@@ -29,12 +28,12 @@ class MLEstimator(IEstimator):
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
 
         # decide type of model used
-        if isinstance(items, PolyItem):
+        if all([isinstance(item.b, list) for item in items]):
             self.type: Literal["poly", "dich"] = "poly"
             self.model = model
         else:
             self.type = "dich"
-
+        
         # ignore additional kwargs
         del kwargs
 

@@ -1,11 +1,11 @@
 import numpy as np
 from scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
-from ...models.__test_item import BaseItem, PolyItem
+from ...models.__test_item import TestItem
 from .__functions.__estimators import log_likelihood
 from .__prior import Prior
 from math import pow
-from typing import Sequence, Literal, cast
+from typing import Literal, cast
 from .__functions.__poly.__gpcm import GPCM
 from .__functions.__poly.__grm import GRM
 
@@ -13,7 +13,7 @@ from .__functions.__poly.__grm import GRM
 class ExpectedAPosteriori(BayesModal):
     def __init__(self,
                  response_pattern: list[int] | np.ndarray,
-                 items: Sequence[BaseItem],
+                 items: list[TestItem],
                  prior: Prior,
                  optimization_interval: tuple[float, float] = (-10, 10),
                  model: Literal["GRM", "GPCM"] | None = None,):
@@ -26,7 +26,7 @@ class ExpectedAPosteriori(BayesModal):
             Args:
                 response_pattern (List[int] | np.ndarray): list of response patterns (0: wrong, 1:right)
 
-                items (Sequence[BaseItem]): list of answered items
+                items (list[TestItem]): list of answered items
             
                 prior (Prior): prior distribution
 
@@ -35,7 +35,7 @@ class ExpectedAPosteriori(BayesModal):
         super().__init__(response_pattern, items, prior, optimization_interval)
 
         # decide type of model used
-        if isinstance(items, PolyItem):
+        if all([isinstance(item.b, list) for item in items]):
             self.type: Literal["poly", "dich"] = "poly"
             self.model = model
         else:

@@ -1,5 +1,6 @@
 from typing import TypedDict
 
+
 class TestItem:
     def __init__(self):
         """Representation of a test item in the item pool.
@@ -20,16 +21,16 @@ class TestItem:
         """
         self.id: int | None = None
         self.a: float = 1
-        self.b: float | list[float]= float("nan")
+        self.b: float | list[float] = float("nan")
         self.c: float = 0
         self.d: float = 1
         self.additional_properties: dict = {}
 
-    def as_dict(self, with_id = True):
+    def as_dict(self, with_id=True):
         """Convert test item to a dictionary.
 
         Args:
-            with_id (bool, optional): Deprecated. This argument will be ignored. 
+            with_id (bool, optional): Deprecated. This argument will be ignored.
                 Defaults to True.
 
         """

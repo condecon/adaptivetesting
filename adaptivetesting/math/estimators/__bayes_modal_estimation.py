@@ -1,7 +1,7 @@
-from typing import List, Tuple, Sequence, Literal, cast
+from typing import List, Tuple, Literal, cast
 import numpy as np
 from ...services.__estimator_interface import IEstimator
-from ...models.__test_item import BaseItem, PolyItem
+from ...models.__test_item import TestItem
 from .__functions.__bayes import maximize_posterior
 from .__prior import Prior
 from .__test_information import test_information_function, poly_test_information_function
@@ -12,7 +12,7 @@ from .__functions.__poly.__grm import GRM
 class BayesModal(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
-                 items: Sequence[BaseItem],
+                 items: list[TestItem],
                  prior: Prior,
                  optimization_interval: Tuple[float, float] = (-10, 10),
                  model: Literal["GRM", "GPCM"] | None = None,):
@@ -26,7 +26,7 @@ class BayesModal(IEstimator):
             Args:
                 response_pattern (List[int] | np.ndarray ): list of response patterns (0: wrong, 1:right)
 
-                items (Sequence[BaseItem]): list of answered items
+                items (list[TestItem]): list of answered items
             
                 prior (Prior): prior distribution
 
@@ -37,7 +37,7 @@ class BayesModal(IEstimator):
         self.prior = prior
 
         # decide type of model used
-        if isinstance(items, PolyItem):
+        if all([isinstance(item.b, list) for item in items]):
             self.type: Literal["poly", "dich"] = "poly"
             self.model = model
         else:

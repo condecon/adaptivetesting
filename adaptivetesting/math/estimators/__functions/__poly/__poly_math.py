@@ -8,24 +8,25 @@ from scipy.integrate import trapezoid
 
 class PolyModelFunctions(ABC):
     
-    @abstractmethod
+
     @staticmethod
+    @abstractmethod
     def category_prob(theta: float,
                       a: float,
                       thresholds_list: list[float],
                       response_pattern: int):
         pass
 
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def log_likelihood(theta: float,
                        a_params: list[float],
                        thresholds_list: list[list[float]],
                        response_pattern: list[int]):
         pass
     
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def fisher_information(theta: float,
                            a: float,
                            thresholds: list[float]):

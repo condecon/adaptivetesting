@@ -97,7 +97,8 @@ class TestLoadTestItems(TestCase):
                 "b": 5,
                 "c": 0.9,
                 "d": 1,
-                "additional_properties": {}
+                "additional_properties": {},
+                "id": None
             },
             generated.test_items[0].as_dict()
         )
@@ -108,7 +109,8 @@ class TestLoadTestItems(TestCase):
                 "b": 3,
                 "c": 1.9,
                 "d": 1,
-                "additional_properties": {}
+                "additional_properties": {},
+                "id": None
             },
             generated.test_items[1].as_dict()
         )
@@ -246,7 +248,7 @@ class TestTestItemRoundTrip(TestCase):
         }
 
         # serialize including id
-        data_with_id = original.as_dict(with_id=True)
+        data_with_id = original.as_dict()
 
         # deserialize
         restored = TestItem.from_dict(data_with_id)
@@ -259,6 +261,3 @@ class TestTestItemRoundTrip(TestCase):
         self.assertEqual(restored.d, original.d)
         self.assertEqual(restored.additional_properties, original.additional_properties)
 
-        # verify as_dict omits id when with_id is False
-        data_no_id = original.as_dict(with_id=False)
-        self.assertNotIn("id", data_no_id)

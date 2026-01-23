@@ -222,6 +222,9 @@ class ItemPool:
 
             if ids is not None:
                 item.id = ids[i]
+            
+            if "id" in source.keys():
+                item.id = source["id"][i]
 
             if content_categories is not None:
                 item.additional_properties["category"] = content_categories[i]
