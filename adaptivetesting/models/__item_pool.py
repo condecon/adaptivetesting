@@ -204,7 +204,7 @@ class ItemPool:
             if not (len(a) == len(b) == len(c) == len(d)):
                 raise ValueError("a, b, c, and d must have the same length.")
         else:
-             if not (len(a) == len(b)):
+            if not (len(a) == len(b)):
                 raise ValueError("a and b must have the same length.")
         
         if ids is not None:
@@ -245,7 +245,7 @@ class ItemPool:
     @staticmethod
     def load_from_dataframe(source: DataFrame) -> "ItemPool":
         """Creates item pool from a pandas DataFrame.
-        Required columns are: `a`, `b`. 
+        Required columns are: `a`, `b`.
         `c`, `d` are optional (ignored for polytomous items).
         Each column has to contain float values.
         A `simulated_responses` (int values) column can be added to

@@ -260,4 +260,3 @@ class TestTestItemRoundTrip(TestCase):
         self.assertEqual(restored.c, original.c)
         self.assertEqual(restored.d, original.d)
         self.assertEqual(restored.additional_properties, original.additional_properties)
-

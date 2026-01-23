@@ -7,8 +7,6 @@ from scipy.integrate import trapezoid
 
 
 class PolyModelFunctions(ABC):
-    
-
     @staticmethod
     @abstractmethod
     def category_prob(theta: float,
