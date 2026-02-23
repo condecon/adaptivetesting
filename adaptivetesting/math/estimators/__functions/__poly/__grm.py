@@ -5,7 +5,8 @@ from .__poly_math import PolyModelFunctions
 
 class GRM(PolyModelFunctions):
     @staticmethod
-    def category_prob(theta, a: float, thresholds: list[float], k: int):
+    def category_prob(theta, a: float, thresholds: list[float], response_pattern: int):
+        k = response_pattern
         # k is the category index (0, 1, ..., num_thresholds)
         num_thresholds = len(thresholds)
 
@@ -45,7 +46,7 @@ class GRM(PolyModelFunctions):
                 theta=theta,
                 a=a_params[item_idx],
                 thresholds=thresholds_list[item_idx],
-                k=response_pattern[item_idx]
+                response_pattern=response_pattern[item_idx]
             )
             if prob <= 0: # Handle cases where probability is zero or negative
                 log_lik += -np.inf # Log of zero is negative infinity

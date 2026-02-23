@@ -71,3 +71,11 @@ class TestItem:
         if "id" in source and source["id"] is not None:
             item.id = source["id"]
         return item
+
+    def is_polytomous(self) -> bool:
+        """Checks whether a item is polytomous or dichotomous.
+
+        Returns:
+            bool: True if item is polytomous.
+        """
+        return isinstance(self.b, list)
