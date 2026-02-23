@@ -5,6 +5,7 @@ from .__exposure_control import ExposureControl
 from ...models.__adaptive_test import AdaptiveTest
 from ...models.__test_item import TestItem
 from ..estimators.__test_information import item_information_function
+from typing import Literal
 
 
 class Randomesque(ExposureControl):
@@ -78,22 +79,22 @@ class Randomesque(ExposureControl):
         return item_entry[0]
 
     @staticmethod
+    # TODO: implement model call
     def radomesque_item_selection(items: list[TestItem],
                                   ability_estimate: float,
                                   n_items: int,
                                   reverse: bool = True,
                                   item_rating_function: Callable = item_information_function,
                                   seed: int | None = None,
+                                  model: Literal["GRM", "GPCM"] | None = None,
                                   **kwargs: Any
                                   ) -> TestItem:
         item_information_list: list[tuple[float, int]] = []
         for i, item in enumerate(items):
             information = float(item_rating_function(
-                a=np.array(item.a),
-                b=np.array(item.b),
-                c=np.array(item.c),
-                d=np.array(item.d),
-                mu=np.array(ability_estimate),
+                ability=ability_estimate,
+                item=item,
+                model=model,
                 **kwargs
             ))
 
