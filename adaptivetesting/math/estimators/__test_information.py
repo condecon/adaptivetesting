@@ -4,12 +4,40 @@ from .__prior import Prior
 from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
-from typing import Literal
+from typing import Literal, cast
 from .__functions.__poly.__gpcm import GPCM
 from .__functions.__poly.__grm import GRM
+from ...models.__test_item import TestItem
 
 
 def item_information_function(
+        ability: float,
+        item: TestItem,
+        model: Literal["GRM", "GPCM"] | None = None
+) -> float:
+    if model == "GRM":
+        return GRM.fisher_information(
+            ability,
+            item.a,
+            cast(list, item.b),
+        )
+    elif model == "GPCM":
+        return GPCM.fisher_information(
+            ability,
+            item.a,
+            cast(list, item.b)
+        )
+
+    else: # dichotmous 
+        return dicho_item_information_function(
+            mu=np.array(ability),
+            a=np.array(item.a),
+            b=np.array(item.b),
+            c=np.array(item.c),
+            d=np.array(item.d)
+        ).astype(float).item()
+
+def dicho_item_information_function(
         mu: np.ndarray,
         a: np.ndarray,
         b: np.ndarray,
@@ -81,7 +109,7 @@ def test_information_function(
         optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
     """
-    Calculates test information.
+    Calculates test information for dichotmous items.
     Therefore, the information is calculated for every item
     and then summed up.
     If a prior is specified, the fisher information of the prior
@@ -100,7 +128,7 @@ def test_information_function(
         float: test information
     """
     # calculate information for every item
-    item_information = np.vectorize(item_information_function)(
+    item_information = np.vectorize(dicho_item_information_function)(
         mu, a, b, c, d
     )
 

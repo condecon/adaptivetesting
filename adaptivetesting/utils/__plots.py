@@ -7,6 +7,7 @@ from ..math.estimators.__functions.__estimators import probability_y1
 from ..math.estimators.__test_information import item_information_function
 from .__funcs import load_final_test_results, load_test_results_single_participant
 import numpy as np
+from typing import Literal
 
 
 def plot_final_ability_estimates(simulation_id: str,
@@ -94,6 +95,7 @@ def plot_icc(item: TestItem,
 
 def plot_iif(item: TestItem,
              range: tuple[float, float] = (-10, 10),
+             model: Literal["GRM", "GPCM"] | None = None,
              ax: Axes | None = None,
              **kwargs):
     """
@@ -101,6 +103,7 @@ def plot_iif(item: TestItem,
     Parameters:
         item (TestItem): The test item for which to plot the information function.
         range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
+        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotmous IRT models.
         ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
         **kwargs: Additional keyword arguments passed to matplotlib's plot function.
     Returns:
@@ -113,11 +116,9 @@ def plot_iif(item: TestItem,
     
     for theta in thetas:
         info = item_information_function(
-            mu=theta,
-            a=np.array(item.a),
-            b=np.array(item.b),
-            c=np.array(item.c),
-            d=np.array(item.d),
+            ability=theta.astype(float).item(),
+            item=item,
+            model=model
         )
         information_array.append(info)
 
@@ -203,6 +204,7 @@ def plot_exposure_rate(simulation_id: str,
 def plot_test_information(
         items: list[TestItem],
         range: tuple[float, float] = (-10, 10),
+        model: Literal["GRM", "GPCM"] | None = None,
         ax: Axes | None = None,
         **kwargs):
     """
@@ -210,6 +212,7 @@ def plot_test_information(
     Args:
         items (list[TestItem]): Test items in an item pool for which to calculate the test information
         range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
+        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotmous IRT models.
         ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
         **kwargs: Additional keyword arguments passed to matplotlib's plot function.
     Returns:
@@ -218,13 +221,12 @@ def plot_test_information(
     # calculate test information by summing item information across items
     thetas = np.linspace(range[0], range[1], 100)
     information_array = np.zeros_like(thetas, dtype=float)
+    item_information_function_vec = np.vectorize(item_information_function)
     for item in items:
-        information_array += item_information_function(
-            mu=np.array(thetas).T,
-            a=np.array(item.a),
-            b=np.array(item.b),
-            c=np.array(item.c),
-            d=np.array(item.d),
+        information_array += item_information_function_vec(
+            np.array(thetas).T,
+            item=item,
+            model=model
         )
 
     # setup figure

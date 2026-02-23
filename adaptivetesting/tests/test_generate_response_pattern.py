@@ -114,7 +114,7 @@ def make_polyt_item(a=1.0, b_list=None):
     it.b = b_list if b_list is not None else [0.2, 0.7]
     return it
 
-class TestGenerateResponsePattern(unittest.TestCase):
+class TestGeneratePolyPattern(unittest.TestCase):
     def test_no_break(self):
         items = [make_polyt_item() for _ in range(3)]
         pattern = generate_response_pattern(ability=0.5, items=items, model="GRM")
