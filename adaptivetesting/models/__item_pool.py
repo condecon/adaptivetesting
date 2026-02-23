@@ -129,22 +129,18 @@ class ItemPool:
             for i, discrimination in enumerate(a):
                 items[i].a = discrimination
 
-        if not all([isinstance(b_i, list) for b_i in b]):
-            if c is not None:
-                if len(c) != len(b):
-                    raise ValueError("Length of c and b has to be the same.")
-                for i, guessing in enumerate(c):
-                    items[i].c = guessing
-            if c is None:
-                raise ValueError("c cannot be None.")
+        
+        if c is not None:
+            if len(c) != len(b):
+                raise ValueError("Length of c and b has to be the same.")
+            for i, guessing in enumerate(c):
+                items[i].c = guessing
 
-            if d is not None:
-                if len(d) != len(b):
-                    raise ValueError("Length of d and b has to be the same.")
-                for i, slipping in enumerate(d):
-                    items[i].d = slipping
-            if d is None:
-                raise ValueError("d cannot be None.")
+        if d is not None:
+            if len(d) != len(b):
+                raise ValueError("Length of d and b has to be the same.")
+            for i, slipping in enumerate(d):
+                items[i].d = slipping
 
         if ids is not None:
             if len(ids) != len(b):

@@ -164,9 +164,23 @@ class TestLoadTestItems(TestCase):
             "c": [0.9, 1.9]
         }
         df = pd.DataFrame(dictionary)
+        # this should work because d can be ignored when creating items
+        pool = ItemPool.load_from_dataframe(df)
+        # check that the pool contains the correct items
+        item1 = TestItem()
+        item1.a = 0.9
+        item1.b = 5
+        item1.c = 0.9
+        item1.d = 1
 
-        with self.assertRaises(ValueError):
-            ItemPool.load_from_dataframe(df)
+        item2 = TestItem()
+        item2.a = 1.9
+        item2.b = 3
+        item2.c = 1.9
+        item2.d = 1
+
+        self.assertDictEqual(item1.as_dict(), pool.test_items[0].as_dict())
+        self.assertDictEqual(item2.as_dict(), pool.test_items[1].as_dict())
 
     def test_load_pandas_no_responses(self):
         dictionary = {
