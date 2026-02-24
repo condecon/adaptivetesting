@@ -85,3 +85,47 @@ class TestMaximumPriorityIndex(unittest.TestCase):
                 },
                 current_ability=0
             )
+
+
+class TestMPIPolyModels(unittest.TestCase):
+    def __init__(self, methodName="runTest"):
+
+        items = pd.DataFrame({
+            "a": [1.32, 1.07, 0.84],
+            "b": [[0.2, 0.9],
+                  [0.2, 0.9],
+                  [0.2, 0.9]],
+            "id": [1, 2, 3]
+        })
+
+        self.available_items = adt.ItemPool.load_from_dataframe(items).test_items
+        self.content_categories = ["Math", "English", "Math"]
+
+        for i, _ in enumerate(self.available_items):
+            self.available_items[i].additional_properties = {
+                "category": [self.content_categories[i]]
+            }
+
+        super().__init__(methodName)
+
+    def test_basic_calculation(self):
+        adt.compute_priority_index(
+            item=self.available_items[0],
+            group_weights={
+                "Math": 0.2,
+                "English": 0.8
+            },
+            required_items={
+                "Math": 5,
+                "English": 10
+            },
+            shown_items={
+                "Math": 0,
+                "English": 10
+            },
+            current_ability=0
+        )
+    
+    def test_quota_calculation(self):
+        result = adt.compute_quota_left(10, 5)
+        self.assertAlmostEqual(result, 0.5)
