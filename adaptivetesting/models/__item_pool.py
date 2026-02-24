@@ -64,7 +64,7 @@ class ItemPool:
             item (TestItem): item to get the corresponding response
 
         Returns:
-            (int): response (either `0` or `1`)
+            (int): response (either `0` or `1` for dichotmous items or `k` for polytomous items)
         """
         if self.simulated_responses is None:
             raise ValueError("Simulated responses not provided")

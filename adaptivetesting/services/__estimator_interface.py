@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Tuple, cast
+from typing import List, Tuple, cast, Literal
 import numpy as np
 from ..models.__test_item import TestItem
 
@@ -8,7 +8,8 @@ class IEstimator(ABC):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
                  items: list[TestItem],
-                 optimization_interval: Tuple[float, float] = (-10, 10)):
+                 optimization_interval: Tuple[float, float] = (-10, 10),
+                 model: Literal["GRM", "GPCM"] | None = None):
         """This is the interface required for every possible
         estimator.
         Any estimator inherits from this class and implements

@@ -5,6 +5,7 @@ from ..models.__test_item import TestItem
 import numpy as np
 from typing import Literal, cast
 from scipy.stats import multinomial
+from scipy.special import softmax
 
 
 def generate_response_pattern(ability: float,
@@ -85,24 +86,27 @@ def gen_pattern_poly(
     # loop through all items
     for item in items:
         # calculate probability for every class
-        probabilities: list[float] = []
+        log_probabilities: list[float] = []
         if model == "GRM":
             for t_i in range(len(cast(list, item.b)) + 1):
-                prob = GRM.category_prob(ability,
+                log_prob = GRM.category_prob(ability,
                                          item.a,
                                          cast(list, item.b),
                                          response_pattern=t_i)
-                probabilities.append(prob)
+                log_probabilities.append(log_prob)
         elif model == "GPCM":
             for t_i in range(len(cast(list, item.b)) + 1):
-                prob = GPCM.category_prob(ability,
+                log_prob = GPCM.category_prob(ability,
                                           item.a,
                                           cast(list, item.b),
                                           response_pattern=t_i)
-                probabilities.append(prob)
+                log_probabilities.append(log_prob)
+
+        
 
         # draw from multinomial distribution for final response
         # the probability for a response in k categories is 1
+        probabilities = softmax(np.array(log_probabilities))
         mn_draw = cast(np.ndarray, multinomial.rvs(
             n=1,
             p=probabilities,

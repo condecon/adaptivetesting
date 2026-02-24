@@ -12,8 +12,8 @@ class MLEstimator(IEstimator):
     def __init__(self,
                  response_pattern: List[int] | np.ndarray,
                  items: list[TestItem],
-                 optimization_interval: Tuple[float, float] = (-10, 10),
                  model: Literal["GRM", "GPCM"] | None = None,
+                 optimization_interval: Tuple[float, float] = (-10, 10),
                  **kwargs):
         """This class can be used to estimate the current ability level
         of a respondent given the response pattern and the corresponding
@@ -28,7 +28,7 @@ class MLEstimator(IEstimator):
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
 
         # decide type of model used
-        if all([isinstance(item.b, list) for item in items]):
+        if all([item.is_polytomous() for item in items]):
             self.type: Literal["poly", "dich"] = "poly"
             self.model = model
         else:
