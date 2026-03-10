@@ -62,7 +62,8 @@ class BayesModal(IEstimator):
                 self.c,
                 self.d,
                 self.response_pattern,
-                self.prior
+                self.prior,
+                self.optimization_interval
             )
         # else, we have to calculate the full posterior distribution
         # because the optimizers do not correctly identify the maximum of the function
