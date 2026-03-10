@@ -60,7 +60,8 @@ class BayesModal(IEstimator):
                                       self.c,
                                       self.d,
                                       self.response_pattern,
-                                      self.prior)
+                                      self.prior,
+                                      optimization_interval=self.optimization_interval)
     
         if self.type == "poly":
             if self.model == "GRM":
