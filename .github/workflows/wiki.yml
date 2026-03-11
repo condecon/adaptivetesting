@@ -27,4 +27,5 @@ jobs:
           mv docs_source/build/markdown ./API
           rm -r docs_source
       - uses: Andrew-Chen-Wang/github-wiki-action@v4
-        path: docs/
+        with:
+          path: docs/
