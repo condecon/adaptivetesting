@@ -92,7 +92,7 @@ class BayesModal(IEstimator):
                 ])
 
                 # add prior
-                unmarginalized_posterior = lik_values * self.prior.pdf(mu)
+                unmarginalized_posterior = lik_values * np.log(self.prior.pdf(mu))
                 # find argmin and return mu
                 estimate_index = np.argmin(unmarginalized_posterior)
                 return float(mu[estimate_index].astype(float))
