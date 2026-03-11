@@ -1,0 +1,30 @@
+name: Publish wiki
+on:
+  push:
+    branches: [revision]
+    paths:
+      - wiki/**
+      - .github/workflows/publish-wiki.yml
+permissions:
+  contents: write
+jobs:
+  publish-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: build wiki
+        run: |
+          cd docs/docs_source
+          pip install -r requirements.txt
+          .\Make markdown
+      - name: move markdown pages
+        run: |
+          cd ..
+          mkdir API
+          mv docs_source/build/markdown ./API
+          rm -r docs_source
+      - uses: Andrew-Chen-Wang/github-wiki-action@v4
+        path: docs/

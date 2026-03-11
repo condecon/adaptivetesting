@@ -1,32 +1,12 @@
 # adaptivetesting
 
-*adaptivetesting* is a Python package for computer-aided adaptive
-testing that can be used to simulate and implement custom adaptive tests
-in real-world testing scenarios.
+[![SPEC 0 — Minimum Supported Dependencies](docs/_static/SPEC-0.svg)](https://scientific-python.org/specs/spec-0000/)
+![](https://anaconda.org/conda-forge/adaptivetesting/badges/version.svg)
+![](https://anaconda.org/conda-forge/adaptivetesting/badges/license.svg)
+![](https://anaconda.org/conda-forge/adaptivetesting/badges/downloads.svg)
 
-# Getting Started
 
----
+![Logo of the adaptivetesting package](/docs/_static/logo.svg)
 
-Required Python version: >= 3.11 (other versions may work, but they are not officially supported)
 
-```bash
-pip install adaptivetesting
-```
-
-If you want to install the current development version,
-you can do so by running the following command:
-
-```bash
-pip install git+https://github.com/condecon/adaptivetesting
-```
-
-# Contents:
-
-* [data Module](data.md)
-* [implementations Module](implementations.md)
-* [math Module](math.md)
-* [models Module](models.md)
-* [simulation Module](simulation.md)
-* [services Module](services.md)
-* [tests Module](tests.md)
+## Features
