@@ -3,7 +3,7 @@ on:
   push:
     branches: [revision]
     paths:
-      - wiki/**
+      - docs/**
       - .github/workflows/publish-wiki.yml
 permissions:
   contents: write
