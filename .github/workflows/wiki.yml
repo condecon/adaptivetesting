@@ -5,6 +5,7 @@ on:
     paths:
       - docs/**
       - .github/workflows/publish-wiki.yml
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
