@@ -1,7 +1,4 @@
 # adaptivetesting
-[![SPEC 0 — Minimum Supported Dependencies](docs/docs_source/source/_static/SPEC-0.svg)](https://scientific-python.org/specs/spec-0000/)
-
-
 
 <img src="/docs/_static/logo.svg" style="width: 100%">
 </img>
