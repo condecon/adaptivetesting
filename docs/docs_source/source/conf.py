@@ -12,9 +12,6 @@ sys.path.insert(0, os.path.abspath('../../'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'adaptivetesting'
-copyright = '2025, Jonas Engicht'
-author = 'Jonas Engicht'
-release = '2025'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -31,19 +28,4 @@ autoclass_content = 'both'
 
 html_theme = 'sphinx_book_theme'
 html_static_path = ['_static']
-html_css_files = [
-    'main.css',
-]
-html_logo = "_static/logo.svg"
-html_theme_options = {
-    "navigation_depth": -1,
-    "repository_url": "https://github.com/condecon/adaptivetesting",
-    "use_issues_button": True
-
-}
-
-
-
-
-def setup(app: Sphinx):
-    app.add_css_file("main.css")
+markdown_uri_doc_suffix = ""
