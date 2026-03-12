@@ -19,16 +19,15 @@ jobs:
       - name: build wiki
         run: |
           pip install -e .
-          cd docs/docs_source
-          pip install -r requirements.txt
-          make markdown
+          pip install -r docs/docs_source/requirements.txt
+          make -C docs/docs_source markdown
       - name: move markdown pages
         run: |
-          cd ..
-          mkdir API
-          ls
-          mv docs_source/build/markdown ./API
-          rm -r docs_source
+          mkdir -p docs/API
+          # Move the files using the full path from the repo root
+          # Note: check if 'make' creates 'build' inside 'docs_source'
+          mv docs/docs_source/build/markdown/* docs/API/
+          rm -r docs/docs_source
       - uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
           path: docs/
