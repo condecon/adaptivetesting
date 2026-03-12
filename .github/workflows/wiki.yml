@@ -26,7 +26,9 @@ jobs:
           mkdir -p docs/API
           # Move the files using the full path from the repo root
           # Note: check if 'make' creates 'build' inside 'docs_source'
+          rm docs/docs_source/build/markdown/index.md
           mv docs/docs_source/build/markdown/* docs/API/
+          # remove source_dir
           rm -r docs/docs_source
       - uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
