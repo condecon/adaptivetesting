@@ -1,6 +1,9 @@
 # adaptivetesting
 ![Logo of the adaptivetesting package](_static/logo.svg)
 
+![Following SPEC 0](_static/spec0.svg)
+![Supported Python Versions](_static/python.svg)
+![Package Repositories: PyPi, conda-forge](_static/package.svg)
 
 ## Features
 
