@@ -31,7 +31,7 @@ dev = [
     "mypy>=1.15.0",
     "pandas-stubs>=2.2.3.250308",
     "scipy-stubs>=1.15.2.2",
-    "setuptools>=70.3.0",
+    "setuptools>=78.1.1",
     "snakeviz>=2.2.2",
     "types-tqdm>=4.67.0.20250516",
 ]
@@ -42,7 +42,7 @@ docs = [
     "sphinx-markdown-builder>=0.6.8",
 ]
 test = [
-    "psychopy>=2025.1.1",
+    "psychopy>=2026.1.1",
 ]
 
 [tool.uv.sources]
