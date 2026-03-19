@@ -56,6 +56,6 @@ members = [
 
 [project.urls]
 Homepage = "https://github.com/condecon/adaptivetesting"
-Documentation = "https://github.com/condecon/adaptivetesting/tree/main/docs"
+Documentation = "https://github.com/condecon/adaptivetesting/wiki"
 Repository = "https://github.com/condecon/adaptivetesting.git"
 Issues = "https://github.com/condecon/adaptivetesting/issues"
