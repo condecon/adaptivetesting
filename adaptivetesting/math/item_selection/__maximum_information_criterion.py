@@ -2,11 +2,13 @@ from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ..estimators.__test_information import item_information_function
 from ...models.__algorithm_exception import AlgorithmException
-import numpy as np
+from typing import Literal
 
 
+# Todo: implement model parameter in function calls
 def maximum_information_criterion(items: list[TestItem],
-                                  ability: float) -> TestItem:
+                                  ability: float,
+                                  model: Literal["GRM", "GPCM"] | None = None) -> TestItem:
     """The maximum information criterion selected the next item for the respondent
     by finding the item that has the highest information value.
 
@@ -25,20 +27,12 @@ def maximum_information_criterion(items: list[TestItem],
     best_item = None
 
     for item in items:
-        # extract parameters from the current item
-        a = np.array([item.a])
-        b = np.array([item.b])
-        c = np.array([item.c])
-        d = np.array([item.d])
-
         # calculate information for the current item
         try:
             information = float(item_information_function(
-                mu=np.array(ability, dtype=float),
-                a=a,
-                b=b,
-                c=c,
-                d=d
+                ability=ability,
+                item=item,
+                model=model,
             ))
             
             # if information is higher than before

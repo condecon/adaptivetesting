@@ -3,6 +3,8 @@ import csv
 import pathlib
 from ..models.__test_result import TestResult
 from ..services.__test_results_interface import ITestResults
+import json
+import ast
 
 
 class CSVContext(ITestResults):
@@ -54,4 +56,26 @@ class CSVContext(ITestResults):
 
         Returns: List[TestResult]
         """
-        raise NotImplementedError("This function is not implemented.")
+        foldername = f"data/{self.simulation_id}"
+        
+        test_results: list[TestResult] = []
+        with open(f"{foldername}/{self.participant_id}.csv", "r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            next(reader, None) # skip header row
+            for row in reader:
+                test_result = TestResult.from_dict(row)
+                # showed_item is read as a string representation of a Python
+                # literal (e.g. a dict). Use ast.literal_eval to safely parse
+                # it back into a dict. Fallback to a JSON-style conversion
+                # if literal_eval fails.
+                try:
+                    test_result.showed_item = ast.literal_eval(str(test_result.showed_item))
+                except Exception:
+                    json_string = str(test_result.showed_item).replace("'", '"').replace("None", "null")
+                    try:
+                        test_result.showed_item = json.loads(json_string)
+                    except Exception:
+                        test_result.showed_item = {}
+                test_results.append(test_result)
+            file.close()
+        return test_results

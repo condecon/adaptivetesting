@@ -4,14 +4,12 @@ from typing import List
 
 
 class ITestResults(ABC):
-
     def __init__(self, simulation_id: str, participant_id: str):
         """Interface for saving and reading test results.
         This interface may mainly be used for saving simulation results.
 
         Args:
             simulation_id (str): The simulation ID. Name of the results file.
-
             participant_id (str): The participant ID.
         """
         self.simulation_id = simulation_id

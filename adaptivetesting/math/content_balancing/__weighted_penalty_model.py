@@ -1,0 +1,282 @@
+from typing import Literal, Callable
+from ..estimators.__test_information import item_information_function
+from ...models.__test_item import TestItem
+from .__functions import (
+    compute_prop,
+    compute_total_content_penalty_value_for_item,
+    standardize_total_content_constraint_penalty_value,
+    standardize_item_information,
+    compute_information_penalty_value,
+    compute_weighted_penalty_value
+)
+from .__constraint import Constraint
+from .__content_balancing import ContentBalancing
+from ...models.__adaptive_test import AdaptiveTest
+
+
+CONSTRAINT_GROUP = Literal["A", "B", "C"]
+ITEM_GROUP = Literal["green", "orange", "yellow", "red", None]
+
+
+class WeightedPenaltyModel(ContentBalancing):
+    """This content balancing method follows Shin et al. (2009)
+    and allows to apply constraints to the item selection.
+    The users can define a custom weight for the item information and the constriant.
+
+    References
+    ------------
+        Shin, C. D., Chien, Y., Way, W. D., & Swanson, L. (2009). Weighted Penalty Model for Content Balancing in CATS.
+        Pearson.
+        https://www.pearsonassessments.com/content/dam/school/global/clinical/us/assets/testnav/weighted-penalty-model.pdf
+
+    """
+    def __init__(self,
+                 adaptive_test: AdaptiveTest,
+                 constraints: list[Constraint],
+                 constraint_weight: float | Callable[[AdaptiveTest], float],
+                 information_weight: float | Callable[[AdaptiveTest], float]
+                 ):
+        """
+        This content balancing method follows Shin et al. (2009)
+        and allows to apply constraints to the item selection.
+        The users can define a custom weight for the item information and the constriant.
+
+        Args:
+            adaptive_test (AdaptiveTest): instance of the adaptive test
+            constraints (list[Constraint]): constraints that are applied to the item selection
+            constraint_weight (float | Callable[[AdaptiveTest], float]): weight of the constraints
+                This can also be a function taking adaptive test as an input argument.
+                This allows the user to specify custom weight values depending
+                on the specific states and progress of the test.
+            information_weight (float | Callable[[AdaptiveTest], float]): weight of the item information
+                This can also be a function taking adaptive test as an input argument.
+                This allows the user to specify custom weight values depending
+                on the specific states and progress of the test.
+        """
+        super().__init__(adaptive_test, constraints)
+        self.items = adaptive_test.item_pool.test_items
+        self.ability = adaptive_test.ability_level
+        self.shown_items = adaptive_test.answered_items
+        self.constraints = constraints
+        
+        # setup
+        self.eligible_items: list[tuple[TestItem, float, ITEM_GROUP]] = []
+
+        # only used internally
+        if callable(constraint_weight):
+            self.constraint_weight = constraint_weight(adaptive_test)
+        else:
+            self.constraint_weight = constraint_weight
+        
+        if callable(information_weight):
+            self.information_weight = information_weight(adaptive_test)
+        else:
+            self.information_weight = information_weight
+
+    def select_item(self) -> TestItem | None:
+        """Select the next item to administer based on the weighted penalty model.
+
+        Returns:
+            TestItem | None: The selected TestItem or None if no eligible items are available.
+        """
+        self.prepare_item_pool()
+        if len(self.eligible_items) > 0:
+            return self.eligible_items[0][0]
+        else:
+            return None
+    
+    def prepare_item_pool(self):
+        """Prepares item pool for the item selection
+        and calls are functions required to perform the necessary calculations"""
+        # calculate item information for every item
+        item_information_list = self.calculate_information()
+
+        max_item = max(item_information_list)
+
+        content_penalties = self.calculate_content_penalties()
+
+        max_content_penalty = max(content_penalties)
+        min_content_penalty = min(content_penalties)
+
+        self.calcualte_weighted_penalty_for_all_items(
+            item_information_list=item_information_list,
+            max_item=max_item,
+            content_penalties=content_penalties,
+            max_content_penalty=max_content_penalty,
+            min_content_penalty=min_content_penalty
+        )
+
+        group_assignment: list[tuple[Constraint, CONSTRAINT_GROUP]] = self.get_constraint_group_assignments()
+
+        # form a list of candidate items
+        self.form_list_of_candidate_items(group_assignment)
+
+        # order items
+        self.order_candidate_items()
+
+    def calculate_information(self, model: Literal['GRM', 'GPCM'] | None = None) -> list[float]:
+        information_list = [
+            float(item_information_function(
+                ability=self.ability,
+                item=item,
+                model=model
+            ))
+            for item in self.items
+        ]
+        return information_list
+
+    def calculate_content_penalties(self) -> list[float]:
+        content_penalties = [
+            compute_total_content_penalty_value_for_item(
+                item=item,
+                shown_items=self.shown_items,
+                available_items=self.items,
+                constraints=self.constraints
+            )
+            for item in self.items
+        ]
+        return content_penalties
+
+    def calcualte_weighted_penalty_for_all_items(self,
+                                                 item_information_list: list[float],
+                                                 max_item: float,
+                                                 content_penalties: list[float],
+                                                 max_content_penalty: float,
+                                                 min_content_penalty: float):
+        for i, item in enumerate(self.items):
+            weighted_penalty_value = self.calculate_weighted_penalty_value(
+                item_information=item_information_list[i],
+                max_information=max_item,
+                constraint_weight=self.constraint_weight,
+                information_weight=self.information_weight,
+                content_penalty=content_penalties[i],
+                maximum_total_content_penalty=max_content_penalty,
+                minimum_total_content_penalty=min_content_penalty,
+            )
+
+            self.eligible_items.append((item, weighted_penalty_value, None))
+
+    def get_constraint_group_assignments(self) -> list[tuple[Constraint, CONSTRAINT_GROUP]]:
+        group_assignment: list[tuple[Constraint, CONSTRAINT_GROUP]] = []
+        for constraint in self.constraints:
+            # calculate proportion of the constraint
+            n_administered: int = len(
+                [item for item in self.shown_items if constraint.name in item.additional_properties["category"]]
+            )
+            n_remaining: int = len(
+                [item for item in self.items if constraint.name in item.additional_properties["category"]]
+            )
+            test_length: int = len(self.shown_items)
+            prop = compute_prop(
+                n_administered=n_administered,
+                n_remaining=n_remaining,
+                prevalence=constraint.prevalence,
+                test_length=test_length,
+            )
+            # assign color group per proportion
+            group_assignment.append(self.assign_color_group_per_proportion(
+                constraint, prop
+            ))
+
+        return group_assignment
+    
+    @staticmethod
+    def assign_color_group_per_proportion(constraint: Constraint,
+                                          prop: float):
+        if constraint.lower is not None and constraint.upper is not None:
+            if prop <= constraint.lower:
+                return (constraint, "A")
+            if constraint.lower <= prop <= constraint.upper:
+                return (constraint, "B")
+            if constraint.upper <= prop:
+                return (constraint, "C")
+        else:
+            raise ValueError("constraint.lower and constraint.upper may not be None.")
+
+    def form_list_of_candidate_items(self,
+                                     group_assignment: list[tuple[Constraint, CONSTRAINT_GROUP]]) -> None:
+        for i, item_entry in enumerate(self.eligible_items):
+            item, weighted_penalty_value, _ = item_entry
+            # find associated constraint
+            associated_constraints = [constraint_assignment
+                                      for constraint_assignment in group_assignment
+                                      if constraint_assignment[0].name in item.additional_properties["category"]
+                                      ]
+            self.eligible_items[i] = self.assign_items_to_item_group(
+                item,
+                associated_constraints,
+                weighted_penalty_value
+            )
+
+    @staticmethod
+    def assign_items_to_item_group(
+        item: TestItem,
+        associated_constraints: list[tuple[Constraint, Literal['A', 'B', 'C']]],
+        weighted_penalty_value: float
+    ):
+        group_set = set([group for _, group in associated_constraints])
+        
+        # if all associated constraints A or B -> green group
+        if group_set.issubset({"A", "B"}) and "A" in group_set:
+            return (item, weighted_penalty_value, "green")
+        # if all A, B, C, or A, C -> orange
+        elif group_set == {"A", "C"} or group_set == {"A", "B", "C"}:
+            return (item, weighted_penalty_value, "orange")
+        # if all B -> yellow
+        elif group_set == {"B"}:
+            return (item, weighted_penalty_value, "yellow")
+        # if all B, C -> red
+        elif group_set == {"B", "C"} or group_set == {"C"}:
+            return (item, weighted_penalty_value, "red")
+        else:
+            return (item, weighted_penalty_value, None)
+
+    def order_candidate_items(self):
+        # between group ordering: green, orange, yellow, red
+        # within group ordering: ascending order of weighted penalty value
+        self.eligible_items = sorted(
+            self.eligible_items,
+            key=lambda x: (
+                {"green": 0, "orange": 1, "yellow": 2, "red": 3, None: 4}[x[2]],
+                x[1]
+            )
+        )
+
+    @staticmethod
+    def calculate_weighted_penalty_value(content_penalty: float,
+                                         minimum_total_content_penalty: float,
+                                         maximum_total_content_penalty: float,
+                                         item_information: float,
+                                         max_information: float,
+                                         constraint_weight: float,
+                                         information_weight: float
+                                         ) -> float:
+        # reference content penalty
+        total_content_penalty_value = content_penalty
+
+        # standardize total content constraint penalty value
+        standardized_total_content_penalty_value = standardize_total_content_constraint_penalty_value(
+            item_penalty_value=total_content_penalty_value,
+            minimum=minimum_total_content_penalty,
+            maximum=maximum_total_content_penalty
+        )
+
+        # calculate standardized item information
+        standardized_item_information = standardize_item_information(
+            item_information=item_information,
+            maximum=max_information
+        )
+
+        # calculate information penalty value
+        information_penalty_value = compute_information_penalty_value(
+            standardized_item_information=standardized_item_information
+        )
+
+        # compute weighted penality value
+        weighted_penalty_value = compute_weighted_penalty_value(
+            constraint_weight=constraint_weight,
+            standardized_constraint_penalty_value=standardized_total_content_penalty_value,
+            information_weight=information_weight,
+            information_penalty_value=information_penalty_value,
+        )
+        return weighted_penalty_value

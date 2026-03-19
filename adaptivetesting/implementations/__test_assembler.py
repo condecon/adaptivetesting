@@ -1,86 +1,109 @@
+from ..models.__item_selection_exception import ItemSelectionException
+from ..math.content_balancing.__constraint import Constraint
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from typing import Any, Type
+from typing import Any, Type, TypedDict, Callable, Literal
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
 from ..models.__test_result import TestResult
+from ..models.__misc import ResultOutputFormat
 from ..services.__item_selection_protocol import ItemSelectionStrategy
+from ..math.content_balancing.__content_balancing import CONTENT_BALANCING
+from ..math.content_balancing.__weighted_penalty_model import WeightedPenaltyModel
+from ..math.content_balancing.__maximum_priority_index import MaximumPriorityIndex
+from ..math.estimators.__prior import Prior
+from ..math.exposure_control.__exposure_control import EXPOSURE_CONTROL
+from ..math.exposure_control.__randomesque import Randomesque
+from ..math.exposure_control.__mpi_exposure_control import MaximumPriorityIndexExposureControl
+import inspect
+
+
+class EstimatorArgs(TypedDict):
+    prior: Prior | None
+    optimization_interval: tuple[float, float]
+    model: Literal["GRM", "GPCM"] | None
+
+
+class ContentBalancingArgs(TypedDict):
+    constraints: list[Constraint] | None
+    """constraints that are applied to the item selection"""
+    constraint_weight: float | Callable[[AdaptiveTest], float] | None
+    """weight of the constraints
+    This can also be a function taking adaptive test as an input argument.
+    This allows the user to specify custom weight values depending
+    on the specific states and progress of the test."""
+    information_weight: float | Callable[[AdaptiveTest], float] | None
+    """weight of the item information
+    This can also be a function taking adaptive test as an input argument.
+    This allows the user to specify custom weight values depending
+    on the specific states and progress of the test."""
+
+
+class ExposureControlArgs(TypedDict):
+    constraints: list[Constraint] | None
+    """Constraints applied for Maximum Priority Index exposure control."""
+    participant_ids: list[str] | None
+    """Participant ids to read the previously administered test in order to
+    perform exposure control (MPI only).
+    """
+    output_format: ResultOutputFormat | None
+    """Format in which the previous tests have been saved (MPI only)."""
+    n_items: int | None
+    """number of items to select for Randomesque items selection"""
+    seed: int | None
+    """random seed for the final item selection during Randomesque item selection"""
 
 
 class TestAssembler(AdaptiveTest):
     """
     TestAssembler is a subclass of AdaptiveTest designed to assemble and administer adaptive tests,
     optionally including a pretest phase. It supports customizable ability estimation and item selection strategies.
-    Args:
-        
-        item_pool: The pool of test items available for selection.
-        
-        simulation_id: Identifier for the simulation run.
-        
-        participant_id: Identifier for the participant.
-        
-        ability_estimator (Type[IEstimator]): The estimator class used for ability estimation.
-        
-        estimator_args (dict[str, Any], optional):
-            Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
-        
-        item_selector (ItemSelectionStrategy, optional):
-            Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
-        
-        item_selector_args (dict[str, Any], optional): Arguments for the item selector. Defaults to {}.
-        
-        pretest (bool, optional): Whether to run a pretest phase before the main test. Defaults to False.
-        
-        pretest_seed (int | None, optional): Random seed for pretest item selection. Defaults to None.
-        
-        true_ability_level (optional): The true ability level of the participant (for simulation).
-        
-        initial_ability_level (optional): The initial ability estimate. Defaults to 0.
-        
-        simulation (bool, optional): Whether the test is run in simulation mode. Defaults to True.
-        
-        debug (bool, optional): Whether to enable debug output. Defaults to False.
-        
-        **kwargs: Additional keyword arguments passed to the AdaptiveTest superclass.
-    
+
     Methods:
         estimate_ability_level():
             Estimates the current ability level using the specified estimator and handles exceptions
             for specific response patterns (all correct or all incorrect).
-        
+
         get_next_item() -> TestItem:
             Selects the next item to administer using the specified item selection strategy.
-        
+
         run_test_once():
             Runs a single iteration of the test, including an optional pretest phase. Handles item
             administration, response collection, ability estimation, and result recording.
-    
+
     Attributes:
         __ability_estimator: The estimator class for ability estimation.
-        
+
         __estimator_args: Arguments for the ability estimator.
-        
+
         __item_selector: The item selection strategy.
-        
+
         __item_selector_args: Arguments for the item selector.
-        
+
         __pretest: Whether to run a pretest phase.
-        
+
         __pretest_seed: Random seed for pretest item selection.
     """
+
     def __init__(self,
                  item_pool,
                  simulation_id,
                  participant_id,
                  ability_estimator: Type[IEstimator],
-                 estimator_args: dict[str, Any] = {
+                 estimator_args: EstimatorArgs = {
                      "prior": None,
-                     "optimization_interval": (-10, 10)
+                     "optimization_interval": (-10, 10),
+                     "model": None
                  },
                  item_selector: ItemSelectionStrategy = maximum_information_criterion, # type: ignore
                  item_selector_args: dict[str, Any] = {},
+                 model_type: Literal["GRM", "GPCM"] | None = None,
+                 content_balancing: None | CONTENT_BALANCING = None,
+                 content_balancing_args: ContentBalancingArgs | None = None,
+                 exposure_control: None | EXPOSURE_CONTROL = None,
+                 exposure_control_args: None | ExposureControlArgs = None,
                  pretest: bool = False,
                  pretest_seed: int | None = None,
                  true_ability_level=None,
@@ -88,13 +111,54 @@ class TestAssembler(AdaptiveTest):
                  simulation=True,
                  debug=False,
                  **kwargs):
+        """
+        Args:
+
+            item_pool: The pool of test items available for selection.
+
+            simulation_id: Identifier for the simulation run.
+
+            participant_id: Identifier for the participant.
+
+            ability_estimator (Type[IEstimator]): The estimator class used for ability estimation.
+
+            estimator_args (EstimatorArgs, optional):
+                Arguments for the ability estimator. Defaults to {"prior": None, "optimization_interval": (-10, 10)}.
+
+            item_selector (ItemSelectionStrategy, optional):
+                Function or strategy for selecting the next item. Defaults to maximum_information_criterion.
+
+            item_selector_args (dict[str, Any], optional): Arguments for the item selector. Defaults to {}.
+
+            content_balancing (CONTENT_BALANCING, optional): Selected content balancing strategy. Defaults to None.
+                If a content balancing strategy is specified, the item selection strategy will be ignored.
+
+            pretest (bool, optional): Whether to run a pretest phase before the main test. Defaults to False.
+
+            pretest_seed (int | None, optional): Random seed for pretest item selection. Defaults to None.
+
+            true_ability_level (optional): The true ability level of the participant (for simulation).
+
+            initial_ability_level (optional): The initial ability estimate. Defaults to 0.
+
+            simulation (bool, optional): Whether the test is run in simulation mode. Defaults to True.
+
+            debug (bool, optional): Whether to enable debug output. Defaults to False.
+
+            **kwargs: Additional keyword arguments passed to the AdaptiveTest superclass.
+        """
         self.__ability_estimator = ability_estimator
         self.__estimator_args = estimator_args
         self.__item_selector = item_selector
         self.__item_selector_args = item_selector_args
+        self.content_balancing = content_balancing
+        self.content_balancing_args = content_balancing_args
+        self.exposure_control = exposure_control
+        self.exposure_control_args = exposure_control_args
         self.__pretest = pretest
         self.__pretest_seed = pretest_seed
-            
+        self.__estimator_args["model"] = model_type
+
         super().__init__(item_pool,
                          simulation_id,
                          participant_id,
@@ -103,7 +167,7 @@ class TestAssembler(AdaptiveTest):
                          simulation,
                          debug,
                          **kwargs)
-    
+
     def estimate_ability_level(self):
         """
         Estimates the ability level of a test-taker based on their response pattern and answered items.
@@ -113,17 +177,23 @@ class TestAssembler(AdaptiveTest):
         it assigns a default estimation value (-10 for all incorrect, 10 for all correct)
         and recalculates the standard error.
         Otherwise, it raises an AlgorithmException with additional context.
-        
+
         Returns:
             tuple[float, float]: A tuple containing the estimated ability level (float) and its standard error (float).
-        
+
         Raises:
             AlgorithmException: If estimation fails for reasons other than all responses being identical.
         """
+        # filter estimator args
+        sig = inspect.signature(self.__ability_estimator)
+        allowed = set(sig.parameters.keys())
+        filtered_estimator_args = {k: v for k, v in self.__estimator_args.items() if k in allowed}
+
+        # setup estimator
         estimator = self.__ability_estimator(
             self.response_pattern,
             self.answered_items,
-            **self.__estimator_args
+            **filtered_estimator_args # type: ignore
         )
 
         try:
@@ -143,10 +213,14 @@ class TestAssembler(AdaptiveTest):
                 when wrong when running {type(estimator)}""") from exception
 
         return estimation, standard_error
-    
+
     def get_next_item(self) -> TestItem:
         """
         Selects and returns the next test item based on the current ability level and item selector strategy.
+        If a content balancing strategy is specified, the item selection strategy will be ignored.
+        Instead, the item selected by the content balancing strategy will be returned.
+        This also applies to exposure control.
+        However, content balancing and exposure control cannot be specified at the same time
 
         Returns:
             TestItem: The next item to be administered in the test, as determined by the item selector.
@@ -154,12 +228,106 @@ class TestAssembler(AdaptiveTest):
         Raises:
             Any exceptions raised by the item selector function.
         """
-        item = self.__item_selector(
-            self.item_pool.test_items,
-            self.ability_level,
-            **self.__item_selector_args
-        )
-        return item
+        item: TestItem | None
+        if self.content_balancing is None and self.exposure_control_args is None:
+            # content balancing an exposure control are not specified
+            # filter item selection args
+            sig = inspect.signature(self.__item_selector)
+            allowed = set(sig.parameters.keys())
+            filtered_item_selector_args = {k: v for k, v in self.__item_selector_args.items() if k in allowed}
+
+            item = self.__item_selector(
+                self.item_pool.test_items,
+                self.ability_level,
+                **filtered_item_selector_args
+            )
+            return item
+        elif self.content_balancing and self.exposure_control:
+            raise ValueError("Content balancing and exposure cannot be specified at the same time!")
+        # content balancing only
+        elif self.content_balancing and self.exposure_control is None:
+            if self.content_balancing_args is not None:
+                # which strategy has been selected
+                if self.content_balancing == "WeightedPenaltyModel":
+                    # parse content balancing args
+
+                    # setup wep
+                    adaptive_test = self
+                    wep = WeightedPenaltyModel(
+                        adaptive_test,
+                        constraints=self.check_args_are_not_none(
+                            "constraints",
+                            self.content_balancing_args["constraints"]),
+                        constraint_weight=self.check_args_are_not_none(
+                            "constraint_weights",
+                            self.content_balancing_args["constraint_weight"]),
+                        information_weight=self.check_args_are_not_none(
+                            "information_weight",
+                            self.content_balancing_args["information_weight"]))
+
+                    item = wep.select_item()
+                    if item is None:
+                        raise ItemSelectionException(
+                            f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                    else:
+                        return item
+                elif self.content_balancing == "MaximumPriorityIndex":
+                    adaptive_test = self
+                    mpi = MaximumPriorityIndex(
+                        adaptive_test,
+                        constraints=self.check_args_are_not_none(
+                            "constraints",
+                            self.content_balancing_args["constraints"]))
+
+                    item = mpi.select_item()
+
+                    if item is None:
+                        raise ItemSelectionException(
+                            f"""Something went wrong when selecting an item using {self.content_balancing}""")
+                    else:
+                        return item
+            else:
+                raise ValueError("content_balancing_args cannot be None when using content balancing.")
+        # exposure control only
+        elif self.content_balancing is None and self.exposure_control:
+            if self.exposure_control_args is None:
+                raise ValueError("exposure_control_args cannot be None when using exposure control.")
+            # which strategy has been selected
+            if self.exposure_control == "Randomesque":
+                # Randomesque
+                adaptive_test = self
+                dict_keys = list(self.exposure_control_args.keys())
+                if "seed" not in dict_keys or "n_items" not in dict_keys:
+                    raise ValueError("exposure_control_args are not correctly specified")
+                
+                if self.exposure_control_args["n_items"] is not None:
+                    randomesque = Randomesque(
+                        adaptive_test=adaptive_test,
+                        n_items=self.exposure_control_args["n_items"],
+                        seed=self.exposure_control_args["seed"]
+                    )
+                    return randomesque.select_item()
+                else:
+                    raise ValueError("n_items cannot be None.")
+                
+            if self.exposure_control == "MaximumPriorityIndex":
+                if (self.exposure_control_args["participant_ids"]
+                   is None or self.exposure_control_args["output_format"] is None):
+                    raise ValueError("exposure_control_args are not correctly specified")
+                mpi = MaximumPriorityIndexExposureControl(
+                    self,
+                    constraints=self.exposure_control_args["constraints"],
+                    participant_ids=self.exposure_control_args["participant_ids"],
+                    format=self.exposure_control_args["output_format"]
+                )
+
+                selected_item = mpi.select_item()
+                if selected_item is None:
+                    raise ItemSelectionException("Fatal! Not appropriated item was "
+                                                 "selected using MPI for exposure control")
+                else:
+                    return selected_item
+        raise ValueError(f"Something went wrong when selecting an item using {self.content_balancing}.")
 
     def run_test_once(self):
         """
@@ -172,7 +340,7 @@ class TestAssembler(AdaptiveTest):
                 - Removes the item from the item pool.
             - Estimates the ability level and standard error after pretest responses.
             - Records test results for each pretest item, with the final item including the first ability estimation.
-        
+
         Returns:
             The result of the superclass's run_test_once() method.
         """
@@ -229,3 +397,22 @@ class TestAssembler(AdaptiveTest):
             self.test_results.append(intermediate_result)
 
         return super().run_test_once()
+
+    def check_args_are_not_none(self, key: str, x: Any | None) -> Any:
+        """This functions checks if an object is none.
+        If not a ValueError is raised.
+
+        Args:
+            key (str): parameter name where the object is typically assigned
+            x (Any | None): object
+
+        Raises:
+            ValueError: raised if the object is None.
+
+        Returns:
+            Any: object
+        """
+        if x is not None:
+            return x
+        else:
+            raise ValueError(f"{key} cannot be None.")

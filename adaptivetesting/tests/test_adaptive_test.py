@@ -39,10 +39,6 @@ class TestAdaptiveTest(unittest.TestCase, AdaptiveTest):
     def estimate_ability_level(self) -> tuple[float, float]:
         return 0, float("NaN")
 
-    def test_get_difficulties(self):
-        difficulties = self.get_item_difficulties()
-        self.assertEqual(difficulties, [0.24, 0.89, -0.6])
-
     def test_standard_error(self):
         """This should calculate a standard error without failing"""
         self.answered_items = [item1, item2]

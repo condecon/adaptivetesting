@@ -3,6 +3,8 @@ from unittest.mock import MagicMock, patch, PropertyMock
 from adaptivetesting.simulation.__simulation import Simulation
 from adaptivetesting.models.__adaptive_test import AdaptiveTest
 from adaptivetesting.models.__misc import ResultOutputFormat, StoppingCriterion
+import pandas as pd
+import adaptivetesting as adt
 
 
 def get_mock_adaptive_test():
@@ -32,7 +34,7 @@ def get_mock_adaptive_test_empty_pool():
     return mock_test
 
 
-class TestSimulation(unittest.TestCase):
+class TestSimulationMock(unittest.TestCase):
 
     @patch("adaptivetesting.simulation.__simulation.PickleContext")
     @patch("adaptivetesting.simulation.__simulation.CSVContext")
@@ -97,3 +99,63 @@ class TestSimulation(unittest.TestCase):
         sim = Simulation(test=mock_adaptive_test, test_result_output="UNSUPPORTED") # type: ignore
         with self.assertRaises(KeyError):
             sim.save_test_results()
+
+
+class TestFullSimulation(unittest.TestCase):
+    def test_run_basic_simulation_GRM(self):
+        items = pd.DataFrame({
+            "a": [1.32, 1.07, 0.84],
+            "b": [[0.2, 0.9],
+                  [0.2, 0.9],
+                  [0.2, 0.9]],
+            "id": [1, 2, 3]
+        })
+
+        item_pool = adt.ItemPool.load_from_dataframe(items)
+        res_pattern = adt.generate_response_pattern(
+            0,
+            item_pool.test_items,
+            model="GRM",
+            seed=123
+        )
+        item_pool.simulated_responses = res_pattern
+
+        adaptive_test = adt.TestAssembler(
+            item_pool=item_pool,
+            simulation_id="2",
+            participant_id="2",
+            ability_estimator=adt.MLEstimator,
+            model_type="GRM"
+        )
+
+        sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
+        sim.simulate()
+
+    def test_run_basic_simulation_GPCM(self):
+        items = pd.DataFrame({
+            "a": [0.926, 1.595, 0.330],
+            "b": [[1.595, 0.330],
+                  [-0.820, 0.487],
+                  [0.738, 0.578]],
+            "id": [1, 2, 3]
+        })
+
+        item_pool = adt.ItemPool.load_from_dataframe(items)
+        res_pattern = adt.generate_response_pattern(
+            0,
+            item_pool.test_items,
+            model="GPCM",
+            seed=123
+        )
+        item_pool.simulated_responses = res_pattern
+
+        adaptive_test = adt.TestAssembler(
+            item_pool=item_pool,
+            simulation_id="2",
+            participant_id="2",
+            ability_estimator=adt.MLEstimator,
+            model_type="GPCM"
+        )
+
+        sim = adt.Simulation(adaptive_test, adt.ResultOutputFormat.CSV)
+        sim.simulate()

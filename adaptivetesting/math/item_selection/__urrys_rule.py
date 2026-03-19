@@ -1,8 +1,10 @@
 from ...models.__test_item import TestItem
-from typing import List
+from typing import List, cast
 from ...models.__item_selection_exception import ItemSelectionException
+from warnings import deprecated
 
 
+@deprecated("Use maximum information criterion instead.")
 def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
     """Urry's rule selects the test item
     which has the minimal difference between
@@ -16,18 +18,21 @@ def urrys_rule(items: List[TestItem], ability: float) -> TestItem:
     Returns:
         TestItem: selected test item
     """
-    # create difference array from absolute value
-    difference: List[float] = []
-    for item in items:
-        difference.append(abs(ability - item.b))
+    if all([isinstance(item.b, float) for item in items]):
+        # create difference array from absolute value
+        difference: List[float] = []
+        for item in items:
+            difference.append(abs(ability - cast(float, item.b)))
 
-    # get minimal difference
-    minimal_difference = min(difference)
+        # get minimal difference
+        minimal_difference = min(difference)
 
-    # find the item where minimal difference is equal to absolut
-    # value of difference
-    for item in items:
-        if abs(ability - item.b) == minimal_difference:
-            return item
+        # find the item where minimal difference is equal to absolut
+        # value of difference
+        for item in items:
+            if abs(ability - cast(float, item.b)) == minimal_difference:
+                return item
 
-    raise ItemSelectionException("No appropriate item could be selected.")
+        raise ItemSelectionException("No appropriate item could be selected.")
+    else:
+        raise ValueError("Urry's rule cannot be used with polytomous IRT model items!")
