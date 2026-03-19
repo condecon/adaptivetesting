@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.special import logsumexp
 import numdifftools as nd
+import math
 from .__poly_math import PolyModelFunctions
 
 
@@ -42,7 +43,7 @@ class GPCM(PolyModelFunctions):
             )
             
             log_lik += log_prob
-        return -log_lik # Return negative log-likelihood for minimization
+        return log_lik # Return negative log-likelihood for minimization
     
     @staticmethod
     def fisher_information(theta: float,
@@ -53,7 +54,7 @@ class GPCM(PolyModelFunctions):
         primary citation Dodd, DeAyala & Koch 1995
         """
         def prob(x: float, category: int):
-            p = GPCM.category_prob(x, a, thresholds, category)
+            p = math.exp(GPCM.category_prob(x, a, thresholds, category))
             p = max(p, 1e-12)
             return p
         prob_d1 = nd.Derivative(prob, order=1)

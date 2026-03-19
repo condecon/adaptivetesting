@@ -1,6 +1,7 @@
 import numpy as np
 import numdifftools as nd
 from .__poly_math import PolyModelFunctions
+import math
 
 
 class GRM(PolyModelFunctions):
@@ -48,11 +49,9 @@ class GRM(PolyModelFunctions):
                 thresholds=thresholds_list[item_idx],
                 response_pattern=response_pattern[item_idx]
             )
-            if prob <= 0: # Handle cases where probability is zero or negative
-                log_lik += -np.inf # Log of zero is negative infinity
-            else:
-                log_lik += np.log(prob)
-        return -log_lik # Return negative log-likelihood for minimization
+            
+            log_lik += np.log(np.maximum(prob, 1e-12))
+        return log_lik # Return negative log-likelihood for minimization
     
     @staticmethod
     def fisher_information(theta: float,
