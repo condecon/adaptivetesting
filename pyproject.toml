@@ -8,11 +8,11 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
-    "numpy>=2.0.0",
+    "numpy>=2.1.0",
     "pandas>=2.3.0",
-    "scipy>=1.13.0",
+    "scipy>=1.15.0",
     "tqdm>=4.66.0",
-    "matplotlib>=3.9.0",
+    "matplotlib>=3.10.0",
     "numdifftools>=0.9.42",
 ]
 license-files = ["LICENSE"]
@@ -29,8 +29,8 @@ dev = [
     "cython>=3.1.4",
     "flake8>=7.2.0",
     "mypy>=1.15.0",
-    "pandas-stubs>=2.2.3.250308",
-    "scipy-stubs>=1.15.2.2",
+    "pandas-stubs>=2.3.0",
+    "scipy-stubs>=1.15.0",
     "setuptools>=78.1.1",
     "snakeviz>=2.2.2",
     "types-tqdm>=4.67.0.20250516",
@@ -42,7 +42,7 @@ docs = [
     "sphinx-markdown-builder>=0.6.8",
 ]
 test = [
-    "psychopy>=2026.1.1",
+    "psychopy",
 ]
 
 [tool.uv.sources]
