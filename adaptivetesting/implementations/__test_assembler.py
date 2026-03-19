@@ -3,7 +3,7 @@ from ..math.content_balancing.__constraint import Constraint
 from ..models.__adaptive_test import AdaptiveTest
 from ..models.__test_item import TestItem
 from ..services.__estimator_interface import IEstimator
-from typing import Any, Type, TypedDict, Callable
+from typing import Any, Type, TypedDict, Callable, Literal
 from ..math.item_selection.__maximum_information_criterion import maximum_information_criterion
 from ..models.__algorithm_exception import AlgorithmException
 from ..implementations.__pre_test import PreTest
@@ -97,6 +97,7 @@ class TestAssembler(AdaptiveTest):
                  },
                  item_selector: ItemSelectionStrategy = maximum_information_criterion, # type: ignore
                  item_selector_args: dict[str, Any] = {},
+                 model_type: Literal["GRM", "GPCM"] | None = None,
                  content_balancing: None | CONTENT_BALANCING = None,
                  content_balancing_args: ContentBalancingArgs | None = None,
                  exposure_control: None | EXPOSURE_CONTROL = None,
@@ -154,6 +155,7 @@ class TestAssembler(AdaptiveTest):
         self.exposure_control_args = exposure_control_args
         self.__pretest = pretest
         self.__pretest_seed = pretest_seed
+        self.__estimator_args["model"] = model_type
 
         super().__init__(item_pool,
                          simulation_id,

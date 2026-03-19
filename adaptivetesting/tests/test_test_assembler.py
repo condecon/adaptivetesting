@@ -80,7 +80,7 @@ class TestTestAssembler(unittest.TestCase):
             debug=True
         )
         self.assertEqual(assembler._TestAssembler__ability_estimator, DummyEstimator) # type: ignore
-        self.assertEqual(assembler._TestAssembler__estimator_args, {"foo": "bar"}) # type: ignore
+        self.assertEqual(assembler._TestAssembler__estimator_args, {"foo": "bar", "model": None}) # type: ignore
         self.assertEqual(assembler._TestAssembler__item_selector, dummy_item_selector) # type: ignore
         self.assertEqual(assembler._TestAssembler__item_selector_args, {"baz": 1}) # type: ignore
         self.assertTrue(assembler._TestAssembler__pretest) # type: ignore

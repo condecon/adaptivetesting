@@ -97,7 +97,8 @@ class TestLoadTestItems(TestCase):
                 "b": 5,
                 "c": 0.9,
                 "d": 1,
-                "additional_properties": {}
+                "additional_properties": {},
+                "id": None
             },
             generated.test_items[0].as_dict()
         )
@@ -108,7 +109,8 @@ class TestLoadTestItems(TestCase):
                 "b": 3,
                 "c": 1.9,
                 "d": 1,
-                "additional_properties": {}
+                "additional_properties": {},
+                "id": None
             },
             generated.test_items[1].as_dict()
         )
@@ -162,9 +164,23 @@ class TestLoadTestItems(TestCase):
             "c": [0.9, 1.9]
         }
         df = pd.DataFrame(dictionary)
+        # this should work because d can be ignored when creating items
+        pool = ItemPool.load_from_dataframe(df)
+        # check that the pool contains the correct items
+        item1 = TestItem()
+        item1.a = 0.9
+        item1.b = 5
+        item1.c = 0.9
+        item1.d = 1
 
-        with self.assertRaises(ValueError):
-            ItemPool.load_from_dataframe(df)
+        item2 = TestItem()
+        item2.a = 1.9
+        item2.b = 3
+        item2.c = 1.9
+        item2.d = 1
+
+        self.assertDictEqual(item1.as_dict(), pool.test_items[0].as_dict())
+        self.assertDictEqual(item2.as_dict(), pool.test_items[1].as_dict())
 
     def test_load_pandas_no_responses(self):
         dictionary = {
@@ -246,7 +262,7 @@ class TestTestItemRoundTrip(TestCase):
         }
 
         # serialize including id
-        data_with_id = original.as_dict(with_id=True)
+        data_with_id = original.as_dict()
 
         # deserialize
         restored = TestItem.from_dict(data_with_id)
@@ -259,6 +275,50 @@ class TestTestItemRoundTrip(TestCase):
         self.assertEqual(restored.d, original.d)
         self.assertEqual(restored.additional_properties, original.additional_properties)
 
-        # verify as_dict omits id when with_id is False
-        data_no_id = original.as_dict(with_id=False)
-        self.assertNotIn("id", data_no_id)
+
+class TestPolyItems(TestCase):
+    def test_loading_items_list(self):
+        items = ItemPool.load_from_list(
+            a = [0.934, 0.972, 1.210],
+            b = [
+                [0.071, 0.129],
+                [1.715, 0.461],
+                [-1.265, -0.687]
+            ]
+        ).test_items
+
+        self.assertTrue(all([isinstance(item.a, float) for item in items]))
+        self.assertTrue(all([isinstance(item.b, list) for item in items]))
+
+    def test_loading_items_dict(self):
+        items_dict = {
+            "a" : [0.934, 0.972, 1.210],
+            "b": [
+                [0.071, 0.129],
+                [1.715, 0.461],
+                [-1.265, -0.687]
+            ]
+        }
+        
+        items = ItemPool.load_from_dict(
+            items_dict
+        ).test_items
+
+        self.assertTrue(all([isinstance(item.a, float) for item in items]))
+        self.assertTrue(all([isinstance(item.b, list) for item in items]))
+
+    def test_loading_items_df(self):
+        items_dict = {
+            "a" : [0.934, 0.972, 1.210],
+            "b": [
+                [0.071, 0.129],
+                [1.715, 0.461],
+                [-1.265, -0.687]
+            ]
+        }
+
+        df = pd.DataFrame(items_dict)
+        items = ItemPool.load_from_dataframe(df).test_items
+
+        self.assertTrue(all([isinstance(item.a, float) for item in items]))
+        self.assertTrue(all([isinstance(item.b, list) for item in items]))

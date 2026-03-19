@@ -67,20 +67,6 @@ class AdaptiveTest(abc.ABC):
                         seed=kwargs["seed"] if "seed" in kwargs.keys() else None
                     )
 
-    def get_item_difficulties(self) -> List[float]:
-        """
-        Returns:
-             List[float]: difficulties of items in the item pool
-        """
-        return [item.b for item in self.item_pool.test_items]
-
-    def get_answered_items_difficulties(self) -> List[float]:
-        """
-        Returns:
-            List[float]: difficulties of answered items
-        """
-        return [item.b for item in self.answered_items]
-    
     def get_answered_items(self) -> List[TestItem]:
         """
         Returns:

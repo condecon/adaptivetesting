@@ -1,5 +1,5 @@
 from .__test_item import TestItem
-from typing import List, Tuple
+from typing import List, Tuple, cast
 from pandas import DataFrame
 
 
@@ -64,7 +64,7 @@ class ItemPool:
             item (TestItem): item to get the corresponding response
 
         Returns:
-            (int): response (either `0` or `1`)
+            (int): response (either `0` or `1` for dichotmous items or `k` for polytomous items)
         """
         if self.simulated_responses is None:
             raise ValueError("Simulated responses not provided")
@@ -90,7 +90,7 @@ class ItemPool:
 # STATIC LOAD METHODS
     @staticmethod
     def load_from_list(
-            b: List[float],
+            b: List[float] | list[list[float]],
             a: List[float] | None = None,
             c: List[float] | None = None,
             d: List[float] | None = None,
@@ -102,9 +102,10 @@ class ItemPool:
 
         Args:
             a (List[float]): discrimination parameter
-            b (List[float]): difficulty parameter
-            c (List[float]): guessing parameter
-            d (List[float]): slipping parameter
+            b (List[float] | list[list[float]]): For dichotomous models, this is the difficulty parameter.
+                For polytomous items, this is the list of threshold parameters.
+            c (List[float]): guessing parameter. Ignored for polytomous items.
+            d (List[float]): slipping parameter. Ignored for polytomous items.
             simulated_responses (List[int]): simulated responses
             ids (List[int]): item IDs
             content_categories (list[list[str]], optional): List of categories for each item.
@@ -116,9 +117,9 @@ class ItemPool:
         """
         items: List[TestItem] = []
 
-        for difficulty in b:
+        for b_i in b:
             item = TestItem()
-            item.b = difficulty
+            item.b = b_i
             items.append(item)
 
         # check if a, b, c, d are the same length
@@ -128,6 +129,7 @@ class ItemPool:
             for i, discrimination in enumerate(a):
                 items[i].a = discrimination
 
+        
         if c is not None:
             if len(c) != len(b):
                 raise ValueError("Length of c and b has to be the same.")
@@ -158,7 +160,7 @@ class ItemPool:
         return item_pool
 
     @staticmethod
-    def load_from_dict(source: dict[str, List[float]],
+    def load_from_dict(source: dict[str, List[float] | list[float]],
                        simulated_responses: List[int] | None = None,
                        ids: List[int] | None = None,
                        content_categories: list[list[str]] | None = None) -> "ItemPool":
@@ -166,13 +168,13 @@ class ItemPool:
         The dictionary has to have the following keys:
 
             - a
-            - b
-            - c
-            - d
+            - b (list of float, for polytomous models list[list[float]] as threshold list)
+            - c (ignored for polytomous items)
+            - d (ignored for polytomous items)
         each containing a list of float.
 
         Args:
-            source (dict[str, List[float]]): item pool dictionary
+            source (dict[str, List[float] | list[float]]): item pool dictionary
             simulated_responses (List[int]): simulated responses
             ids (List[int], optional): item IDs. Default `None`.
             content_categories (list[list[str]], optional): List of categories for each item.
@@ -181,10 +183,10 @@ class ItemPool:
         Returns:
             List[TestItem]: item pool
         """
-        a = source.get("a")
-        b = source.get("b")
-        c = source.get("c")
-        d = source.get("d")
+        a = cast(list[float], source.get("a"))
+        b = cast(list[list[float]] | list[float], source.get("b"))
+        c = cast(list[float] | None, source.get("c"))
+        d = cast(list[float] | None, source.get("d"))
 
         # check none
         if a is None:
@@ -192,17 +194,21 @@ class ItemPool:
 
         if b is None:
             raise ValueError("b cannot be None")
+        
+        if not all([isinstance(b_i, list) for b_i in b]):
+            # if b is not a list of thresholds check of c and d
+            if c is None:
+                raise ValueError("c cannot be None")
 
-        if c is None:
-            raise ValueError("c cannot be None")
-
-        if d is None:
-            raise ValueError("d cannot be None")
-
-        # check if a, b, c, and d have the same length
-        if not (len(a) == len(b) == len(c) == len(d)):
-            raise ValueError("All lists in the source dictionary must have the same length")
-
+            if d is None:
+                raise ValueError("d cannot be None")
+            # check if a, b, c, and d have the same length
+            if not (len(a) == len(b) == len(c) == len(d)):
+                raise ValueError("a, b, c, and d must have the same length.")
+        else:
+            if not (len(a) == len(b)):
+                raise ValueError("a and b must have the same length.")
+        
         if ids is not None:
             if len(ids) != len(b):
                 raise ValueError("Length of ids and b has to be the same.")
@@ -217,11 +223,17 @@ class ItemPool:
             item = TestItem()
             item.a = a[i]
             item.b = b[i]
-            item.c = c[i]
-            item.d = d[i]
+            
+            if c is not None:
+                item.c = c[i]
+            if d is not None:
+                item.d = d[i]
 
             if ids is not None:
                 item.id = ids[i]
+            
+            if "id" in source.keys():
+                item.id = cast(int, source["id"][i])
 
             if content_categories is not None:
                 item.additional_properties["category"] = content_categories[i]
@@ -235,7 +247,8 @@ class ItemPool:
     @staticmethod
     def load_from_dataframe(source: DataFrame) -> "ItemPool":
         """Creates item pool from a pandas DataFrame.
-        Required columns are: `a`, `b`, `c`, `d`.
+        Required columns are: `a`, `b`.
+        `c`, `d` are optional (ignored for polytomous items).
         Each column has to contain float values.
         A `simulated_responses` (int values) column can be added to
         the DataFrame to provide simulated responses.
@@ -254,17 +267,21 @@ class ItemPool:
         if "b" not in source.columns:
             raise ValueError("Column 'b' not found.")
 
-        if "c" not in source.columns:
-            raise ValueError("Column 'c' not found.")
-
-        if "d" not in source.columns:
-            raise ValueError("Column 'd' not found.")
-
         # get values
         a: List[float] = source["a"].values.tolist() # type: ignore
-        b: List[float] = source["b"].values.tolist() # type: ignore
-        c: List[float] = source["c"].values.tolist() # type: ignore
-        d: List[float] = source["d"].values.tolist() # type: ignore
+        b: List[float] | list[list[float]] = source["b"].values.tolist() # type: ignore
+        
+        c: list[float] | None
+        if "c" in source.columns:
+            c: List[float] = source["c"].values.tolist() # type: ignore
+        else:
+            c = None
+        
+        d: list[float] | None
+        if "d" in source.columns:
+            d: List[float] = source["d"].values.tolist() # type: ignore
+        else:
+            d = None
 
         if "ids" in source.columns:
             ids: List[int] | None = source["ids"].values.tolist() # type: ignore

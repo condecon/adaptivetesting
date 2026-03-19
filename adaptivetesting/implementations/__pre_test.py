@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, cast
 import numpy as np
 from ..models.__test_item import TestItem
 import random
@@ -10,6 +10,7 @@ class PreTest:
         The pretest class can be used to draw items randomly from
         difficulty quantiles
         of the item pool.
+        This pretest can only be used with dichotomous IRT models and items.
 
         Args:
             items: Item pool
@@ -18,15 +19,21 @@ class PreTest:
                 If not, the item selection will be drawn randomly, and you will not be able
                 to reproduce the results.
 
+        Raises:
+            ValueError: Raised if the items are specified for polytomous IRT models.
+
         """
         self.items = items
         self.seed = seed
+
+        if any([isinstance(item.b, list) for item in items]):
+            raise ValueError("The pretest can only be used with dichotomous IRT models and items.")
 
     def calculate_quantiles(self) -> np.ndarray:
         """Calculates quantiles 0.25, 0.5, 0.75
         """
         # get difficulties
-        difficulties: List[float] = [item.b for item in self.items]
+        difficulties: List[float] = [cast(float, item.b) for item in self.items]
 
         quantiles = np.array([])
         # calculate quantiles
@@ -50,7 +57,7 @@ class PreTest:
         """
         # select only items with difficulty in interval
         items_in_interval: List[TestItem] = [item for item in list(self.items)
-                                             if lower < item.b <= upper]
+                                             if lower < cast(float, item.b) <= upper]
         # draw one item randomly
         if self.seed is not None:
             random.seed(self.seed)

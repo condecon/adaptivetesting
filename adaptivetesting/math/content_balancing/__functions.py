@@ -3,13 +3,15 @@ from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ...math.estimators.__test_information import item_information_function
 import numpy as np
+from typing import Literal
 
-
+# TODO: implement model in function call
 def compute_priority_index(item: TestItem,
                            group_weights: dict[str, float],
                            required_items: dict[str, float],
                            shown_items: dict[str, float],
-                           current_ability: float) -> float:
+                           current_ability: float,
+                           model: Literal['GRM', 'GPCM'] | None = None) -> float:
     """Calculates the priority index of a given item.
 
     Args:
@@ -42,11 +44,9 @@ def compute_priority_index(item: TestItem,
     
     # weight fisher information
     priority_index = priority_index * float(item_information_function(
-        mu=np.array(current_ability, dtype=np.float64),
-        a=np.array(item.a, dtype=np.float64),
-        b=np.array(item.b, dtype=np.float64),
-        c=np.array(item.c, dtype=np.float64),
-        d=np.array(item.d, dtype=np.float64)
+        ability=current_ability,
+        item=item,
+        model=model
     ))
 
     return priority_index

@@ -4,9 +4,40 @@ from .__prior import Prior
 from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
+from typing import Literal, cast
+from .__functions.__poly.__gpcm import GPCM
+from .__functions.__poly.__grm import GRM
+from ...models.__test_item import TestItem
 
 
 def item_information_function(
+        ability: float,
+        item: TestItem,
+        model: Literal["GRM", "GPCM"] | None = None
+) -> float:
+    if model == "GRM":
+        return GRM.fisher_information(
+            ability,
+            item.a,
+            cast(list, item.b),
+        )
+    elif model == "GPCM":
+        return GPCM.fisher_information(
+            ability,
+            item.a,
+            cast(list, item.b)
+        )
+
+    else: # dichotmous 
+        return dicho_item_information_function(
+            mu=np.array(ability),
+            a=np.array(item.a),
+            b=np.array(item.b),
+            c=np.array(item.c),
+            d=np.array(item.d)
+        ).astype(float).item()
+
+def dicho_item_information_function(
         mu: np.ndarray,
         a: np.ndarray,
         b: np.ndarray,
@@ -78,7 +109,7 @@ def test_information_function(
         optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
     """
-    Calculates test information.
+    Calculates test information for dichotmous items.
     Therefore, the information is calculated for every item
     and then summed up.
     If a prior is specified, the fisher information of the prior
@@ -97,7 +128,7 @@ def test_information_function(
         float: test information
     """
     # calculate information for every item
-    item_information = np.vectorize(item_information_function)(
+    item_information = np.vectorize(dicho_item_information_function)(
         mu, a, b, c, d
     )
 
@@ -106,3 +137,44 @@ def test_information_function(
         return float(item_information.sum() + prior_information)
     else:
         return float(item_information.sum())
+
+
+def poly_test_information_function(
+    mu: float,
+    a_params: list[float],
+    thresholds_list: list[list[float]],
+    prior: Prior | None,
+    model_type: Literal["GRM", "GPCM"],
+    optimization_interval: tuple[float, float] = (-10, 10),
+) -> float:
+    # calculate information for every test item
+    item_information = 0.0
+    if model_type == "GRM":
+        for i, _ in enumerate(a_params):
+            inf_item_i = GRM.fisher_information(
+                mu,
+                a_params[i],
+                thresholds_list[i]
+            )
+            item_information = item_information + inf_item_i
+    elif model_type == "GPCM":
+        for i, _ in enumerate(a_params):
+            inf_item_i = GPCM.fisher_information(
+                mu,
+                a_params[i],
+                thresholds_list[i]
+            )
+            item_information = item_information + inf_item_i
+    else:
+        raise ValueError("model_type must be GRM or GPCM")
+    
+    test_information = item_information
+    # add prior information
+    if prior:
+        prior_information = prior_information_function(
+            prior=prior,
+            optimization_interval=optimization_interval
+        )
+        test_information = test_information + float(prior_information)
+
+    return test_information
