@@ -274,3 +274,51 @@ class TestTestItemRoundTrip(TestCase):
         self.assertEqual(restored.c, original.c)
         self.assertEqual(restored.d, original.d)
         self.assertEqual(restored.additional_properties, original.additional_properties)
+
+
+class TestPolyItems(TestCase):
+    def test_loading_items_list(self):
+        items = ItemPool.load_from_list(
+            a = [0.934, 0.972, 1.210],
+            b = [
+                [0.071, 0.129],
+                [1.715, 0.461],
+                [-1.265, -0.687]
+            ]
+        ).test_items
+
+        self.assertTrue(all([isinstance(item.a, float) for item in items]))
+        self.assertTrue(all([isinstance(item.b, list) for item in items]))
+
+    def test_loading_items_dict(self):
+        items_dict = {
+            "a" : [0.934, 0.972, 1.210],
+            "b": [
+                [0.071, 0.129],
+                [1.715, 0.461],
+                [-1.265, -0.687]
+            ]
+        }
+        
+        items = ItemPool.load_from_dict(
+            items_dict
+        ).test_items
+
+        self.assertTrue(all([isinstance(item.a, float) for item in items]))
+        self.assertTrue(all([isinstance(item.b, list) for item in items]))
+
+    def test_loading_items_df(self):
+        items_dict = {
+            "a" : [0.934, 0.972, 1.210],
+            "b": [
+                [0.071, 0.129],
+                [1.715, 0.461],
+                [-1.265, -0.687]
+            ]
+        }
+
+        df = pd.DataFrame(items_dict)
+        items = ItemPool.load_from_dataframe(df).test_items
+
+        self.assertTrue(all([isinstance(item.a, float) for item in items]))
+        self.assertTrue(all([isinstance(item.b, list) for item in items]))
