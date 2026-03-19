@@ -5,7 +5,6 @@ from ...math.estimators.__test_information import item_information_function
 from typing import Literal
 
 
-# TODO: implement model in function call
 def compute_priority_index(item: TestItem,
                            group_weights: dict[str, float],
                            required_items: dict[str, float],
@@ -209,7 +208,6 @@ def standardize_total_content_constraint_penalty_value(item_penalty_value: float
     Returns:
         float: standardized total content constraint penalty value
     """
-    # TODO: ok?
     try:
         standardized_value = (item_penalty_value - minimum) / (maximum - minimum)
         return standardized_value

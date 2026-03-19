@@ -114,7 +114,6 @@ class WeightedPenaltyModel(ContentBalancing):
         # order items
         self.order_candidate_items()
 
-    # TODO: implement function call
     def calculate_information(self, model: Literal['GRM', 'GPCM'] | None = None) -> list[float]:
         information_list = [
             float(item_information_function(

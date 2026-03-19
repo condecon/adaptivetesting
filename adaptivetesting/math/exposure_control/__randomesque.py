@@ -78,7 +78,6 @@ class Randomesque(ExposureControl):
         return item_entry[0]
 
     @staticmethod
-    # TODO: implement model call
     def radomesque_item_selection(items: list[TestItem],
                                   ability_estimate: float,
                                   n_items: int,
