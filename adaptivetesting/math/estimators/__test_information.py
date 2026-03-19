@@ -28,7 +28,7 @@ def item_information_function(
             cast(list, item.b)
         )
 
-    else: # dichotmous 
+    else: # dichotmous
         return dicho_item_information_function(
             mu=np.array(ability),
             a=np.array(item.a),
@@ -36,6 +36,7 @@ def item_information_function(
             c=np.array(item.c),
             d=np.array(item.d)
         ).astype(float).item()
+
 
 def dicho_item_information_function(
         mu: np.ndarray,

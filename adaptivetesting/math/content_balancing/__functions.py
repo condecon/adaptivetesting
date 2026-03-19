@@ -2,8 +2,8 @@ from .__constraint import Constraint
 from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ...math.estimators.__test_information import item_information_function
-import numpy as np
 from typing import Literal
+
 
 # TODO: implement model in function call
 def compute_priority_index(item: TestItem,

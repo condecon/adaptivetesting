@@ -34,7 +34,7 @@ def get_mock_adaptive_test_empty_pool():
     return mock_test
 
 
-class TestSimulation(unittest.TestCase):
+class TestSimulationMock(unittest.TestCase):
 
     @patch("adaptivetesting.simulation.__simulation.PickleContext")
     @patch("adaptivetesting.simulation.__simulation.CSVContext")
@@ -101,7 +101,7 @@ class TestSimulation(unittest.TestCase):
             sim.save_test_results()
 
 
-class TestSimulation(unittest.TestCase):
+class TestFullSimulation(unittest.TestCase):
     def test_run_basic_simulation_GRM(self):
         items = pd.DataFrame({
             "a": [1.32, 1.07, 0.84],

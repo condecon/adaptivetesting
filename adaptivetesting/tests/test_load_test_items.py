@@ -1,3 +1,4 @@
+# flake8: noqa
 from unittest import TestCase
 from adaptivetesting.models import TestItem, ItemPool
 import pandas as pd
@@ -291,7 +292,7 @@ class TestPolyItems(TestCase):
         self.assertTrue(all([isinstance(item.b, list) for item in items]))
 
     def test_loading_items_dict(self):
-        items_dict = {
+        items_dict: dict[str, list] = {
             "a" : [0.934, 0.972, 1.210],
             "b": [
                 [0.071, 0.129],

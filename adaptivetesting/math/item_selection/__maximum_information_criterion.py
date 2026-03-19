@@ -2,8 +2,8 @@ from ...models.__test_item import TestItem
 from ...models.__item_selection_exception import ItemSelectionException
 from ..estimators.__test_information import item_information_function
 from ...models.__algorithm_exception import AlgorithmException
-import numpy as np
 from typing import Literal
+
 
 # Todo: implement model parameter in function calls
 def maximum_information_criterion(items: list[TestItem],

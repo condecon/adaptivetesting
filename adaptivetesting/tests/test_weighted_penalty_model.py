@@ -272,6 +272,7 @@ class TestWeightedPenaltyModel(unittest.TestCase):
             information_selected_item.as_dict()
         )
 
+
 class TestWeightedPenaltyModelPoly(unittest.TestCase):
     def __init__(self, methodName="runTest"):
         super().__init__(methodName)

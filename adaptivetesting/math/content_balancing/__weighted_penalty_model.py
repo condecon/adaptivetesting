@@ -1,5 +1,4 @@
 from typing import Literal, Callable
-import numpy as np
 from ..estimators.__test_information import item_information_function
 from ...models.__test_item import TestItem
 from .__functions import (

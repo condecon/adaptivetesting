@@ -129,7 +129,6 @@ class ItemPool:
             for i, discrimination in enumerate(a):
                 items[i].a = discrimination
 
-        
         if c is not None:
             if len(c) != len(b):
                 raise ValueError("Length of c and b has to be the same.")
@@ -160,7 +159,7 @@ class ItemPool:
         return item_pool
 
     @staticmethod
-    def load_from_dict(source: dict[str, List[float] | list[float]],
+    def load_from_dict(source: dict[str, list[float]] | dict[str, list],
                        simulated_responses: List[int] | None = None,
                        ids: List[int] | None = None,
                        content_categories: list[list[str]] | None = None) -> "ItemPool":

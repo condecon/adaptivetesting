@@ -90,19 +90,17 @@ def gen_pattern_poly(
         if model == "GRM":
             for t_i in range(len(cast(list, item.b)) + 1):
                 log_prob = GRM.category_prob(ability,
-                                         item.a,
-                                         cast(list, item.b),
-                                         response_pattern=t_i)
+                                             item.a,
+                                             cast(list, item.b),
+                                             response_pattern=t_i)
                 log_probabilities.append(log_prob)
         elif model == "GPCM":
             for t_i in range(len(cast(list, item.b)) + 1):
                 log_prob = GPCM.category_prob(ability,
-                                          item.a,
-                                          cast(list, item.b),
-                                          response_pattern=t_i)
+                                              item.a,
+                                              cast(list, item.b),
+                                              response_pattern=t_i)
                 log_probabilities.append(log_prob)
-
-        
 
         # draw from multinomial distribution for final response
         # the probability for a response in k categories is 1

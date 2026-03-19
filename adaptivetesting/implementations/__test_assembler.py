@@ -23,6 +23,7 @@ import inspect
 class EstimatorArgs(TypedDict):
     prior: Prior | None
     optimization_interval: tuple[float, float]
+    model: Literal["GRM", "GPCM"] | None
 
 
 class ContentBalancingArgs(TypedDict):
@@ -93,7 +94,8 @@ class TestAssembler(AdaptiveTest):
                  ability_estimator: Type[IEstimator],
                  estimator_args: EstimatorArgs = {
                      "prior": None,
-                     "optimization_interval": (-10, 10)
+                     "optimization_interval": (-10, 10),
+                     "model": None
                  },
                  item_selector: ItemSelectionStrategy = maximum_information_criterion, # type: ignore
                  item_selector_args: dict[str, Any] = {},

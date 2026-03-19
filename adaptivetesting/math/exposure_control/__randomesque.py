@@ -1,6 +1,5 @@
 from typing import Callable, Any
 import random
-import numpy as np
 from .__exposure_control import ExposureControl
 from ...models.__adaptive_test import AdaptiveTest
 from ...models.__test_item import TestItem
