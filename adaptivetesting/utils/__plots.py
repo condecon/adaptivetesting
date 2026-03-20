@@ -304,6 +304,8 @@ def plot_theta_estimation_trace(simulation_id: str,
 
     ax.plot(steps, true_abilities, label="True ability", color="black")
     ax.plot(steps, estimations, label="Ability Estimations", color="blue")
+    ax.set_xlabel("Step")
+    ax.set_ylabel("Ability level")
     ax.legend()
 
     return fig, ax
