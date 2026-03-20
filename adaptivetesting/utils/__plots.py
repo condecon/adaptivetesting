@@ -3,7 +3,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure, SubFigure
 from ..models.__misc import ResultOutputFormat
 from ..models.__test_item import TestItem
-from ..math.estimators.functions.__estimators import probability_y1
+from ..math.estimators.__functions.__estimators import probability_y1
 from ..math.estimators.__test_information import item_information_function
 from .__funcs import load_final_test_results, load_test_results_single_participant
 import numpy as np

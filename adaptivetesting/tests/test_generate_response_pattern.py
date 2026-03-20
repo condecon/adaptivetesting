@@ -59,7 +59,7 @@ class TestGenerateResponsePattern(unittest.TestCase):
         self.assertAlmostEqual(mean, 0, delta=0.3)
 
     def test_debug_probabilities(self):
-        from adaptivetesting.math.estimators.functions.__estimators import probability_y1
+        from adaptivetesting.math.estimators.__functions.__estimators import probability_y1
         import numpy as np
         
         item_pool = ItemPool.load_from_dict(source_dictionary)
@@ -74,7 +74,7 @@ class TestGenerateResponsePattern(unittest.TestCase):
             print(f"Item {i}: a={item.a:.3f}, b={item.b:.3f}, c={item.c:.3f}, d={item.d:.3f} -> P={float(prob):.3f}")
 
     def test_calculate_expected_vs_actual(self):
-        from adaptivetesting.math.estimators.functions.__estimators import probability_y1
+        from adaptivetesting.math.estimators.__functions.__estimators import probability_y1
         import numpy as np
             
         item_pool = ItemPool.load_from_dict(source_dictionary)

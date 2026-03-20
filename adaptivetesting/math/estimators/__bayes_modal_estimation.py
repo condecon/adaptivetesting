@@ -2,11 +2,11 @@ from typing import List, Tuple, Literal, cast
 import numpy as np
 from ...services.__estimator_interface import IEstimator
 from ...models.__test_item import TestItem
-from .functions.__bayes import maximize_posterior
+from .__functions.__bayes import maximize_posterior
 from .__prior import Prior
 from .__test_information import test_information_function, poly_test_information_function
-from .functions.poly.__gpcm import GPCM
-from .functions.poly.__grm import GRM
+from .__functions.__poly.__gpcm import GPCM
+from .__functions.__poly.__grm import GRM
 
 
 class BayesModal(IEstimator):
