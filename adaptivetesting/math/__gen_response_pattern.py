@@ -1,6 +1,6 @@
-from .estimators.functions.__estimators import probability_y1
-from .estimators.functions.poly.__gpcm import GPCM
-from .estimators.functions.poly.__grm import GRM
+from .estimators.__functions.__estimators import probability_y1
+from .estimators.__functions.__poly.__gpcm import GPCM
+from .estimators.__functions.__poly.__grm import GRM
 from ..models.__test_item import TestItem
 import numpy as np
 from typing import Literal, cast
