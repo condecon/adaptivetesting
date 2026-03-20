@@ -43,3 +43,13 @@ from .services.__item_selection_protocol import ItemSelectionStrategy
 from .simulation.__simulation import Simulation, SimulationPool, setup_simulation_and_start
 
 from .utils.__descriptives import bias, average_absolute_deviation, rmse
+from .utils.__funcs import load_final_test_results, load_test_results_single_participant
+from .utils.__plots import (
+    plot_exposure_rate,
+    plot_final_ability_estimates,
+    plot_icc,
+    plot_iif,
+    plot_exposure_rate,
+    plot_test_information,
+    plot_theta_estimation_trace
+)
