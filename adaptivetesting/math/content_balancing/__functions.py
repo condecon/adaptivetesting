@@ -21,6 +21,7 @@ def compute_priority_index(item: TestItem,
         required_items (int): number of items required to be shown per constraint
         shown_items (int): number of items already shown per constraint
         current_ability (float): currently estimated ability level
+        model (Literal['GRM', 'GPCM'] | None): model type. Required for polytomous items.
 
     Returns:
         float: priority index of an item
@@ -103,7 +104,7 @@ def compute_expected_difference(proportion: float,
         constraint_target (float): constraint target
 
     Returns:
-        float: _description_
+        float: expected difference
     """
     expected_difference = proportion - constraint_target
     return expected_difference
@@ -154,9 +155,9 @@ def compute_total_content_penalty_value_for_item(item: TestItem,
 
     Args:
         item (TestItem): given test item
-        shown_items:
-        available_items:
-        constraints (list[Constraint]): YYYYYY
+        shown_items: shown item
+        available_items: available items in the test
+        constraints (list[Constraint]): constraints assigned to the test and its items
 
     Returns:
         float: total content penalty value

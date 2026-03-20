@@ -103,7 +103,7 @@ def plot_iif(item: TestItem,
     Parameters:
         item (TestItem): The test item for which to plot the information function.
         range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
-        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotmous IRT models.
+        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotomous IRT models.
         ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
         **kwargs: Additional keyword arguments passed to matplotlib's plot function.
     Returns:
@@ -142,7 +142,7 @@ def plot_exposure_rate(simulation_id: str,
     in a series of adaptive tests or CAT simulations.
 
     Args:
-        simulation_id (str): Simulation identifyer
+        simulation_id (str): Simulation identifier
         participant_ids (list[str]): List of unique participant IDs
         output_format (ResultOutputFormat): Format in which the test results have been previously saved
 
@@ -212,7 +212,7 @@ def plot_test_information(
     Args:
         items (list[TestItem]): Test items in an item pool for which to calculate the test information
         range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
-        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotmous IRT models.
+        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotomous IRT models.
         ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
         **kwargs: Additional keyword arguments passed to matplotlib's plot function.
     Returns:

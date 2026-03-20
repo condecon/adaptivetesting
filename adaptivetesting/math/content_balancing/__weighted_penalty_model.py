@@ -21,7 +21,7 @@ ITEM_GROUP = Literal["green", "orange", "yellow", "red", None]
 class WeightedPenaltyModel(ContentBalancing):
     """This content balancing method follows Shin et al. (2009)
     and allows to apply constraints to the item selection.
-    The users can define a custom weight for the item information and the constriant.
+    The users can define a custom weight for the item information and the constraint.
 
     References
     ------------
@@ -98,7 +98,7 @@ class WeightedPenaltyModel(ContentBalancing):
         max_content_penalty = max(content_penalties)
         min_content_penalty = min(content_penalties)
 
-        self.calcualte_weighted_penalty_for_all_items(
+        self.calculate_weighted_penalty_for_all_items(
             item_information_list=item_information_list,
             max_item=max_item,
             content_penalties=content_penalties,
@@ -114,7 +114,16 @@ class WeightedPenaltyModel(ContentBalancing):
         # order items
         self.order_candidate_items()
 
-    def calculate_information(self, model: Literal['GRM', 'GPCM'] | None = None) -> list[float]:
+    def calculate_information(self,
+                              model: Literal['GRM', 'GPCM'] | None = None) -> list[float]:
+        """
+        Calculates the item information for every item
+        Args:
+            model: model type. Required for polytomous models.
+
+        Returns:
+            list of item information
+        """
         information_list = [
             float(item_information_function(
                 ability=self.ability,
@@ -126,6 +135,7 @@ class WeightedPenaltyModel(ContentBalancing):
         return information_list
 
     def calculate_content_penalties(self) -> list[float]:
+        """Calculate content penalty values for every item"""
         content_penalties = [
             compute_total_content_penalty_value_for_item(
                 item=item,
@@ -137,12 +147,13 @@ class WeightedPenaltyModel(ContentBalancing):
         ]
         return content_penalties
 
-    def calcualte_weighted_penalty_for_all_items(self,
+    def calculate_weighted_penalty_for_all_items(self,
                                                  item_information_list: list[float],
                                                  max_item: float,
                                                  content_penalties: list[float],
                                                  max_content_penalty: float,
                                                  min_content_penalty: float):
+        """Calculate the weighted penalty value for every item"""
         for i, item in enumerate(self.items):
             weighted_penalty_value = self.calculate_weighted_penalty_value(
                 item_information=item_information_list[i],
@@ -157,6 +168,8 @@ class WeightedPenaltyModel(ContentBalancing):
             self.eligible_items.append((item, weighted_penalty_value, None))
 
     def get_constraint_group_assignments(self) -> list[tuple[Constraint, CONSTRAINT_GROUP]]:
+        """Assign every constraint to a constraint group depending on the number
+        of items shown from each specific constraint."""
         group_assignment: list[tuple[Constraint, CONSTRAINT_GROUP]] = []
         for constraint in self.constraints:
             # calculate proportion of the constraint
@@ -183,6 +196,15 @@ class WeightedPenaltyModel(ContentBalancing):
     @staticmethod
     def assign_color_group_per_proportion(constraint: Constraint,
                                           prop: float):
+        """
+        Implements constraint assignment logic.
+        Args:
+            constraint (Constraint): constraint
+            prop (float): proportion
+
+        Returns:
+            tuple[Constraint, str]: constraint and assigned group
+        """
         if constraint.lower is not None and constraint.upper is not None:
             if prop <= constraint.lower:
                 return (constraint, "A")
@@ -195,6 +217,12 @@ class WeightedPenaltyModel(ContentBalancing):
 
     def form_list_of_candidate_items(self,
                                      group_assignment: list[tuple[Constraint, CONSTRAINT_GROUP]]) -> None:
+        """
+        Form a list of candidate items according to the constraint group assignment.
+        Args:
+            group_assignment (list[tuple[Constraint, CONSTRAINT_GROUP]): list of constraints and assigned groups
+
+        """
         for i, item_entry in enumerate(self.eligible_items):
             item, weighted_penalty_value, _ = item_entry
             # find associated constraint
@@ -214,6 +242,17 @@ class WeightedPenaltyModel(ContentBalancing):
         associated_constraints: list[tuple[Constraint, Literal['A', 'B', 'C']]],
         weighted_penalty_value: float
     ):
+        """
+        Assign items according to the constraint group assignment to an item group (color group)
+        Args:
+            item (TestItem): item
+            associated_constraints (list[tuple[Constraint, Literal['A', 'B', 'C']]]):
+                constraints relevant for this item
+            weighted_penalty_value (float): calculated weighted penalty value of this item
+
+        Returns:
+            tuple[TestItem, float, str]: item, weighted penalty value and assigned color
+        """
         group_set = set([group for _, group in associated_constraints])
         
         # if all associated constraints A or B -> green group
@@ -232,6 +271,8 @@ class WeightedPenaltyModel(ContentBalancing):
             return (item, weighted_penalty_value, None)
 
     def order_candidate_items(self):
+        """Order candidate items according to the color group assignment.
+        """
         # between group ordering: green, orange, yellow, red
         # within group ordering: ascending order of weighted penalty value
         self.eligible_items = sorted(
@@ -251,6 +292,20 @@ class WeightedPenaltyModel(ContentBalancing):
                                          constraint_weight: float,
                                          information_weight: float
                                          ) -> float:
+        """
+        Calculate the weighted penalty value of an item.
+        Args:
+            content_penalty: content penalty value
+            minimum_total_content_penalty: minimum total content penalty value
+            maximum_total_content_penalty: maximum total content penalty value
+            item_information: item information
+            max_information: maximum item information
+            constraint_weight: constraint weight
+            information_weight: information weight
+
+        Returns:
+            weighted penalty value
+        """
         # reference content penalty
         total_content_penalty_value = content_penalty
 

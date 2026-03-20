@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Constraint:
-    """Constraint for Exposure Constrol and Content Balancing
+    """Constraint for Exposure Control and Content Balancing
     """
     name: str
     """Constraint name. This string has to be the same

@@ -13,7 +13,7 @@ def generate_response_pattern(ability: float,
                               model: Literal["GRM", "GPCM"] | None = None,
                               seed: int | None = None) -> list[int]:
     """Generates a response pattern for a given ability level
-    and item difficulties. Also, a seed can be set.
+    and item difficulties. A seed may be set for reproducibility.
 
     Args:
         ability (float): participants ability
@@ -48,7 +48,19 @@ def generate_response_pattern(ability: float,
 
 def gen_pattern_dichotomous(ability: float,
                             items: list[TestItem],
-                            rng: np.random.RandomState):
+                            rng: np.random.RandomState) -> list[int]:
+    """
+    Generates a response pattern for a given ability level for an IRT
+    model with dichotomous test items (e.g., 4PL, 3PL).
+
+    Args:
+        ability (float): participants ability
+        items (list[TestItem]): test items
+        rng (np.random.RandomState): random state (numpy object)
+
+    Returns:
+        list[int]: generated response pattern
+    """
     responses: list[int] = []
 
     for item in items:
@@ -82,6 +94,18 @@ def gen_pattern_poly(
     model: Literal["GRM", "GPCM"],
     rng: np.random.RandomState
 ) -> list[int]:
+    """
+    Generates a response pattern for a given ability level for polytomous items.
+
+    Args:
+        ability (float): participants ability
+        items (list[TestItem]): test items
+        model (literal, optional): model type (GRM, or GPCM)
+        rng (np.random.RandomState, optional): random state (numpy object)
+
+    Returns:
+        list[int]: response pattern
+    """
     responses: list[int] = []
     # loop through all items
     for item in items:

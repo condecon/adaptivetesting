@@ -345,7 +345,7 @@ class TestAssembler(AdaptiveTest):
             The result of the superclass's run_test_once() method.
         """
         # check if to run pretest
-        if self.__pretest is True:
+        if self.__pretest:
             pretest = PreTest(
                 self.item_pool.test_items,
                 self.__pretest_seed
@@ -353,7 +353,7 @@ class TestAssembler(AdaptiveTest):
             # get selected items
             random_items = pretest.select_random_item_quantile()
             for item in random_items:
-                if self.simulation is True:
+                if self.simulation:
                     response = self.item_pool.get_item_response(item)
                 else:
                     # not simulation

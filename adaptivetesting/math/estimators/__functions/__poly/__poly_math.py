@@ -7,12 +7,27 @@ from scipy.integrate import trapezoid
 
 
 class PolyModelFunctions(ABC):
+    """
+    This is an abstract base class for polytomous IRT models and
+    their functions used for Computerized Adaptive Testing.
+
+    This class may be reimplemented by subclasses.
+    """
     @staticmethod
     @abstractmethod
     def category_prob(theta: float,
                       a: float,
                       thresholds_list: list[float],
-                      response_pattern: int):
+                      response_pattern: int) -> float:
+        """
+        Calculates the probability of a specific category.
+        Args:
+            theta (float): ability
+            a (float): item parameter a
+            thresholds_list (list[float]): list of thresholds
+            response_pattern (int): item response / category
+
+        """
         pass
 
     @staticmethod
@@ -21,6 +36,16 @@ class PolyModelFunctions(ABC):
                        a_params: list[float],
                        thresholds_list: list[list[float]],
                        response_pattern: list[int]):
+        """
+        Calculates the log likelihood function of the model.
+
+        Args:
+            theta (float): ability
+            a_params (list[float]): item parameters a
+            thresholds_list (list[list[float]]): list of thresholds for each item
+            response_pattern (list[int]): response pattern
+
+        """
         pass
     
     @staticmethod
@@ -28,6 +53,14 @@ class PolyModelFunctions(ABC):
     def fisher_information(theta: float,
                            a: float,
                            thresholds: list[float]):
+        """
+        Calculates the fisher information of a specific item.
+
+        Args:
+            theta (float): ability
+            a (float): item parameter a
+            thresholds (list[float]): list of thresholds
+        """
         pass
     
     def maximize_likelihood_function(self,
@@ -35,6 +68,18 @@ class PolyModelFunctions(ABC):
                                      thresholds_list: list[list[float]],
                                      response_pattern: list[int],
                                      border: tuple[float, float] = (-10, 10)):
+        """
+        Maximize the likelihood function of the model.
+
+        Args:
+            a_params (list[float]): item parameters a
+            thresholds_list (list[list[float]]): list of thresholds for each item
+            response_pattern (list[int]): response pattern
+            border (tuple[float, float]): interval used for numerical optimization. Defaults to (-10, 10).
+
+        Returns:
+            float: point (theta) where the likelihood function is maximized
+        """
 
         result: OptimizeResult = minimize_scalar(lambda mu: -self.log_likelihood(mu,
                                                                                  a_params,
@@ -55,7 +100,20 @@ class PolyModelFunctions(ABC):
                            prior: Prior,
                            optimization_interval: tuple[float, float] = (-10, 10)
                            ) -> float:
-        
+        """
+            Maximize the posterior function of the model.
+
+            Args:
+                a_params (list[float]): item parameters a
+                thresholds_list (list[list[float]]): list of thresholds for each item
+                response_pattern (list[int]): response pattern
+                optimization_interval (tuple[float, float]): interval used for numerical optimization.
+                    Defaults to (-10, 10).
+                prior (Prior): prior distribution used
+
+            Returns:
+                float: point (theta) where the posterior function is maximized
+        """
         def log_posterior(mu):
             log_likelihood_res = np.array(self.log_likelihood(mu,
                                                               a_params,
@@ -90,6 +148,21 @@ class PolyModelFunctions(ABC):
                        response_pattern: list[int],
                        prior: Prior,
                        optimization_interval: tuple[float, float] = (-10, 10)) -> float:
+        """
+            Calculate the posterior mean of the model.
+
+            Args:
+                a_params (list[float]): item parameters a
+                thresholds_list (list[list[float]]): list of thresholds for each item
+                response_pattern (list[int]): response pattern
+                optimization_interval (tuple[float, float]): interval used for numerical optimization.
+                        Defaults to (-10, 10).
+                prior (Prior): prior distribution used
+
+                Returns:
+                    float: posterior mean
+                """
+
         x = np.linspace(optimization_interval[0], optimization_interval[1], 1000)
 
         if hasattr(prior, "logpdf"):

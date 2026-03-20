@@ -5,7 +5,6 @@ from ...models.__algorithm_exception import AlgorithmException
 from typing import Literal
 
 
-# Todo: implement model parameter in function calls
 def maximum_information_criterion(items: list[TestItem],
                                   ability: float,
                                   model: Literal["GRM", "GPCM"] | None = None) -> TestItem:
@@ -15,6 +14,7 @@ def maximum_information_criterion(items: list[TestItem],
     Args:
         items (list[TestItem]): list of available items
         ability (float): currently estimated ability
+        model (Literal["GRM", "GPCM"] | None): model type. Required for polytomous models. Defaults to dichotomous variables.
 
     Returns:
         TestItem: item that has the highest information value

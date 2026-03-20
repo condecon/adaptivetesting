@@ -18,6 +18,7 @@ class IEstimator(ABC):
         Args:
             response_pattern (List[int]): list of responses (0: wrong, 1:right)
             items (list[TestItem]): list of answered items
+            model: model type. Required for polytomous IRT models.
         """
         if type(response_pattern) is not np.ndarray:
             self.response_pattern = np.array(response_pattern)

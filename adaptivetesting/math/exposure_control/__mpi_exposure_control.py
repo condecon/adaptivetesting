@@ -24,7 +24,7 @@ class MaximumPriorityIndexExposureControl(MaximumPriorityIndex, ExposureControl)
         """
         # compute priority index for every item
         available_items = self.adaptive_test.item_pool.test_items
-        # skip seletion if item pool is empty
+        # skip selection if item pool is empty
         if len(available_items) == 0:
             return None
 

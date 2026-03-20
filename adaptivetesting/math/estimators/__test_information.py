@@ -15,6 +15,19 @@ def item_information_function(
         item: TestItem,
         model: Literal["GRM", "GPCM"] | None = None
 ) -> float:
+    """
+    Calculates the item information given an item and ability level.
+    If the item is polytomous, the model parameter has to be specified to
+    correctly calculated the item information.
+
+    Args:
+        ability (float): ability level
+        item (TestItem): test item
+        model (literal["GRM", "GPCM"] | None): model parameter. Required for polytomous response variables.
+
+    Returns:
+        float: item information
+    """
     if model == "GRM":
         return GRM.fisher_information(
             ability,
@@ -28,7 +41,7 @@ def item_information_function(
             cast(list, item.b)
         )
 
-    else: # dichotmous
+    else: # dichotomous
         return dicho_item_information_function(
             mu=np.array(ability),
             a=np.array(item.a),
@@ -46,7 +59,7 @@ def dicho_item_information_function(
         d: np.ndarray
 ) -> np.ndarray:
     """
-    Calculates the item information for given parameters.
+    Internal function to calculate the item information for dichotomous items.
 
     Args:
         mu (np.ndarray): ability level
@@ -110,7 +123,7 @@ def test_information_function(
         optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
     """
-    Calculates test information for dichotmous items.
+    Calculates test information for dichotomous items.
     Therefore, the information is calculated for every item
     and then summed up.
     If a prior is specified, the fisher information of the prior
@@ -124,6 +137,7 @@ def test_information_function(
         d (np.ndarray): slipping parameter
         prior (Prior | None, optional): prior distribution. Defaults to None.
         optimization_interval (tuple[float, float], optional): interval used for numerical integration.
+            Defaults to (-10, 10).
 
     Returns:
         float: test information
@@ -148,6 +162,28 @@ def poly_test_information_function(
     model_type: Literal["GRM", "GPCM"],
     optimization_interval: tuple[float, float] = (-10, 10),
 ) -> float:
+    """
+        Calculates test information for polytomous items.
+        Therefore, the information is calculated for every item
+        and then summed up.
+        If a prior is specified, the fisher information of the prior
+        is calculated as well and added to the information sum.
+
+        Args:
+            mu (float): ability level
+            a_params (list[float]): discrimination parameters
+            thresholds_list (list[list[float]]): list of thresholds
+            model_type (Literal["GRM", "GPCM"]): model type. Supported models: GRM, GPCM.
+            prior (Prior | None, optional): prior distribution. Defaults to None.
+            optimization_interval (tuple[float, float], optional): interval used for numerical integration.
+                Defaults to (-10, 10).
+
+        Returns:
+            float: test information
+
+        Raises:
+            ValueError: model type must be either GRM or GPCM.
+    """
     # calculate information for every test item
     item_information = 0.0
     if model_type == "GRM":

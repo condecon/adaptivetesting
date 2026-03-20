@@ -24,6 +24,10 @@ class MLEstimator(IEstimator):
             response_pattern (List[int]): list of response patterns (0: wrong, 1:right)
 
             items (Sequence[BaseItem]): list of answered items
+
+            model (Literal["GRM", "GPCM"], optional): model type (required for polytomous models)
+
+            optimization_interval (Tuple[float, float]): tuple of (min, max) intervals used for numerical optimization.
         """
         IEstimator.__init__(self, response_pattern, items, optimization_interval)
 

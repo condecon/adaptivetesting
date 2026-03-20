@@ -31,6 +31,8 @@ class ExpectedAPosteriori(BayesModal):
                 prior (Prior): prior distribution
 
                 optimization_interval (Tuple[float, float]): interval used for the optimization function
+
+                model (Literal["GRM", "GPCM"], optional): model type (required for polytomous models)
         """
         super().__init__(response_pattern, items, prior, optimization_interval)
 

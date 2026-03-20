@@ -10,11 +10,11 @@ class TestItem:
             - id (int | None): item ID
             - a (float): discrimination parameter
             - b (float | list[float]): difficulty parameter. For polytomous models, list of threshold parameters
-            - c (float): guessing parameter. Ignored for polytomours models.
-            - d (float): slipping parameter / upper asymptote. Ignored for polytomours models.
-            - additional_properties (dict): addtional properties can be set if required.
+            - c (float): guessing parameter. Ignored for polytomous models.
+            - d (float): slipping parameter / upper asymptote. Ignored for polytomous models.
+            - additional_properties (dict): additional properties can be set if required.
                 This functionality is used for content balancing.
-                To use content balancing, set set `category` key of the class instance
+                To use content balancing, set `category` key of the class instance
                 to a list of string which indicate the corresponding constraint classes.
                 Example: `item.additional_properties["category"] = ["Math"]`
 
@@ -73,7 +73,7 @@ class TestItem:
         return item
 
     def is_polytomous(self) -> bool:
-        """Checks whether a item is polytomous or dichotomous.
+        """Checks whether an item is polytomous or dichotomous.
 
         Returns:
             bool: True if item is polytomous.
