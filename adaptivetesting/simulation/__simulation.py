@@ -117,30 +117,47 @@ class SimulationPool:
         self.criterion = criterion
         self.value = value
         
-    def start(self):
+    def start(self, parallel: bool = True):
         """
         Starts the simulation by executing adaptive tests in parallel.
 
         Depending on the operating system, uses either multithreading (on Windows)
         or multiprocessing (on other platforms) to run the simulation for each adaptive test.
         Progress is displayed using a progress bar.
+        
+        Note that parallel processing is not supported for the use in jupyter notebooks. 
+        For that, `parallel` has to be set to `False`.
+
+        Args:
+            parallel (bool): process all simulations in parallel. Not supported in jupyter notebooks.
+                Default `True`.
+
         """
-        func = partial(
-            setup_simulation_and_start,
-            test_result_output=self.test_results_output,
-            criterion=self.criterion,
-            value=self.value
-        )
-        # check for platform
-        # this is because multiprocessing is not as well-supported on windows
-        # therefore, multithreading is used instead
-        if platform.system() == "Windows":
-            with ThreadPoolExecutor(max_workers=60) as executor:
-                futures = [executor.submit(func, (test,)) for test in self.adaptive_tests]
-                for _ in tqdm(as_completed(futures), total=len(futures)):
-                    pass
+        if parallel:
+            func = partial(
+                setup_simulation_and_start,
+                test_result_output=self.test_results_output,
+                criterion=self.criterion,
+                value=self.value
+            )
+            # check for platform
+            # this is because multiprocessing is not as well-supported on windows
+            # therefore, multithreading is used instead
+            if platform.system() == "Windows":
+                with ThreadPoolExecutor(max_workers=60) as executor:
+                    futures = [executor.submit(func, (test,)) for test in self.adaptive_tests]
+                    for _ in tqdm(as_completed(futures), total=len(futures)):
+                        pass
+            else:
+                with ProcessPoolExecutor() as executor:
+                    futures = [executor.submit(func, (test,)) for test in self.adaptive_tests]
+                    for _ in tqdm(as_completed(futures), total=len(futures)):
+                        pass
         else:
-            with ProcessPoolExecutor() as executor:
-                futures = [executor.submit(func, (test,)) for test in self.adaptive_tests]
-                for _ in tqdm(as_completed(futures), total=len(futures)):
-                    pass
+            for test in tqdm(self.adaptive_tests):
+                setup_simulation_and_start(
+                    test=test,
+                    test_result_output=self.test_results_output,
+                    criterion=self.criterion,
+                    value=self.value
+                )
