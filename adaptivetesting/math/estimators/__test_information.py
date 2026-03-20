@@ -1,12 +1,12 @@
 import numpy as np
-from .__functions.__estimators import probability_y1
+from .functions.__estimators import probability_y1
 from .__prior import Prior
 from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
 from typing import Literal, cast
-from .__functions.__poly.__gpcm import GPCM
-from .__functions.__poly.__grm import GRM
+from .functions.poly.__gpcm import GPCM
+from .functions.poly.__grm import GRM
 from ...models.__test_item import TestItem
 
 

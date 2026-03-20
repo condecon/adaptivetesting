@@ -2,12 +2,12 @@ import numpy as np
 from scipy.integrate import trapezoid
 from .__bayes_modal_estimation import BayesModal
 from ...models.__test_item import TestItem
-from .__functions.__estimators import log_likelihood
+from .functions.__estimators import log_likelihood
 from .__prior import Prior
 from math import pow
 from typing import Literal, cast
-from .__functions.__poly.__gpcm import GPCM
-from .__functions.__poly.__grm import GRM
+from .functions.poly.__gpcm import GPCM
+from .functions.poly.__grm import GRM
 
 
 class ExpectedAPosteriori(BayesModal):
