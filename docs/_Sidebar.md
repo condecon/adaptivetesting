@@ -1,8 +1,8 @@
 ### [Home](Home)
 
-**Getting Started**
 
 **Tutorials**
+[**Getting Started**](Getting_Started)
 
 **API Reference**
 - [data module](API-data)
