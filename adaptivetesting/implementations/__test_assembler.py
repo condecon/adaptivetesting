@@ -133,6 +133,15 @@ class TestAssembler(AdaptiveTest):
             content_balancing (CONTENT_BALANCING, optional): Selected content balancing strategy. Defaults to None.
                 If a content balancing strategy is specified, the item selection strategy will be ignored.
 
+            content_balancing_args (ContentBalancingArgs, optional): Arguments for the content balancing strategy.
+                Defaults to None.
+
+            exposure_control (EXPOSURE_CONTROL, optional): Exposure control strategy. Defaults to None.
+                If an exposure control strategy is specified, the item selection strategy will be ignored.
+
+            exposure_control_args (ExposureControlArgs, optional): Arguments for the exposure control strategy.
+                Defaults to None.
+
             pretest (bool, optional): Whether to run a pretest phase before the main test. Defaults to False.
 
             pretest_seed (int | None, optional): Random seed for pretest item selection. Defaults to None.
