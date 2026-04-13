@@ -28,7 +28,7 @@ class Randomesque(ExposureControl):
 
         References
         ------------
-        Kingsbury, C. G., & Zara, A. R. (1991). A Comparison of Procedures for Content-Sensitive
+        Kingsbury, G. G., & Zara, A. R. (1991). A Comparison of Procedures for Content-Sensitive
         Item Selection in Computerized Adaptive Tests. Applied Measurement in Education, 4(3), 241–261.
         Psychology and Behavioral Sciences Collection. https://doi.org/10.1207/s15324818ame0403_4
 

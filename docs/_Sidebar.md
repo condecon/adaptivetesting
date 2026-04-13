@@ -2,7 +2,11 @@
 
 
 **Tutorials**
-[**Getting Started**](Getting_Started)
+- [Getting Started](Getting_Started)
+- [Exposure Control](Exposure_Control)
+- [Content Balancing](Content_Balancing)
+- [Testing Software](Testing_Software)
+- [Simulation](Simulation)
 
 **API Reference**
 - [data module](API-data)
