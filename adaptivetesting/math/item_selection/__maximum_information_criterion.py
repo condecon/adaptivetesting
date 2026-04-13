@@ -14,7 +14,7 @@ def maximum_information_criterion(items: list[TestItem],
     Args:
         items (list[TestItem]): list of available items
         ability (float): currently estimated ability
-        model (Literal["GRM", "GPCM"] | None): model type. Required for polytomous models. 
+        model (Literal["GRM", "GPCM"] | None): model type. Required for polytomous models.
             Defaults to dichotomous variables.
 
     Returns:

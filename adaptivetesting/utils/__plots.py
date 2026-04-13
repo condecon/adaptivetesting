@@ -40,13 +40,10 @@ def plot_final_ability_estimates(simulation_id: str,
     # extract true and finally estimated ability levels
     estimates = []
     true_abilities = []
-    
-   
+
     for result in final_test_results:
         estimates.append(result.ability_estimation)
         true_abilities.append(result.true_ability_level)
-
-
 
     if "color" not in kwargs:
         ax.scatter(np.array(true_abilities, dtype=float),

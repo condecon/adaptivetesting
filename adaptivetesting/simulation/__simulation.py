@@ -125,7 +125,7 @@ class SimulationPool:
         or multiprocessing (on other platforms) to run the simulation for each adaptive test.
         Progress is displayed using a progress bar.
         
-        Note that parallel processing is not supported for the use in jupyter notebooks. 
+        Note that parallel processing is not supported for the use in jupyter notebooks.
         For that, `parallel` has to be set to `False`.
 
         Args:
