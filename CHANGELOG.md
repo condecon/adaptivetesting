@@ -10,6 +10,8 @@
 
 *Note*: We have tried our best to eliminate breaking changes. 
 But still, please be careful when updating to this version.
+# Version 1.1.6
+- Bug Fig #49 (optimization interval issue in BayesModal)
 
 # Version 1.1.5
 - Bug Fix #46 (numerical stability issue concerning Bayesian ability estimation)

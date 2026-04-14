@@ -3,6 +3,7 @@ from scipy.optimize import minimize_scalar, OptimizeResult # type: ignore
 from ..__prior import Prior
 from ....models.__algorithm_exception import AlgorithmException
 from .__estimators import log_likelihood
+from .__estimators import probability_y0, probability_y1
 
 
 def maximize_posterior(
@@ -46,9 +47,28 @@ def maximize_posterior(
     result: OptimizeResult = minimize_scalar(lambda mu: -log_posterior(mu),
                                              bounds=optimization_interval,
                                              method="bounded") # type: ignore
-    
+
     if not result.success:
         raise AlgorithmException(f"Optimization failed: {result.message}")
-    
+
     else:
         return float(result.x)
+
+
+def likelihood(mu: np.ndarray,
+               a: np.ndarray,
+               b: np.ndarray,
+               c: np.ndarray,
+               d: np.ndarray,
+               response_pattern: np.ndarray
+               ):
+    
+    p1 = probability_y1(mu, a, b, c, d)
+    p0 = probability_y0(mu, a, b, c, d)
+
+    log_likelihood = np.sum(
+        (response_pattern * np.log(p1 + 1e-300)) + (
+            (1 - response_pattern) * np.log(p0 + 1e-300)
+        ))
+
+    return -np.exp(log_likelihood)
