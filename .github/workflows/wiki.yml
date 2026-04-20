@@ -1,7 +1,7 @@
 name: Publish wiki
 on:
   push:
-    branches: [revision]
+    branches: [main]
     paths:
       - docs/**
       - .github/workflows/publish-wiki.yml
@@ -13,20 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "latest"
+      - name: render badge images
+        run: |
+          cd docs/_static
+          npm ci
+          node create_badges.js
+          
       - uses: actions/setup-python@v6
         with:
           python-version: '3.13'
       - name: build wiki
         run: |
-          cd docs/docs_source
-          pip install -r requirements.txt
-          make markdown
+          pip install -e .
+          pip install -r docs/docs_source/requirements.txt
+          make -C docs/docs_source markdown
       - name: move markdown pages
         run: |
-          cd ..
-          mkdir API
-          mv docs_source/build/markdown ./API
-          rm -r docs_source
+          mkdir -p docs/API
+          rm docs/docs_source/build/markdown/index.md
+          mv docs/docs_source/build/markdown/* docs/API/
+          # remove source_dir
+          rm -r docs/docs_source
       - uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
           path: docs/

@@ -4,15 +4,73 @@ from .__prior import Prior
 from scipy.integrate import trapezoid
 import numpy
 from scipy.differentiate import derivative
+from typing import Literal, cast
+from .__functions.__poly.__gpcm import GPCM
+from .__functions.__poly.__grm import GRM
+from ...models.__test_item import TestItem
 
 
 def item_information_function(
+        ability: float,
+        item: TestItem,
+        model: Literal["GRM", "GPCM"] | None = None
+) -> float:
+    """
+    Calculates the item information given an item and ability level.
+    If the item is polytomous, the model parameter has to be specified to
+    correctly calculated the item information.
+
+    Args:
+        ability (float): ability level
+        item (TestItem): test item
+        model (literal["GRM", "GPCM"] | None): model parameter. Required for polytomous response variables.
+
+    Returns:
+        float: item information
+    """
+    if model == "GRM":
+        return GRM.fisher_information(
+            ability,
+            item.a,
+            cast(list, item.b),
+        )
+    elif model == "GPCM":
+        return GPCM.fisher_information(
+            ability,
+            item.a,
+            cast(list, item.b)
+        )
+
+    else: # dichotomous
+        return dicho_item_information_function(
+            mu=np.array(ability),
+            a=np.array(item.a),
+            b=np.array(item.b),
+            c=np.array(item.c),
+            d=np.array(item.d)
+        ).astype(float).item()
+
+
+def dicho_item_information_function(
         mu: np.ndarray,
         a: np.ndarray,
         b: np.ndarray,
         c: np.ndarray,
         d: np.ndarray
 ) -> np.ndarray:
+    """
+    Internal function to calculate the item information for dichotomous items.
+
+    Args:
+        mu (np.ndarray): ability level
+        a (np.ndarray): discrimination parameter
+        b (np.ndarray): difficulty parameter
+        c (np.ndarray): guessing parameter
+        d (np.ndarray): slipping parameter
+
+    Returns:
+        np.ndarray: item information
+    """
     p_y1 = probability_y1(mu, a, b, c, d)
 
     # Clip probabilities
@@ -34,10 +92,12 @@ def prior_information_function(prior: Prior,
     of the specified prior
 
     Args:
-        prior (Prior): _description_
+        prior (Prior): prior distribution
+        optimization_interval (tuple[float, float], optional): interval used for numerical integration.
+            Defaults to (-10, 10).
 
     Returns:
-        np.ndarray: _description_
+        np.ndarray: calculated fisher information of the prior
     """
     def log_prior(x):
         epsilon = 1e-12  # Small value to avoid log(0)
@@ -63,7 +123,7 @@ def test_information_function(
         optimization_interval: tuple[float, float] = (-10, 10)
 ) -> float:
     """
-    Calculates test information.
+    Calculates test information for dichotomous items.
     Therefore, the information is calculated for every item
     and then summed up.
     If a prior is specified, the fisher information of the prior
@@ -75,12 +135,15 @@ def test_information_function(
         b (np.ndarray): difficulty parameter
         c (np.ndarray): guessing parameter
         d (np.ndarray): slipping parameter
+        prior (Prior | None, optional): prior distribution. Defaults to None.
+        optimization_interval (tuple[float, float], optional): interval used for numerical integration.
+            Defaults to (-10, 10).
 
     Returns:
         float: test information
     """
-    # calcualte information for every item
-    item_information = np.vectorize(item_information_function)(
+    # calculate information for every item
+    item_information = np.vectorize(dicho_item_information_function)(
         mu, a, b, c, d
     )
 
@@ -89,3 +152,66 @@ def test_information_function(
         return float(item_information.sum() + prior_information)
     else:
         return float(item_information.sum())
+
+
+def poly_test_information_function(
+    mu: float,
+    a_params: list[float],
+    thresholds_list: list[list[float]],
+    prior: Prior | None,
+    model_type: Literal["GRM", "GPCM"],
+    optimization_interval: tuple[float, float] = (-10, 10),
+) -> float:
+    """
+        Calculates test information for polytomous items.
+        Therefore, the information is calculated for every item
+        and then summed up.
+        If a prior is specified, the fisher information of the prior
+        is calculated as well and added to the information sum.
+
+        Args:
+            mu (float): ability level
+            a_params (list[float]): discrimination parameters
+            thresholds_list (list[list[float]]): list of thresholds
+            model_type (Literal["GRM", "GPCM"]): model type. Supported models: GRM, GPCM.
+            prior (Prior | None, optional): prior distribution. Defaults to None.
+            optimization_interval (tuple[float, float], optional): interval used for numerical integration.
+                Defaults to (-10, 10).
+
+        Returns:
+            float: test information
+
+        Raises:
+            ValueError: model type must be either GRM or GPCM.
+    """
+    # calculate information for every test item
+    item_information = 0.0
+    if model_type == "GRM":
+        for i, _ in enumerate(a_params):
+            inf_item_i = GRM.fisher_information(
+                mu,
+                a_params[i],
+                thresholds_list[i]
+            )
+            item_information = item_information + inf_item_i
+    elif model_type == "GPCM":
+        for i, _ in enumerate(a_params):
+            inf_item_i = GPCM.fisher_information(
+                mu,
+                a_params[i],
+                thresholds_list[i]
+            )
+            item_information = item_information + inf_item_i
+    else:
+        raise ValueError("model_type must be GRM or GPCM")
+    
+    test_information = item_information
+    # add prior information
+    if prior:
+        prior_information = prior_information_function(
+            prior=prior,
+            optimization_interval=optimization_interval
+        )
+        test_information = test_information + float(prior_information)
+
+    return test_information

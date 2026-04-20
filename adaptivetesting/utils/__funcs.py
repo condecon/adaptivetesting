@@ -34,7 +34,7 @@ def load_final_test_results(simulation_id: str,
             final_result = test_results[-1]
             final_test_results.append(final_result)
 
-    if output_format is ResultOutputFormat.PICKLE:
+    elif output_format is ResultOutputFormat.PICKLE:
         for id in participant_ids:
             context = PickleContext(simulation_id, participant_id=id)
             test_results = context.load()

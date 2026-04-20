@@ -7,6 +7,7 @@ from ..math.estimators.__functions.__estimators import probability_y1
 from ..math.estimators.__test_information import item_information_function
 from .__funcs import load_final_test_results, load_test_results_single_participant
 import numpy as np
+from typing import Literal
 
 
 def plot_final_ability_estimates(simulation_id: str,
@@ -37,18 +38,22 @@ def plot_final_ability_estimates(simulation_id: str,
     # read final test results data
     final_test_results = load_final_test_results(simulation_id, participant_ids, output_format)
     # extract true and finally estimated ability levels
-    true_and_final_abilities = [
-        (result.ability_estimation, result.true_ability_level)
-        for result in final_test_results
-    ]
+    estimates = []
+    true_abilities = []
 
-    final_estimates, true_abilities = zip(*true_and_final_abilities)
-    
+    for result in final_test_results:
+        estimates.append(result.ability_estimation)
+        true_abilities.append(result.true_ability_level)
+
     if "color" not in kwargs:
-        ax.scatter(true_abilities, final_estimates, color="blue", **kwargs)
+        ax.scatter(np.array(true_abilities, dtype=float),
+                   np.array(estimates, dtype=float),
+                   color="blue", **kwargs)
     else:
-        ax.scatter(true_abilities, final_estimates, **kwargs)
-    ax.plot(true_abilities, true_abilities, color="black")
+        ax.scatter(np.array(true_abilities, dtype=float),
+                   np.array(estimates, dtype=float), **kwargs)
+    ax.plot(np.array(true_abilities, dtype=float),
+            np.array(true_abilities, dtype=float), color="black")
     ax.set_xlabel("True ability level")
     ax.set_ylabel("Estimated ability level")
 
@@ -69,7 +74,7 @@ def plot_icc(item: TestItem,
     Returns:
         tuple: A tuple containing the matplotlib Figure and Axes objects.
     """
-    thetas = np.linspace(range[0], range[1], 1000)
+    thetas = np.linspace(range[0], range[1], 1000, dtype=float)
     probabilities = probability_y1(
         mu=np.array(thetas).T,
         a=np.array(item.a),
@@ -94,6 +99,7 @@ def plot_icc(item: TestItem,
 
 def plot_iif(item: TestItem,
              range: tuple[float, float] = (-10, 10),
+             model: Literal["GRM", "GPCM"] | None = None,
              ax: Axes | None = None,
              **kwargs):
     """
@@ -101,6 +107,7 @@ def plot_iif(item: TestItem,
     Parameters:
         item (TestItem): The test item for which to plot the information function.
         range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
+        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotomous IRT models.
         ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
         **kwargs: Additional keyword arguments passed to matplotlib's plot function.
     Returns:
@@ -113,11 +120,9 @@ def plot_iif(item: TestItem,
     
     for theta in thetas:
         info = item_information_function(
-            mu=theta,
-            a=np.array(item.a),
-            b=np.array(item.b),
-            c=np.array(item.c),
-            d=np.array(item.d),
+            ability=theta.astype(float).item(),
+            item=item,
+            model=model
         )
         information_array.append(info)
 
@@ -141,7 +146,7 @@ def plot_exposure_rate(simulation_id: str,
     in a series of adaptive tests or CAT simulations.
 
     Args:
-        simulation_id (str): Simulation identifyer
+        simulation_id (str): Simulation identifier
         participant_ids (list[str]): List of unique participant IDs
         output_format (ResultOutputFormat): Format in which the test results have been previously saved
 
@@ -203,6 +208,7 @@ def plot_exposure_rate(simulation_id: str,
 def plot_test_information(
         items: list[TestItem],
         range: tuple[float, float] = (-10, 10),
+        model: Literal["GRM", "GPCM"] | None = None,
         ax: Axes | None = None,
         **kwargs):
     """
@@ -210,21 +216,21 @@ def plot_test_information(
     Args:
         items (list[TestItem]): Test items in an item pool for which to calculate the test information
         range (tuple[float, float], optional): The range of ability levels (theta) to plot over. Defaults to (-10, 10).
+        model (Literal["GRM", "GPCM"], optional): Type of IRT model. Defaults to dichotomous IRT models.
         ax (Axes, optional): Matplotlib Axes object to plot on. If None, a new figure and axes are created.
         **kwargs: Additional keyword arguments passed to matplotlib's plot function.
     Returns:
         tuple[Figure, Axes]: The matplotlib Figure and Axes objects containing the plot.
     """
     # calculate test information by summing item information across items
-    thetas = np.linspace(range[0], range[1], 100)
+    thetas = np.linspace(range[0], range[1], 100, dtype=float)
     information_array = np.zeros_like(thetas, dtype=float)
+    item_information_function_vec = np.vectorize(item_information_function)
     for item in items:
-        information_array += item_information_function(
-            mu=np.array(thetas).T,
-            a=np.array(item.a),
-            b=np.array(item.b),
-            c=np.array(item.c),
-            d=np.array(item.d),
+        information_array += item_information_function_vec(
+            np.array(thetas).T,
+            item=item,
+            model=model
         )
 
     # setup figure
@@ -277,14 +283,14 @@ def plot_theta_estimation_trace(simulation_id: str,
     true_abilities = np.array([
         result.true_ability_level
         for result in test_results
-    ])
+    ], dtype=float)
 
     estimations = np.array([
         result.ability_estimation
         for result in test_results
-    ])
+    ], dtype=float)
 
-    steps = np.array(range(len(test_results)))
+    steps = np.array(range(len(test_results)), dtype=float)
 
     # setup figure
     fig: Figure | SubFigure
@@ -295,6 +301,8 @@ def plot_theta_estimation_trace(simulation_id: str,
 
     ax.plot(steps, true_abilities, label="True ability", color="black")
     ax.plot(steps, estimations, label="Ability Estimations", color="blue")
+    ax.set_xlabel("Step")
+    ax.set_ylabel("Ability level")
     ax.legend()
 
     return fig, ax

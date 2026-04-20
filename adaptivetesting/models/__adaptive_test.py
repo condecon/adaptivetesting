@@ -25,15 +25,10 @@ class AdaptiveTest(abc.ABC):
 
         Args:
             item_pool (ItemPool): item pool used for the test
-
             simulation_id (str): simulation id
-
             participant_id (str): participant id
-
             true_ability_level (float): true ability level (must always be set)
-
             initial_ability_level (float): initially assumed ability level
-
             simulation (bool): will the test be simulated.
                 If it is simulated and a response pattern is not yet set in the item pool,
                 it will be generated for the given true ability level.
@@ -63,7 +58,7 @@ class AdaptiveTest(abc.ABC):
         # if simulation is True
         # generate a response pattern if
         # it is not yet set in the item pool
-        if simulation is True:
+        if simulation:
             if self.item_pool.simulated_responses is None:
                 if self.true_ability_level is not None:
                     self.item_pool.simulated_responses = generate_response_pattern(
@@ -72,38 +67,12 @@ class AdaptiveTest(abc.ABC):
                         seed=kwargs["seed"] if "seed" in kwargs.keys() else None
                     )
 
-    def get_item_difficulties(self) -> List[float]:
-        """
-        Returns:
-             List[float]: difficulties of items in the item pool
-        """
-        return [item.b for item in self.item_pool.test_items]
-
-    def get_answered_items_difficulties(self) -> List[float]:
-        """
-        Returns:
-            List[float]: difficulties of answered items
-        """
-        return [item.b for item in self.answered_items]
-    
     def get_answered_items(self) -> List[TestItem]:
         """
         Returns:
             List[TestItem]: answered items
         """
         return self.answered_items
-
-    # def get_ability_se(self) -> float:
-    #     """
-    #     Calculate the current standard error
-    #     of the ability estimation.
-
-    #     Returns:
-    #         float: standard error of the ability estimation
-
-    #     """
-    #     answered_items = self.get_answered_items()
-    #     return standard_error(answered_items, self.ability_level)
 
     @abc.abstractmethod
     def get_next_item(self) -> TestItem:
@@ -151,7 +120,7 @@ class AdaptiveTest(abc.ABC):
 
         # check if simulation is running
         response = None
-        if self.simulation is True:
+        if self.simulation:
             response = self.item_pool.get_item_response(item)
         else:
             # not simulation

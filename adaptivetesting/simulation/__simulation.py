@@ -18,7 +18,6 @@ class Simulation:
 
         Args:
             test (AdaptiveTest): instance of an adaptive test implementation (see implementations module)
-
             test_result_output (ResultOutputFormat): test results output format
         """
         self.test = test
@@ -41,7 +40,7 @@ class Simulation:
 
         """
         stop_test = False
-        while stop_test is False:
+        while not stop_test:
             # run test
             self.test.run_test_once()
             # check available items
@@ -82,12 +81,9 @@ def setup_simulation_and_start(test: AdaptiveTest,
 
     Args:
         test (AdaptiveTest): The adaptive test instance to be simulated.
-        
         test_result_output (ResultOutputFormat): The format or handler for outputting test results.
-        
         criterion (StoppingCriterion | list[StoppingCriterion]):
             The criterion used to determine when the simulation should stop.
-        
         value (float):
             The value associated with the stopping criterion (e.g., maximum number of items, target standard error).
     """
@@ -99,7 +95,7 @@ def setup_simulation_and_start(test: AdaptiveTest,
     simulation.save_test_results()
 
 
-class SimulationPool():
+class SimulationPool:
     def __init__(self,
                  adaptive_tests: list[AdaptiveTest],
                  test_result_output: ResultOutputFormat,
@@ -110,9 +106,7 @@ class SimulationPool():
         
         Args:
             adaptive_tests (list[AdaptiveTest]): List of adaptive test instances to be simulated.
-            
-            test_results_output (ResultOutputFormat): Format for outputting test results.
-            
+            test_result_output (ResultOutputFormat): Format for outputting test results.
             criterion (StoppingCriterion | list[StoppingCriterion]):
                 Stopping criterion or list of criteria for the simulations.
             
@@ -123,30 +117,47 @@ class SimulationPool():
         self.criterion = criterion
         self.value = value
         
-    def start(self):
+    def start(self, parallel: bool = True):
         """
         Starts the simulation by executing adaptive tests in parallel.
 
         Depending on the operating system, uses either multithreading (on Windows)
         or multiprocessing (on other platforms) to run the simulation for each adaptive test.
         Progress is displayed using a progress bar.
+        
+        Note that parallel processing is not supported for the use in jupyter notebooks.
+        For that, `parallel` has to be set to `False`.
+
+        Args:
+            parallel (bool): process all simulations in parallel. Not supported in jupyter notebooks.
+                Default `True`.
+
         """
-        func = partial(
-            setup_simulation_and_start,
-            test_result_output=self.test_results_output,
-            criterion=self.criterion,
-            value=self.value
-        )
-        # check for platform
-        # this is because multiprocessing is not as well supported on windows
-        # therefore, multithreading is used instead
-        if platform.system() == "Windows":
-            with ThreadPoolExecutor(max_workers=60) as executor:
-                futures = [executor.submit(func, test) for test in self.adaptive_tests]
-                for _ in tqdm(as_completed(futures), total=len(futures)):
-                    pass
+        if parallel:
+            func = partial(
+                setup_simulation_and_start,
+                test_result_output=self.test_results_output,
+                criterion=self.criterion,
+                value=self.value
+            )
+            # check for platform
+            # this is because multiprocessing is not as well-supported on windows
+            # therefore, multithreading is used instead
+            if platform.system() == "Windows":
+                with ThreadPoolExecutor(max_workers=60) as executor:
+                    futures = [executor.submit(func, (test,)) for test in self.adaptive_tests]
+                    for _ in tqdm(as_completed(futures), total=len(futures)):
+                        pass
+            else:
+                with ProcessPoolExecutor() as executor:
+                    futures = [executor.submit(func, (test,)) for test in self.adaptive_tests]
+                    for _ in tqdm(as_completed(futures), total=len(futures)):
+                        pass
         else:
-            with ProcessPoolExecutor() as executor:
-                futures = [executor.submit(func, test) for test in self.adaptive_tests]
-                for _ in tqdm(as_completed(futures), total=len(futures)):
-                    pass
+            for test in tqdm(self.adaptive_tests):
+                setup_simulation_and_start(
+                    test=test,
+                    test_result_output=self.test_results_output,
+                    criterion=self.criterion,
+                    value=self.value
+                )
