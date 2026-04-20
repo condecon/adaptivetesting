@@ -21,6 +21,7 @@ jobs:
           cd docs/_static
           npm ci
           node create_badges.js
+          rm -rf node_modules
           
       - uses: actions/setup-python@v6
         with:
