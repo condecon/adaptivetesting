@@ -37,6 +37,9 @@ For the latest development version:
 pip install git+https://github.com/condecon/adaptivetesting
 ```
 
+## Documentation
+You can find our documentation in the [GitHub wiki](https://github.com/condecon/adaptivetesting/wiki).
+
 ## Contributing
 
 We welcome contributions! Please see our [GitHub repository](https://github.com/condecon/adaptivetesting) for:
