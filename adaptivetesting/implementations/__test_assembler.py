@@ -175,6 +175,7 @@ class TestAssembler(AdaptiveTest):
                          initial_ability_level,
                          simulation,
                          debug,
+                         model_type=model_type,
                          **kwargs)
 
     def estimate_ability_level(self):
