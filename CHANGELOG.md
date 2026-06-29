@@ -1,3 +1,6 @@
+# Version 1.2.1
+- Bug fix #71 (pass model parameters for generating response patterns)
+
 # Version 1.2
 - Required Python version: >= 3.12
 - The package now follows SPEC0
@@ -11,7 +14,7 @@
 *Note*: We have tried our best to eliminate breaking changes. 
 But still, please be careful when updating to this version.
 # Version 1.1.6
-- Bug Fig #49 (optimization interval issue in BayesModal)
+- Bug Fix #49 (optimization interval issue in BayesModal)
 
 # Version 1.1.5
 - Bug Fix #46 (numerical stability issue concerning Bayesian ability estimation)
