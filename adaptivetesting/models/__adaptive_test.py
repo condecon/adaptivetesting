@@ -64,7 +64,8 @@ class AdaptiveTest(abc.ABC):
                     self.item_pool.simulated_responses = generate_response_pattern(
                         ability=self.true_ability_level,
                         items=self.item_pool.test_items,
-                        seed=kwargs["seed"] if "seed" in kwargs.keys() else None
+                        seed=kwargs["seed"] if "seed" in kwargs.keys() else None,
+                        model=kwargs["model_type"] if "model_type" in kwargs.keys() else None
                     )
 
     def get_answered_items(self) -> List[TestItem]:

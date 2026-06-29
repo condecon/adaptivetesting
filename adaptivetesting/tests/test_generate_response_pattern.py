@@ -4,6 +4,7 @@ import numpy as np
 from adaptivetesting.models import ItemPool, TestItem
 from adaptivetesting.math.estimators import MLEstimator
 from adaptivetesting.math import generate_response_pattern
+from adaptivetesting.implementations import TestAssembler
 
 
 source_dictionary = {"a": [1.0507,
@@ -135,3 +136,14 @@ class TestGeneratePolyPattern(unittest.TestCase):
 
         for a, b in zip(r1, r2):
             self.assertTrue(np.array_equal(np.asarray(a), np.asarray(b)))
+
+
+    def test_poly_items_from_adt_test_class(self):
+        # run this without any errors
+        items = ItemPool([make_polyt_item() for _ in range(3)])
+        TestAssembler(item_pool=items,
+                             simulation_id="test",
+                             participant_id="test",
+                             ability_estimator=MLEstimator,
+                             model_type="GPCM",
+                             simulation=True)
