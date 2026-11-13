@@ -1,14 +1,14 @@
 [project]
 name="adaptivetesting"
-version="1.2.1"
+version="1.2.2"
 description="adaptivetesting is a Python package that can be used to simulate and evaluate custom CAT scenarios as well as implement them in real-world testing scenarios from a single codebase"
 readme = "README.md"
 authors = [
     { name = "Jonas Engicht", email = "dev@condecon.de" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
-    "numpy>=2.1.0",
+    "numpy>=2.3.0",
     "pandas>=2.3.0",
     "scipy>=1.15.0",
     "tqdm>=4.66.0",

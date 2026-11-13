@@ -1,3 +1,9 @@
+# Version 1.2.2
+- Updated the package to follow the current SPEC 0 support policy
+- Required Python version: >= 3.13
+- Updated supported Python versions to 3.13, 3.14, and 3.15
+- Updated minimum NumPy version to 2.3.0
+
 # Version 1.2.1
 - Bug fix #71 (pass model parameters for generating response patterns)
 
